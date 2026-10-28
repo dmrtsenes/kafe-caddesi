@@ -7,8 +7,6 @@ workflows:
       app_store_connect: Bireysel Apple Key
     environment:
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.fincansokagi.game
         provisioning_profiles:
           - kafe_caddesi_profile
         certificates:
