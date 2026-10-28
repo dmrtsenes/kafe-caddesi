@@ -9,6 +9,10 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.fincansokagi.game
+        provisioning_profiles:
+          - kafe_caddesi_profile
+        certificates:
+          - "iOS Dagitim Sertifikasi"
       vars:
         XCODE_PROJECT: "ios/App/App.xcodeproj"
         XCODE_SCHEME: "App"
