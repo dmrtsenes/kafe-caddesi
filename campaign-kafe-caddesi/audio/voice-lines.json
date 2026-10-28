@@ -1,0 +1,46 @@
+[
+  {
+    "id": "01-hook",
+    "text": "Her şey bir çayla başlar.",
+    "phase": 2,
+    "offset": 0.02,
+    "untilPhase": 0,
+    "seed": 121,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "reference": "audio/turkce-yonlendirme.wav"
+  },
+  {
+    "id": "02-welcome",
+    "text": "Yeni misafirlere yer aç.",
+    "phase": 0,
+    "offset": 0.12,
+    "untilPhase": 4,
+    "seed": 122,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "reference": "audio/turkce-yonlendirme.wav"
+  },
+  {
+    "id": "03-grow",
+    "text": "Kazancınla ekibini kur.",
+    "phase": 4,
+    "offset": 0.05,
+    "untilPhase": 6,
+    "seed": 123,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "reference": "audio/turkce-yonlendirme.wav"
+  },
+  {
+    "id": "04-brand",
+    "text": "Kafe Caddesi, şimdi sıra sende.",
+    "phase": 7,
+    "offset": 0.05,
+    "untilPhase": null,
+    "seed": 126,
+    "exaggeration": 0.25,
+    "cfg_weight": 0.5,
+    "reference": "audio/turkce-yonlendirme.wav"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "name": "hook-a",
+    "text": "Her şey bir çayla başlar.",
+    "seed": 101,
+    "exaggeration": 0.25,
+    "cfg_weight": 0.3,
+    "seconds": 1.135,
+    "transcript": "Her şey bir çayla başlar.",
+    "meanWordProbability": 0.8697693288326264
+  },
+  {
+    "name": "hook-b",
+    "text": "Bir çayla başlar.",
+    "seed": 102,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.3,
+    "seconds": 1.00675,
+    "transcript": "bir çayla başlar.",
+    "meanWordProbability": 0.8014571004443698
+  },
+  {
+    "name": "hook-c",
+    "text": "Her şey bir çayla başlar.",
+    "seed": 103,
+    "exaggeration": 0.2,
+    "cfg_weight": 0.0,
+    "seconds": 1.5371666666666666,
+    "transcript": "Her şey bir çayla başlar.",
+    "meanWordProbability": 0.8696688036123913
+  },
+  {
+    "name": "hook-d",
+    "text": "Bir çayla başlar.",
+    "seed": 104,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "seconds": 0.8784583333333333,
+    "transcript": "bir çayla başlar.",
+    "meanWordProbability": 0.810385031832589
+  },
+  {
+    "name": "brand-a",
+    "text": "Kafe Caddesi. Sıra sende.",
+    "seed": 111,
+    "exaggeration": 0.25,
+    "cfg_weight": 0.3,
+    "seconds": 2.0045,
+    "transcript": "Kahve jattisi. Sıra sende.",
+    "meanWordProbability": 0.7274476625025272
+  },
+  {
+    "name": "brand-b",
+    "text": "Kafe caddesi, sıra sende.",
+    "seed": 112,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.0,
+    "seconds": 1.51625,
+    "transcript": "Kafe jattesi sığra sandı.",
+    "meanWordProbability": 0.4937173016369343
+  },
+  {
+    "name": "brand-c",
+    "text": "Kafe Caddesi. Sıra sende.",
+    "seed": 113,
+    "exaggeration": 0.2,
+    "cfg_weight": 0.5,
+    "seconds": 1.5087916666666668,
+    "transcript": "Kahve jottiesi. Sırasandı?",
+    "meanWordProbability": 0.5207652054727078
+  },
+  {
+    "name": "brand-d",
+    "text": "Kafe Caddesi, sıra sende.",
+    "seed": 114,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.2,
+    "seconds": 1.5660833333333333,
+    "transcript": "Kafejattisi Sresende.",
+    "meanWordProbability": 0.47024634132782617
+  }
+]

@@ -1,0 +1,29 @@
+Guessed Channel Layout for Input Stream #0.0 : stereo
+Input #0, wav, from 'C:\Users\Enes\Desktop\oyun\campaign-kafe-caddesi\audio\seslendirme.wav':
+  Metadata:
+    encoder         : Lavf58.24.101
+  Duration: 00:00:18.27, bitrate: 1536 kb/s
+    Stream #0:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s16, 1536 kb/s
+Guessed Channel Layout for Input Stream #1.0 : stereo
+Input #1, wav, from 'C:\Users\Enes\Desktop\oyun\campaign-kafe-caddesi\audio\muzik.wav':
+  Duration: 00:00:18.27, bitrate: 1536 kb/s
+    Stream #1:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s16, 1536 kb/s
+Guessed Channel Layout for Input Stream #2.0 : stereo
+Input #2, wav, from 'C:\Users\Enes\Desktop\oyun\campaign-kafe-caddesi\audio\efektler.wav':
+  Duration: 00:00:18.27, bitrate: 1536 kb/s
+    Stream #2:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s16, 1536 kb/s
+Stream mapping:
+  Stream #0:0 (pcm_s16le) -> asplit
+  Stream #1:0 (pcm_s16le) -> sidechaincompress:main
+  Stream #2:0 (pcm_s16le) -> amix:input2
+  afade -> Stream #0:0 (pcm_s16le)
+Press [q] to stop, [?] for help
+[Parsed_sidechaincompress_1 @ 000001bc1ee3cf80] No channel layout for input 1
+Output #0, wav, to 'C:\Users\Enes\Desktop\oyun\campaign-kafe-caddesi\audio\final-mix.wav':
+  Metadata:
+    ISFT            : Lavf58.24.101
+    Stream #0:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s16, 1536 kb/s (default)
+    Metadata:
+      encoder         : Lavc58.42.102 pcm_s16le
+size=    3425kB time=00:00:18.26 bitrate=1536.0kbits/s speed=41.2x    
+video:0kB audio:3425kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.002224%

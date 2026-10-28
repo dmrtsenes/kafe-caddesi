@@ -1,0 +1,12 @@
+{
+  "name": "hook-tr",
+  "text": "Her şey bir çayla başlar.",
+  "seed": 121,
+  "exaggeration": 0.3,
+  "cfg_weight": 0.5,
+  "seconds": 1.41375,
+  "transcript": "Her şey bir çayla başlar.",
+  "meanWordProbability": 0.9223519384860992,
+  "id": "01-hook",
+  "voice": "Chatterbox V3 conditioned with synthesized Piper stock Turkish accent reference; no real-person sample"
+}

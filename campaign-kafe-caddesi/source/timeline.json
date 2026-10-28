@@ -1,0 +1,948 @@
+{
+  "duration": 18.266666666666666,
+  "fps": 30,
+  "cuts": [
+    {
+      "time": 0,
+      "kind": "cut",
+      "data": {
+        "phase": 2
+      }
+    },
+    {
+      "time": 1.7667,
+      "kind": "cut",
+      "data": {
+        "phase": 3
+      }
+    },
+    {
+      "time": 4.2167,
+      "kind": "cut",
+      "data": {
+        "phase": 0
+      }
+    },
+    {
+      "time": 5.55,
+      "kind": "cut",
+      "data": {
+        "phase": 8
+      }
+    },
+    {
+      "time": 6.9,
+      "kind": "cut",
+      "data": {
+        "phase": 1
+      }
+    },
+    {
+      "time": 8.65,
+      "kind": "cut",
+      "data": {
+        "phase": 4
+      }
+    },
+    {
+      "time": 10.0667,
+      "kind": "cut",
+      "data": {
+        "phase": 5
+      }
+    },
+    {
+      "time": 12.8667,
+      "kind": "cut",
+      "data": {
+        "phase": 6
+      }
+    },
+    {
+      "time": 15.0333,
+      "kind": "cut",
+      "data": {
+        "phase": 7
+      }
+    }
+  ],
+  "voice": [
+    {
+      "id": "01-hook",
+      "text": "Her şey bir çayla başlar.",
+      "phase": 2,
+      "offset": 0.02,
+      "untilPhase": 0,
+      "seed": 121,
+      "exaggeration": 0.3,
+      "cfg_weight": 0.5,
+      "reference": "audio/turkce-yonlendirme.wav",
+      "start": 0.02,
+      "length": 1.41375,
+      "end": 1.43375
+    },
+    {
+      "id": "02-welcome",
+      "text": "Yeni misafirlere yer aç.",
+      "phase": 0,
+      "offset": 0.12,
+      "untilPhase": 4,
+      "seed": 122,
+      "exaggeration": 0.3,
+      "cfg_weight": 0.5,
+      "reference": "audio/turkce-yonlendirme.wav",
+      "start": 4.3367,
+      "length": 1.455125,
+      "end": 5.791825
+    },
+    {
+      "id": "03-grow",
+      "text": "Kazancınla ekibini kur.",
+      "phase": 4,
+      "offset": 0.05,
+      "untilPhase": 6,
+      "seed": 123,
+      "exaggeration": 0.3,
+      "cfg_weight": 0.5,
+      "reference": "audio/turkce-yonlendirme.wav",
+      "start": 8.700000000000001,
+      "length": 1.2245,
+      "end": 9.924500000000002
+    },
+    {
+      "id": "04-brand",
+      "text": "Kafe Caddesi, şimdi sıra sende.",
+      "phase": 7,
+      "offset": 0.05,
+      "untilPhase": null,
+      "seed": 126,
+      "exaggeration": 0.25,
+      "cfg_weight": 0.5,
+      "reference": "audio/turkce-yonlendirme.wav",
+      "start": 15.083300000000001,
+      "length": 2.310833,
+      "end": 17.394133
+    }
+  ],
+  "events": [
+    {
+      "time": 0,
+      "kind": "cut",
+      "data": {
+        "phase": 2
+      }
+    },
+    {
+      "time": 0,
+      "kind": "task",
+      "data": {
+        "key": "prepare",
+        "x": -6.9,
+        "z": -8.35
+      }
+    },
+    {
+      "time": 0,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 0.5333,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 0.5333,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 0.9,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 0.95,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 0.95,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 1.3833,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 1.3833,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 1.4,
+      "kind": "task",
+      "data": {
+        "key": "carry",
+        "x": -6.9,
+        "z": -8.35
+      }
+    },
+    {
+      "time": 1.4,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 1.7667,
+      "kind": "cut",
+      "data": {
+        "phase": 3
+      }
+    },
+    {
+      "time": 1.7667,
+      "kind": "task",
+      "data": {
+        "key": "serve",
+        "x": -5.2,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 1.7667,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 1.8167,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 1.8333,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 2.4,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 2.8,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 3,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 3.1,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 3.1,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 3.5333,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 3.5333,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 3.55,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 3.6333,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 4.2,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 4.2167,
+      "kind": "cut",
+      "data": {
+        "phase": 0
+      }
+    },
+    {
+      "time": 4.2167,
+      "kind": "task",
+      "data": {
+        "key": "clear-dishes",
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 4.2167,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 4.75,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.45
+      }
+    },
+    {
+      "time": 4.8,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 5.1667,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.45
+      }
+    },
+    {
+      "time": 5.1833,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 5.4167,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 5.55,
+      "kind": "cut",
+      "data": {
+        "phase": 8
+      }
+    },
+    {
+      "time": 5.55,
+      "kind": "task",
+      "data": {
+        "key": "dispose-dishes",
+        "x": -6.9,
+        "z": 4.8
+      }
+    },
+    {
+      "time": 5.55,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 5.6,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 6,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 6.1,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 6.5167,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 6.5333,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 6.9,
+      "kind": "cut",
+      "data": {
+        "phase": 1
+      }
+    },
+    {
+      "time": 6.9,
+      "kind": "task",
+      "data": {
+        "key": "clean",
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 6.9,
+      "kind": "action",
+      "data": {
+        "kind": "wipe"
+      }
+    },
+    {
+      "time": 7.2,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 7.2167,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 7.4667,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 7.7333,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 7.95,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 8.15,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 8.2167,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 8.2833,
+      "kind": "cleaned",
+      "data": {
+        "id": "k_masa_2"
+      }
+    },
+    {
+      "time": 8.2833,
+      "kind": "sfx",
+      "data": {
+        "id": "upgrade",
+        "vol": 0.35
+      }
+    },
+    {
+      "time": 8.3,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 8.4,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 8.4,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 8.65,
+      "kind": "cut",
+      "data": {
+        "phase": 4
+      }
+    },
+    {
+      "time": 8.65,
+      "kind": "task",
+      "data": {
+        "key": "collect",
+        "x": 3,
+        "z": -6.1000000000000005
+      }
+    },
+    {
+      "time": 8.65,
+      "kind": "action",
+      "data": {
+        "kind": "cash"
+      }
+    },
+    {
+      "time": 8.7,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 9,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 9.0167,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 9.35,
+      "kind": "collected",
+      "data": {
+        "amount": 41.333333333333336
+      }
+    },
+    {
+      "time": 9.35,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.5167,
+      "kind": "collected",
+      "data": {
+        "amount": 41.33333333333333
+      }
+    },
+    {
+      "time": 9.5167,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.6,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 9.7,
+      "kind": "collected",
+      "data": {
+        "amount": 41.33333333333333
+      }
+    },
+    {
+      "time": 9.7,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.7167,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 10.0667,
+      "kind": "cut",
+      "data": {
+        "phase": 5
+      }
+    },
+    {
+      "time": 10.0667,
+      "kind": "task",
+      "data": {
+        "key": "hire",
+        "x": -8.1,
+        "z": -4.8
+      }
+    },
+    {
+      "time": 10.1,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 11.2,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 12,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 12,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 12.4,
+      "kind": "hired",
+      "data": {
+        "role": "waiter",
+        "count": 1,
+        "location": "kose",
+        "totalCost": 400,
+        "method": "pad"
+      }
+    },
+    {
+      "time": 12.4,
+      "kind": "sfx",
+      "data": {
+        "id": "hire"
+      }
+    },
+    {
+      "time": 12.6,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 12.8667,
+      "kind": "cut",
+      "data": {
+        "phase": 6
+      }
+    },
+    {
+      "time": 12.8667,
+      "kind": "task",
+      "data": {
+        "key": "leave-workspace",
+        "x": -6.2,
+        "z": -7.1
+      }
+    },
+    {
+      "time": 12.9167,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 13.0167,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.22
+      }
+    },
+    {
+      "time": 13.7667,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.22
+      }
+    },
+    {
+      "time": 14,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 14.4,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 14.5167,
+      "kind": "stocked",
+      "data": {
+        "item": "cay",
+        "x": -6.45,
+        "z": -4.4
+      }
+    },
+    {
+      "time": 14.5167,
+      "kind": "sfx",
+      "data": {
+        "id": "stock",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 14.8167,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 15,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 15.0333,
+      "kind": "cut",
+      "data": {
+        "phase": 7
+      }
+    },
+    {
+      "time": 15.0333,
+      "kind": "task",
+      "data": {
+        "key": "leave-workspace",
+        "x": -6.2,
+        "z": -7.1
+      }
+    },
+    {
+      "time": 15.2667,
+      "kind": "stocked",
+      "data": {
+        "item": "cay",
+        "x": -6.45,
+        "z": -4.4
+      }
+    },
+    {
+      "time": 15.2667,
+      "kind": "sfx",
+      "data": {
+        "id": "stock",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 16.6167,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 18,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    }
+  ]
+}

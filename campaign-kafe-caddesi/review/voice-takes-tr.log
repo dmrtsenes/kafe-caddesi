@@ -1,0 +1,102 @@
+C:\Users\Enes\Desktop\oyun\.tools\voice-studio\Lib\site-packages\diffusers\models\lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+WARNING:chatterbox.models.tokenizers.tokenizer:Could not load Cangjie mapping: An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.
+WARNING:chatterbox.models.s3gen.utils.mel:Audio values outside normalized range: min=-1.0296, max=0.9892
+C:\Users\Enes\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 2/1000 [00:00<00:51, 19.45it/s]
+Sampling:   1%|          | 7/1000 [00:00<00:27, 36.07it/s]
+Sampling:   1%|          | 12/1000 [00:00<00:24, 41.06it/s]
+Sampling:   2%|▏         | 17/1000 [00:00<00:22, 43.64it/s]
+Sampling:   2%|▏         | 22/1000 [00:00<00:22, 43.99it/s]
+Sampling:   3%|▎         | 27/1000 [00:00<00:22, 44.07it/s]
+Sampling:   3%|▎         | 32/1000 [00:00<00:21, 44.63it/s]
+Sampling:   4%|▎         | 37/1000 [00:00<00:21, 45.16it/s]
+Sampling:   4%|▍         | 42/1000 [00:00<00:20, 46.10it/s]
+Sampling:   5%|▍         | 47/1000 [00:01<00:20, 46.23it/s]
+Sampling:   5%|▌         | 52/1000 [00:01<00:20, 46.08it/s]
+Sampling:   5%|▌         | 53/1000 [00:01<00:21, 43.96it/s]
+{"name": "hook-tr", "text": "Her şey bir çayla başlar.", "seed": 121, "exaggeration": 0.3, "cfg_weight": 0.5, "seconds": 1.41375, "transcript": "Her şey bir çayla başlar.", "meanWordProbability": 0.9223519384860992}
+WARNING:chatterbox.models.s3gen.utils.mel:Audio values outside normalized range: min=-1.0296, max=0.9892
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:23, 41.84it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:22, 44.16it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:21, 45.12it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:21, 45.00it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:21, 45.16it/s]
+Sampling:   3%|▎         | 30/1000 [00:00<00:21, 45.77it/s]
+Sampling:   4%|▎         | 35/1000 [00:00<00:20, 46.29it/s]
+Sampling:   4%|▍         | 40/1000 [00:00<00:20, 45.76it/s]
+Sampling:   4%|▍         | 45/1000 [00:00<00:20, 45.56it/s]
+Sampling:   5%|▌         | 50/1000 [00:01<00:20, 45.64it/s]
+Sampling:   5%|▌         | 52/1000 [00:01<00:20, 45.36it/s]
+{"name": "welcome-tr", "text": "Yeni misafirlere yer aç.", "seed": 122, "exaggeration": 0.3, "cfg_weight": 0.5, "seconds": 1.455125, "transcript": "Yeni misafirlere yer aç.", "meanWordProbability": 0.9478665627539158}
+WARNING:chatterbox.models.s3gen.utils.mel:Audio values outside normalized range: min=-1.0296, max=0.9892
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 4/1000 [00:00<00:25, 38.64it/s]
+Sampling:   1%|          | 9/1000 [00:00<00:23, 42.55it/s]
+Sampling:   1%|▏         | 14/1000 [00:00<00:22, 44.23it/s]
+Sampling:   2%|▏         | 19/1000 [00:00<00:21, 45.66it/s]
+Sampling:   2%|▏         | 24/1000 [00:00<00:21, 46.05it/s]
+Sampling:   3%|▎         | 29/1000 [00:00<00:20, 46.59it/s]
+Sampling:   3%|▎         | 34/1000 [00:00<00:20, 46.47it/s]
+Sampling:   4%|▍         | 39/1000 [00:00<00:20, 46.45it/s]
+Sampling:   4%|▍         | 44/1000 [00:00<00:20, 46.36it/s]
+Sampling:   5%|▍         | 47/1000 [00:01<00:21, 45.14it/s]
+{"name": "grow-tr", "text": "Kazancınla ekibini kur.", "seed": 123, "exaggeration": 0.3, "cfg_weight": 0.5, "seconds": 1.2245, "transcript": "Kazancınla ekibini kur.", "meanWordProbability": 0.8905070390966204}
+WARNING:chatterbox.models.s3gen.utils.mel:Audio values outside normalized range: min=-1.0296, max=0.9892
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 4/1000 [00:00<00:27, 36.17it/s]
+Sampling:   1%|          | 9/1000 [00:00<00:23, 41.83it/s]
+Sampling:   1%|▏         | 14/1000 [00:00<00:22, 43.60it/s]
+Sampling:   2%|▏         | 19/1000 [00:00<00:22, 44.06it/s]
+Sampling:   2%|▏         | 24/1000 [00:00<00:22, 43.72it/s]
+Sampling:   3%|▎         | 29/1000 [00:00<00:22, 43.52it/s]
+Sampling:   3%|▎         | 34/1000 [00:00<00:22, 43.67it/s]
+Sampling:   4%|▍         | 39/1000 [00:00<00:22, 43.08it/s]
+Sampling:   4%|▍         | 44/1000 [00:01<00:22, 43.10it/s]
+Sampling:   5%|▍         | 49/1000 [00:01<00:22, 43.15it/s]
+Sampling:   5%|▌         | 54/1000 [00:01<00:21, 43.09it/s]
+Sampling:   6%|▌         | 59/1000 [00:01<00:21, 43.00it/s]
+Sampling:   6%|▋         | 63/1000 [00:01<00:21, 42.98it/s]
+{"name": "brand-tr", "text": "Kafe Caddesi. Sıra sende.", "seed": 124, "exaggeration": 0.3, "cfg_weight": 0.5, "seconds": 1.8859583333333334, "transcript": "Kafe caddesi. Sıra sende.", "meanWordProbability": 0.7307813974718252}
+WARNING:chatterbox.models.s3gen.utils.mel:Audio values outside normalized range: min=-1.0296, max=0.9892
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:23, 42.89it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:21, 45.08it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:21, 45.83it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:21, 46.42it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:21, 46.20it/s]
+Sampling:   3%|▎         | 30/1000 [00:00<00:20, 46.22it/s]
+Sampling:   4%|▎         | 35/1000 [00:00<00:20, 46.17it/s]
+Sampling:   4%|▍         | 40/1000 [00:00<00:20, 46.22it/s]
+Sampling:   4%|▍         | 45/1000 [00:00<00:20, 46.21it/s]
+Sampling:   5%|▌         | 50/1000 [00:01<00:20, 45.98it/s]
+Sampling:   6%|▌         | 55/1000 [00:01<00:20, 46.42it/s]
+Sampling:   6%|▌         | 59/1000 [00:01<00:20, 46.04it/s]
+{"name": "brand-tr-b", "text": "Kafe Caddesi. Sıra sende.", "seed": 125, "exaggeration": 0.25, "cfg_weight": 0.3, "seconds": 1.8170833333333334, "transcript": "Kafe caddesi. Sıra sende.", "meanWordProbability": 0.7421019872029623}
+WARNING:chatterbox.models.s3gen.utils.mel:Audio values outside normalized range: min=-1.0296, max=0.9892
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 4/1000 [00:00<00:28, 34.61it/s]
+Sampling:   1%|          | 9/1000 [00:00<00:25, 39.61it/s]
+Sampling:   1%|▏         | 14/1000 [00:00<00:24, 40.84it/s]
+Sampling:   2%|▏         | 19/1000 [00:00<00:23, 41.15it/s]
+Sampling:   2%|▏         | 24/1000 [00:00<00:23, 41.96it/s]
+Sampling:   3%|▎         | 29/1000 [00:00<00:23, 41.98it/s]
+Sampling:   3%|▎         | 34/1000 [00:00<00:22, 42.42it/s]
+Sampling:   4%|▍         | 39/1000 [00:00<00:22, 42.56it/s]
+Sampling:   4%|▍         | 44/1000 [00:01<00:22, 42.81it/s]
+Sampling:   5%|▍         | 49/1000 [00:01<00:22, 42.94it/s]
+Sampling:   5%|▌         | 54/1000 [00:01<00:22, 42.81it/s]
+Sampling:   6%|▌         | 59/1000 [00:01<00:22, 42.50it/s]
+Sampling:   6%|▋         | 64/1000 [00:01<00:21, 42.71it/s]
+Sampling:   7%|▋         | 69/1000 [00:01<00:21, 42.61it/s]
+Sampling:   7%|▋         | 73/1000 [00:01<00:22, 41.98it/s]
+{"name": "brand-tr-c", "text": "Kafe Caddesi, şimdi sıra sende.", "seed": 126, "exaggeration": 0.25, "cfg_weight": 0.5, "seconds": 2.3108333333333335, "transcript": "Kafe caddesi. Şimdi sıra sende.", "meanWordProbability": 0.7563880388935407}

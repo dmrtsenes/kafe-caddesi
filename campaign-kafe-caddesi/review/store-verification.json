@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "files": [
+    {
+      "file": "store/icon-512.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 554806
+    },
+    {
+      "file": "store/feature-1024x500.png",
+      "width": 1024,
+      "height": 500,
+      "channels": 3,
+      "bytes": 252515
+    },
+    {
+      "file": "brand/logo-transparent.png",
+      "width": 1200,
+      "height": 680,
+      "channels": 4,
+      "bytes": 49156
+    },
+    {
+      "file": "brand/logo-en-transparent.png",
+      "width": 1200,
+      "height": 680,
+      "channels": 4,
+      "bytes": 47282
+    },
+    {
+      "file": "store/screenshots/01-servis.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "bytes": 704855
+    },
+    {
+      "file": "store/screenshots/02-hazirla.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "bytes": 245911
+    },
+    {
+      "file": "store/screenshots/03-temizlik.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "bytes": 576661
+    },
+    {
+      "file": "store/screenshots/04-kazanc.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "bytes": 255070
+    },
+    {
+      "file": "store/screenshots/05-ekip.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "bytes": 406074
+    },
+    {
+      "file": "store/screenshots/06-raflar.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "bytes": 432114
+    }
+  ],
+  "officialRulesChecked": "2026-09-13"
+}

@@ -1,0 +1,10 @@
+Vacuum Cleaner by Zoe XR
+Source: https://poly.pizza/m/1_kdZRnuCo8
+Original GLB: https://static.poly.pizza/2b2f090f-e833-4dba-863b-fd3de19eab09.glb
+License: Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+https://creativecommons.org/licenses/by/3.0/
+Original model copyright remains with its author.
+Adaptations in Kafe Caddesi: clothing-coordinated material colors, orientation and
+scale, widened floor shoe, rigid upper handle clipped and replaced with a shaft
+that follows the player's hands. The bundled original GLB is unmodified.
+No endorsement by the original author is implied.

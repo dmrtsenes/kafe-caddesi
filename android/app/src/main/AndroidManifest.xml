@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
+        android:allowBackup="true"
+        android:appCategory="game"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustNothing"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          DİKEY KİLİDİN TABLETTE KORUNMASI.
+
+          targetSdk 36 (Android 16) ile birlikte, en küçük genişliği 600dp
+          ve ÜZERİ ekranlarda sistem `screenOrientation`, en-boy oranı ve
+          yeniden boyutlandırma kısıtlarını YOK SAYAR. Bu özellik olmadan
+          oyun tablette/katlanabilirde yatay açılır ve portre için kurulmuş
+          kamera kadrajı bozulur (kadrajı viewWidth değil maxDistance+fovMax
+          kuruyor; yatayda mekânın yarısı zemin kalıyor).
+
+          Bu opt-out API 37'de KALDIRILACAK — o sürümden önce oyunun
+          gerçekten uyarlanabilir bir kadraj kurması gerekiyor.
+          Kaynak: developer.android.com/develop/adaptive-apps/guides/
+                  app-orientation-aspect-ratio-resizability
+        -->
+        <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
+
+        <!--
+          ADMOB UYGULAMA KİMLİĞİ.
+
+          Şu anki değer GOOGLE'IN HERKESE AÇIK TEST App ID'sidir: AdMob
+          hesabı gerektirmez ve her zaman test reklamı döndürür, yani
+          reklam akışı gerçek cihazda uçtan uca denenebilir.
+
+          YAYINDAN ÖNCE kendi App ID'nle DEĞİŞTİR (admob.google.com).
+          Yanlış/boş App ID ile uygulama AÇILIŞTA ÇÖKER — AdMob SDK'sı
+          bunu ölümcül hata sayar.
+        -->
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${admobAppId}" />
+    </application>
+
+    <!-- Permissions -->
+    <!--
+      INTERNET izni reklam SDK'sı için GEREKLİ.
+
+      Uzun süre bilerek yoktu (oyun tamamen çevrimdışı ve tek ağ çağrısı
+      yapmıyordu). AdMob eklendiği için geri eklendi. BUNUN BEDELİ VAR ve
+      yayından önce karşılanmalı:
+        · Play Data Safety: "Device or other IDs → Advertising ID,
+          collected, shared (ads)" olarak beyan edilmeli.
+        · docs/gizlilik-politikasi.html'e reklam bölümü eklenmeli.
+      Oyun İÇİNDEKİ gizlilik metni kendiliğinden düzelir (Ads.hasAdProvider),
+      mağazadaki sayfa DÜZELMEZ — o elle güncellenir.
+
+      Reklamsız yayınlamaya karar verilirse: src/main.ts'teki initAds
+      çağrısı ve bu izin birlikte kaldırılır, oyun eksiksiz çalışmaya
+      devam eder.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+      Android 11+ paket görünürlüğü. Bu sorgular yoksa reklam SDK'sı Play
+      Hizmetleri'ndeki reklam servisine bağlanamaz ve yükleme hata kodu 0
+      ile düşer. S23'te sorgu eklenince ödüllü ve geçiş reklamı yüklendi.
+    -->
+    <queries>
+        <intent>
+            <action android:name="com.google.android.gms.ads.service.START" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.ads.service.CACHE" />
+        </intent>
+    </queries>
+</manifest>

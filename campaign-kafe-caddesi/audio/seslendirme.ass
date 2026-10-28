@@ -1,0 +1,16 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Barlow Condensed,52,&H00D7F3FF,&H00D7F3FF,&H00322D08,&H80322D08,-1,0,0,0,100,100,0,0,3,9,0,2,80,80,260,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.02,0:00:01.43,Default,,0,0,0,,{\an2\pos(540,1660)\fad(40,70)}Her şey bir çayla başlar.
+Dialogue: 0,0:00:04.34,0:00:05.79,Default,,0,0,0,,{\an2\pos(540,1660)\fad(40,70)}Yeni misafirlere yer aç.
+Dialogue: 0,0:00:08.70,0:00:09.92,Default,,0,0,0,,{\an2\pos(540,1660)\fad(40,70)}Kazancınla ekibini kur.
+Dialogue: 0,0:00:15.08,0:00:17.39,Default,,0,0,0,,{\an2\pos(540,1380)\fad(40,70)}Kafe Caddesi, şimdi sıra sende.

@@ -1,0 +1,41 @@
+{
+  "name": "fincan-sokagi",
+  "private": true,
+  "version": "1.0.6",
+  "type": "module",
+  "description": "Fincan Sokagi - 3D idle arcade cafe tycoon for the web",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "sync": "npm run build && cap sync",
+    "android:open": "npm run sync && cap open android",
+    "android:apk": "npm run sync && cd android && .\\gradlew.bat assembleDebug",
+    "android:release": "npm run sync && cd android && .\\gradlew.bat bundleRelease",
+    "assets": "node tools/make-assets.mjs && capacitor-assets generate --android --ios",
+    "ios:open": "npm run sync && cap open ios",
+    "ios:sync": "npm run sync && cap sync ios",
+    "assets:make": "node tools/make-assets.mjs",
+    "cowork:shorts": "node tools/cowork-shorts.mjs",
+    "cowork:audit": "node tools/cowork-audit.mjs"
+  },
+  "dependencies": {
+    "@capacitor-community/admob": "^8.1.0",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.0",
+    "@capacitor/local-notifications": "^8.2.1",
+    "@capacitor/preferences": "^8.0.1",
+    "three": "0.169.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.0",
+    "@types/three": "0.169.0",
+    "typescript": "5.6.3",
+    "vite": "5.4.10"
+  }
+}

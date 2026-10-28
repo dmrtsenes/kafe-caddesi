@@ -1,0 +1,661 @@
+{
+  "state": {
+    "money": 5308.405321874999,
+    "totalEarned": 20695.405821875003,
+    "revenueEarned": 20695.405821875003,
+    "reputation": 100,
+    "upgrades": {
+      "speed": 2,
+      "capacity": 2,
+      "hands": 1,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffCount": {
+      "waiter": 1,
+      "cashier": 1,
+      "barista": 0,
+      "busser": 1
+    },
+    "staffLevel": {
+      "waiter": 0,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "staffByLocation": {
+      "kose": {
+        "waiter": 1,
+        "cashier": 1,
+        "barista": 0,
+        "busser": 1
+      }
+    },
+    "staffLevelByLocation": {
+      "kose": {
+        "waiter": 0,
+        "cashier": 0,
+        "barista": 0,
+        "busser": 0
+      }
+    },
+    "staffHireDeposits": {
+      "kose": {}
+    },
+    "zones": [
+      "kose:a1",
+      "kose:t1",
+      "kose:a3",
+      "kose:a4",
+      "kose:t2",
+      "kose:t3",
+      "kose:a5",
+      "kose:t4"
+    ],
+    "locations": [
+      "kose"
+    ],
+    "seenLocations": [
+      "kose"
+    ],
+    "activeLocation": "kose",
+    "goalIndex": 17,
+    "goalProgress": 0,
+    "goalBase": 0,
+    "prestigePoints": 0,
+    "prestigeCount": 0,
+    "prestigeLevels": {},
+    "dailyDay": "2026-09-13",
+    "dailyStreak": 0,
+    "dailyClaimed": false,
+    "vacuumHinted": true,
+    "dailyMissionDone": [
+      false,
+      false,
+      false
+    ],
+    "dailyMissions": [
+      {
+        "counter": "mopped",
+        "target": 10
+      },
+      {
+        "counter": "dashers",
+        "target": 1
+      },
+      {
+        "counter": "orders",
+        "target": 25
+      }
+    ],
+    "dailyBase": {
+      "served": 0,
+      "cleaned": 0,
+      "mopped": 0,
+      "refills": 0,
+      "dashers": 0,
+      "orders": 0
+    },
+    "regularVisits": {},
+    "regularMilestones": {},
+    "coupons": 0,
+    "weekKey": "2026-W37",
+    "weekBase": 0,
+    "weekClaimed": false,
+    "festivalWeek": "2026-W37",
+    "festivalBase": 0,
+    "festivalClaimed": false,
+    "festivalGoalId": "f_misafir",
+    "festivalGoalTarget": 100,
+    "adBuffs": {
+      "happy": 0,
+      "robot": 0,
+      "usta": 0,
+      "rush": 0,
+      "tip": 0,
+      "shield": 0
+    },
+    "dailyPrevDone": {},
+    "weekPrevServed": 0,
+    "festPrevItem": 0,
+    "stats": {
+      "sold": 124,
+      "orders": 85,
+      "served": 124,
+      "dashers": 5,
+      "angry": 10,
+      "stationUpgrades": 6,
+      "cleaned": 40,
+      "tablesCleaned": 21,
+      "mopped": 27,
+      "refills": 0,
+      "produced": {},
+      "sale": {
+        "cay": 45,
+        "latte": 59,
+        "tost": 20
+      }
+    },
+    "statsBase": {
+      "served": 0,
+      "cleaned": 0,
+      "tablesCleaned": 0,
+      "mopped": 0,
+      "refills": 0,
+      "dashers": 0,
+      "stationUpgrades": 0
+    },
+    "playTime": 1681.866633332461,
+    "tutorialStep": 7,
+    "cosmetics": {
+      "wall": "krem",
+      "floor": "mese",
+      "table": "bal",
+      "uniform": "sokak"
+    },
+    "cosmeticsOwned": []
+  },
+  "worlds": {
+    "kose": {
+      "stations": {
+        "k_semaver": {
+          "s": 2,
+          "c": 3,
+          "o": 12,
+          "p": 0.01896991822016081,
+          "m": 0,
+          "mv": 0,
+          "t": 66,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_cay": {
+          "s": 0,
+          "c": 1,
+          "o": 6,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": [
+            "cay",
+            "cay",
+            "cay",
+            "cay",
+            "cay",
+            "cay"
+          ]
+        },
+        "k_tezgah_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 23,
+          "mv": 5209.594178125,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_supurge": {
+          "s": 0,
+          "c": 0,
+          "o": 1,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_kova_1": {
+          "s": 0,
+          "c": 0,
+          "o": 12,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 46,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0.6276477608129231,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_3": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_4": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_5": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_6": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_sutbar": {
+          "s": 0,
+          "c": 0,
+          "o": 6,
+          "p": 0.01111111111102181,
+          "m": 0,
+          "mv": 0,
+          "t": 66,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_latte": {
+          "s": 0,
+          "c": 0,
+          "o": 1,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": [
+            "latte"
+          ]
+        },
+        "k_tost": {
+          "s": 0,
+          "c": 0,
+          "o": 4,
+          "p": 0.6111111111110432,
+          "m": 0,
+          "mv": 0,
+          "t": 25,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_tost": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": []
+        },
+        "k_tezgah_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_kova_2": {
+          "s": 0,
+          "c": 0,
+          "o": 4,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 4,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_wc_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {
+            "pecete": 6,
+            "kagit": 6
+          }
+        },
+        "k_wc_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {
+            "pecete": 6,
+            "kagit": 6
+          }
+        },
+        "k_pecete": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_kagit": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_7": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_8": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_9": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_waffle": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_waffle": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": []
+        },
+        "k_frappe": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_frappe": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": []
+        },
+        "k_vip_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_vip_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_vip_3": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        }
+      },
+      "spills": {
+        "s": [
+          {
+            "x": -8.818436620011926,
+            "z": 19.11630406910554,
+            "k": 2,
+            "a": 1
+          },
+          {
+            "x": 5.490391402855985,
+            "z": 3.891919881893771,
+            "k": 2,
+            "a": 0.45
+          },
+          {
+            "x": 6.27682245206088,
+            "z": 10.436094058118762,
+            "k": 2,
+            "a": 1
+          },
+          {
+            "x": -4.9863257676363,
+            "z": 3.646723327413202,
+            "k": 2,
+            "a": 0.9125
+          },
+          {
+            "x": -3.5182398953750873,
+            "z": 4.300869855296796,
+            "k": 2,
+            "a": 0.8292682926829268
+          }
+        ]
+      },
+      "grime": {
+        "c": 0.6,
+        "w": 60,
+        "h": 66,
+        "d": "AAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZYY0ZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGWGNGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkYAAAB2RgAAAABGRgAAAEZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARgAAAABgWAAAAABGRgAAAEZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAAdnIAAABGZwAAAABGRgAAAEZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARlhuY2dYWFVYVU1GRkZGRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZGRk1VYHlgRk1YVVhYRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZY//+aj4j//3JVbv//XEZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARk3/////ef////////b/a1hGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARv//////////////gdX/uHZgSkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARmf////////////////////////VRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkb/WHbEg//////////RqU3k/53nZ0ZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARmP/Rkb/UU3/Z///9v//m/8AAAAAAAAAAABGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARv8AAAAAAAAAAAD//7T///8AAAAAAAAAAABGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARv8AAAAAAAAAAAD///////8AAAAAAAAAAABGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARpn/UUb2Rp3yh///////////xsJrRlVYRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARqTV9kb/////////////////////qVV5RkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARq9G/7T/////////////5P///////8ZVRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARgAAgf////T///+M//////////////+IRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUeBGbvj///////+E+f/////6///////RZ0ZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARohTj8b///////+a/////4b////////271hGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARmdnSvb/3P//////////Z3v///////////9NRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARk2Tdv//8v//////////////////AP//AAD/RkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//0wAAI/y/////6kAAE3/////AAAAAAD/RgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AEYAAEYA//8AAAAAAAAA////7gAAAEb/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkb/AEYAAHQA//8AAAAAAAAA////AAAAAGv/YEYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARn3t/////////////0pGRkZY////AABVAAD/ckYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARtj//////////////1xcVVVm//////9rRtn/RkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/tP8AAHb/l////1xGRkb/////XNlGa/1yRgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB9VQAAAABujP///wAAAFX/////v0ZG/0ZGRgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZ5AAAAAAAAj/8AAAAAAAAA//9mv0bkhEZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZ9AAAAAAAAa/8AAAAAAAAA//9RqX39RkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkaETQAAAACMjP///wAAAGv///+/Rv9GRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZuUU0AAP+gRrT//0ZNXJf///+//X1GRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZnUVVnY2D/RqX//0ZnTf/////n5EZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGbkZGRkbC56L//0ZGRv//////RkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGZ1FGRkZG/27//8ZGRv////9uRkZGRkZGRgAAAAAAAAAAAAAAAAAAAABGAAAAAAAAAAAAAAAAAAAAAABGRm5GRkZGXP////9GRv////9GRkZGRkZGRgAAAAAAAAAAAAAAAAAAAABGRkZGRkZGRkZGRkZGRkYARkZGRmdRAAAAAP////9GRv///wAAAAAARkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZuRkZGRuf///9GY////0ZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZgWEZGRmf///9Gc////0ZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGckZGRkb///9G////xUZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGVWNGRkb///9G////RkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRnJGRkbc//9G////RkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZyRkZr//9r////RkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZjVUZG//9u////RkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRgBGckZG//+T//+lRkZGAABGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGWGBG//////9GRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRnJG0f////9GRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkpuj/////9GRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZnXP////9GRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGAAAAAAAAAAAAAAAAAAAAAABGRkZGRgBGRkZGbv////9GRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAABGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGVZf///9GAAAARkZGRkZGRgAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRsP//+dGAAAARkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkYAAABGRv///1hGRgAAAEZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkYAAABGRv///0ZGRgAAAEZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRv///0ZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZG"
+      },
+      "hygiene": 53.195195453902805,
+      "income": 25.231737820448124,
+      "pads": {},
+      "sideActivities": {
+        "v": 1,
+        "activities": {
+          "garden": {
+            "id": "garden",
+            "level": 0,
+            "completed": 0,
+            "order": 0,
+            "phase": "locked",
+            "lines": [],
+            "workProgress": 0,
+            "cleanProgress": 0,
+            "reward": 0,
+            "bonus": 0,
+            "purchaseDeposit": 0
+          },
+          "courtyard": {
+            "id": "courtyard",
+            "level": 0,
+            "completed": 0,
+            "order": 0,
+            "phase": "locked",
+            "lines": [],
+            "workProgress": 0,
+            "cleanProgress": 0,
+            "reward": 0,
+            "bonus": 0,
+            "purchaseDeposit": 0
+          }
+        }
+      }
+    }
+  }
+}

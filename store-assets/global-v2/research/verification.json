@@ -1,0 +1,241 @@
+{
+  "checkedAt": "2026-09-13T09:09:56.208Z",
+  "protectedProjectFiles": 341,
+  "changedProjectFiles": [],
+  "gameCodeUnchanged": true,
+  "gameIdentifiersUnchanged": true,
+  "captures": [
+    {
+      "lang": "tr",
+      "count": 6,
+      "errors": [],
+      "failedRequests": [],
+      "nativeLanguage": true
+    },
+    {
+      "lang": "en",
+      "count": 6,
+      "errors": [],
+      "failedRequests": [],
+      "nativeLanguage": true
+    }
+  ],
+  "glyphs": [
+    {
+      "font": "paytoneone-PaytoneOne-Regular.ttf",
+      "checked": "ÇĞİÖŞÜçğıöşüÉé",
+      "missing": []
+    },
+    {
+      "font": "barlowcondensed-BarlowCondensed-Bold.ttf",
+      "checked": "ÇĞİÖŞÜçğıöşüÉé",
+      "missing": []
+    }
+  ],
+  "gallery": [
+    {
+      "width": 1440,
+      "overflow": false,
+      "language": "tr",
+      "brokenImages": []
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "language": "en",
+      "brokenImages": []
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "language": "tr",
+      "brokenImages": []
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "language": "en",
+      "brokenImages": []
+    }
+  ],
+  "captionCoverage": 0.18333333333333332,
+  "gameplayPixelIdentityVerified": true,
+  "finalFiles": [
+    {
+      "file": "final/en/feature-graphic-1024x500.png",
+      "bytes": 926740,
+      "sha256": "4f5a141c2ba22dc14224807b4a26202f145e39117d3f091776eca89f5dcca4a2",
+      "width": 1024,
+      "height": 500,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/en/logo-transparent.png",
+      "bytes": 47282,
+      "sha256": "bcb4a35b754862c2021459405bd3ebc3e7cc7fc2079c0455838bfc79eeb3d14c",
+      "width": 1200,
+      "height": 680,
+      "channels": 4,
+      "space": "srgb",
+      "hasTrueTransparency": true
+    },
+    {
+      "file": "final/en/logo.svg",
+      "bytes": 301193,
+      "sha256": "e4d5d0974d0925082de5d1086b2acb982b112028aa89e42daff1d777d1941957"
+    },
+    {
+      "file": "final/en/screenshots/01-serve.png",
+      "bytes": 1138684,
+      "sha256": "cf2ea2e26b6db287b19bfca145d01cf9f49baf671878bd247f5471bf52032f40",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/en/screenshots/02-production.png",
+      "bytes": 579522,
+      "sha256": "d7528e1676844929771f775b00aa680c9682975061f922fca267308ebe146c29",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/en/screenshots/03-clean.png",
+      "bytes": 937707,
+      "sha256": "a1d4baa125394e03241244cabb581173a76c267cb1023162a3fe500cf13fe556",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/en/screenshots/04-cash.png",
+      "bytes": 842653,
+      "sha256": "d1373432180ab9144b045edecbe7ebc1014978732589c358cc3fa7ba2083e404",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/en/screenshots/05-staff.png",
+      "bytes": 213027,
+      "sha256": "dd2caefcc80ee6247a8c31ceb0cdd87efb77d1e97d0f110e7ea5bfe747bdbae6",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/en/screenshots/06-growth.png",
+      "bytes": 1104679,
+      "sha256": "23dc9772bfc50c2b0a5bdfa7f8767628340e6b6a563e9b712da269f0608f60ee",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/shared/icon-google-play-512.png",
+      "bytes": 554806,
+      "sha256": "e50ec72d4d7f3cd4074c8588565762bb2470375f97b948af4e48ac99feb1842f",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "space": "srgb"
+    },
+    {
+      "file": "final/shared/icon-master-1024.png",
+      "bytes": 2002571,
+      "sha256": "fa9e416041ed42c38f087163cd0f7cf573998746517d0b629b3065b845ab71fc",
+      "width": 1024,
+      "height": 1024,
+      "channels": 4,
+      "space": "srgb"
+    },
+    {
+      "file": "final/tr/feature-graphic-1024x500.png",
+      "bytes": 928819,
+      "sha256": "f093b7782d7ef87d726a7d5fb16b5f0eeb2785441f568a7744728af59e255e3b",
+      "width": 1024,
+      "height": 500,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/tr/logo-transparent.png",
+      "bytes": 49156,
+      "sha256": "6194c6ffda18f1a2558b6bf8e69951fbb6f7c80bb93692605b8ee1a109efbc0a",
+      "width": 1200,
+      "height": 680,
+      "channels": 4,
+      "space": "srgb",
+      "hasTrueTransparency": true
+    },
+    {
+      "file": "final/tr/logo.svg",
+      "bytes": 301197,
+      "sha256": "77f09d25345dd773c608bad61a24938795a57c6970c70b45f38caf1ffc81329a"
+    },
+    {
+      "file": "final/tr/screenshots/01-serve.png",
+      "bytes": 1058804,
+      "sha256": "1eab72aa71c82f794f061ccb6020a5d0b54aa374780047a9c451f71434d80be6",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/tr/screenshots/02-production.png",
+      "bytes": 562588,
+      "sha256": "cbb9efdd34c12b5783301ee03830320e677cec818dea2bf99c7c258c9b664819",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/tr/screenshots/03-clean.png",
+      "bytes": 897948,
+      "sha256": "f5bf67bde7e6c3f8499accb2e4928b02800b833a846a33122c10180cf77a5480",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/tr/screenshots/04-cash.png",
+      "bytes": 834201,
+      "sha256": "ec28def0f34ad69199e863ad7c63fc618206dcd8d557272de47213f3c60c4f25",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/tr/screenshots/05-staff.png",
+      "bytes": 215329,
+      "sha256": "08605afbb0eb02adcde8349e0eb49659d67b9a1204e7851ab5f48a9b40823c35",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    },
+    {
+      "file": "final/tr/screenshots/06-growth.png",
+      "bytes": 999603,
+      "sha256": "9c591f36b0a27e8c9825b0c2bc0784ad4575e204a6b7c8c816c6a88ada4f7902",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb"
+    }
+  ],
+  "rightsStatus": "CONDITIONAL: current cast distribution rights unverified per docs/KARAKTER-KAYNAGI.md",
+  "asoStatus": "Prelaunch qualitative recommendation; no measured keyword volume, difficulty or conversion lift."
+}

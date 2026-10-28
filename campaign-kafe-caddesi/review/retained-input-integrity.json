@@ -1,0 +1,6 @@
+{
+  "baseline": "campaign-demlio/source/game-input-hashes.json",
+  "checked": 271,
+  "differences": [],
+  "scope": "Comparison against pre-existing campaign input manifest; new full2 files are separate."
+}

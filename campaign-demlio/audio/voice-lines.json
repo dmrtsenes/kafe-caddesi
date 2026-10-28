@@ -1,0 +1,37 @@
+[
+  {
+    "id": "01-hook",
+    "text": "Şu masaya bak.",
+    "spoken": "Şu masaya bak.",
+    "phase": 0,
+    "offset": 0.04
+  },
+  {
+    "id": "02-start",
+    "text": "Küçük bir başlangıç.",
+    "spoken": "Küçük bir başlangıç.",
+    "phase": 2,
+    "offset": 0.12
+  },
+  {
+    "id": "03-service",
+    "text": "Bir adım daha.",
+    "spoken": "Bir adım daha.",
+    "phase": 3,
+    "offset": 0.34
+  },
+  {
+    "id": "04-team",
+    "text": "Birlikte daha fazlası.",
+    "spoken": "Birlikte daha fazlası.",
+    "phase": 5,
+    "offset": 0.5
+  },
+  {
+    "id": "05-brand",
+    "text": "Demlio. Sıra sende.",
+    "spoken": "Demliyo. Sıra sende.",
+    "phase": 7,
+    "offset": 0.04
+  }
+]

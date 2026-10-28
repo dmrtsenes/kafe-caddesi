@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "files": [
+    {
+      "path": "store/icon-512.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "alpha": true,
+      "bytes": 88830
+    },
+    {
+      "path": "store/feature-1024x500.png",
+      "width": 1024,
+      "height": 500,
+      "channels": 3,
+      "alpha": false,
+      "bytes": 170751
+    },
+    {
+      "path": "store/screenshots/01-servis.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "alpha": false,
+      "bytes": 798550
+    },
+    {
+      "path": "store/screenshots/02-hazirlik.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "alpha": false,
+      "bytes": 272727
+    },
+    {
+      "path": "store/screenshots/03-temizlik.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "alpha": false,
+      "bytes": 658327
+    },
+    {
+      "path": "store/screenshots/04-kazanc.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "alpha": false,
+      "bytes": 264738
+    },
+    {
+      "path": "store/screenshots/05-ekip.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "alpha": false,
+      "bytes": 460669
+    },
+    {
+      "path": "store/screenshots/06-raf.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "alpha": false,
+      "bytes": 449036
+    },
+    {
+      "path": "brand/logo-transparent.png",
+      "width": 1200,
+      "height": 480,
+      "channels": 4,
+      "alpha": true,
+      "bytes": 24996
+    }
+  ],
+  "taglineFraction": 0.16666666666666666,
+  "aspectPreserved": true,
+  "storeRulesChecked": "2026-09-13",
+  "rightsCleared": false
+}

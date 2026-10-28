@@ -1,0 +1,41 @@
+import {chromium} from 'playwright';
+import {createServer} from 'vite';
+import {readFile,writeFile,mkdir,readdir} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import sharp from 'sharp';
+const root=resolve('campaign-demlio'),ink='#123b39',teal='#157f73',cream='#fff3d8',gold='#ffce78';
+const font=await readFile(resolve(root,'source/fonts/paytoneone-PaytoneOne-Regular.ttf'));
+const compact=await readFile(resolve(root,'source/fonts/barlowcondensed-BarlowCondensed-Bold.ttf'));
+const css=`@font-face{font-family:Paytone;src:url(data:font/ttf;base64,${font.toString('base64')})}@font-face{font-family:Barlow;src:url(data:font/ttf;base64,${compact.toString('base64')});font-weight:700}`;
+const svg=(w,h,body)=>`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><style>${css}</style><linearGradient id="bg" x2=".85" y2="1"><stop stop-color="${teal}"/><stop offset="1" stop-color="${ink}"/></linearGradient></defs>${body}</svg>`;
+const imageData=async(file)=>'data:image/png;base64,'+(await readFile(file)).toString('base64');
+// Original vector mark: an actual tea-glass silhouette on a serving tray.
+const mark=`<g><path d="M-62-70 C-54-30-24-6-37 40 Q0 67 37 40 C24-6 54-30 62-70Z" fill="${cream}"/><path d="M-48-46C-32-16-23 10-26 34Q0 48 26 34C23 10 32-16 48-46Z" fill="#cb7849"/><ellipse cy="-70" rx="62" ry="14" fill="${cream}"/><ellipse cy="-69" rx="47" ry="7" fill="#b66530"/><path d="M-89 65Q0 90 89 65" fill="none" stroke="${gold}" stroke-width="17" stroke-linecap="round"/><path d="M-20-108C-39-129-2-137-20-159M19-109C0-130 37-138 19-161" fill="none" stroke="${cream}" stroke-width="11" stroke-linecap="round"/></g>`;
+const server=await createServer({server:{host:'127.0.0.1',port:0,open:false,hmr:false,watch:null}});await server.listen();let browser;
+const entries=[];
+try{
+ browser=await chromium.launch({channel:'chrome',headless:true});const page=await browser.newPage();
+ async function output(name,w,h,body,{alpha=false,target='brand'}={}){
+  const code=svg(w,h,body);await writeFile(resolve(root,'source',name+'.svg'),code);await page.setViewportSize({width:w,height:h});await page.setContent(`<style>html,body{margin:0;background:transparent}${css}</style>${code}`);await page.evaluate(async()=>{await document.fonts.load('80px Paytone');await document.fonts.load('700 40px Barlow');await Promise.all([...document.images].map(i=>i.decode()));await document.fonts.ready;});
+  const buffer=await page.screenshot({omitBackground:true});const out=resolve(root,target,name+'.png');await mkdir(resolve(root,target),{recursive:true});await (alpha?sharp(buffer).ensureAlpha():sharp(buffer).flatten({background:ink}).removeAlpha()).png().toFile(out);entries.push({name,path:out,width:w,height:h,alpha});return out;
+ }
+ await output('logo-transparent',1200,480,`<g transform="translate(140 280) scale(.95)">${mark}</g><text x="279" y="300" font-family="Paytone" font-size="180" fill="${cream}">demlio</text><path d="M295 349Q679 416 1080 349" stroke="${gold}" fill="none" stroke-width="16" stroke-linecap="round"/>`,{alpha:true});
+ await output('logo-dark-transparent',1200,480,`<g transform="translate(140 280) scale(.95)">${mark}</g><text x="279" y="300" font-family="Paytone" font-size="180" fill="${ink}">demlio</text><path d="M295 349Q679 416 1080 349" stroke="${teal}" fill="none" stroke-width="16" stroke-linecap="round"/>`,{alpha:true});
+ const icon=await output('icon-master-1024',1024,1024,`<rect width="1024" height="1024" fill="url(#bg)"/><circle cx="740" cy="245" r="310" fill="${cream}" opacity=".035"/><circle cx="220" cy="820" r="360" fill="${gold}" opacity=".04"/><ellipse cx="512" cy="812" rx="281" ry="59" fill="#062d2d" opacity=".28"/><g transform="translate(512 622) scale(3.35)">${mark}</g>`,{alpha:true});
+ await sharp(icon).resize(512,512,{kernel:'lanczos3'}).png().toFile(resolve(root,'store/icon-512.png'));
+ const report=JSON.parse(await readFile(resolve(root,'review/rehearsal.json'),'utf8'));
+ const files=await readdir(resolve(root,'captures'));
+ const shot=(phase,fraction=.65)=>{const matches=report.samples.filter(s=>s.phase===phase);const m=matches[Math.min(matches.length-1,Math.floor(matches.length*fraction))];if(!m)throw new Error('Missing capture for '+phase);const name=`phase-${phase}-${String(m.frame).padStart(4,'0')}.png`;if(!files.includes(name))throw new Error(name);return resolve(root,'captures',name);};
+ const shots=[{phase:3,title:'Servis sende.',sub:'Çayları masaya yetiştir.',id:'01-servis',f:.63},{phase:2,title:'Sıcacık hazır.',sub:'Üret, tepsine al, yola çık.',id:'02-hazirlik',f:.72},{phase:0,title:'Yeni misafire yer aç.',sub:'Bulaşığı topla. Masayı sil.',id:'03-temizlik',f:.15},{phase:4,title:'Emeğin kazanca dönüşür.',sub:'Kasada birikeni topla.',id:'04-kazanc',f:.55},{phase:5,title:'Ekibini kur.',sub:'Kazancını yeni yardımcına yatır.',id:'05-ekip',f:.66},{phase:6,title:'Birlikte daha fazlası.',sub:'Tezgâhtarın rafları doldursun.',id:'06-raf',f:.86}];
+ for(const [i,s] of shots.entries()){
+  const capture=shot(s.phase,s.f);await sharp(capture).png().toFile(resolve(root,'captures',s.id+'.png'));const uri=await imageData(capture);
+  // Preserve geometry while cropping top/bottom for the 17% editorial header.
+  await output(s.id,1080,1920,`<rect width="1080" height="1920" fill="${ink}"/><image x="0" y="320" width="1080" height="1600" preserveAspectRatio="xMidYMid slice" href="${uri}"/><rect width="1080" height="320" fill="${ink}"/><text x="65" y="73" font-family="Paytone" font-size="34" fill="${gold}">demlio</text><text x="1010" y="73" text-anchor="end" font-family="Barlow" font-size="28" fill="${cream}" opacity=".65">0${i+1} / 06</text><text x="65" y="171" font-family="Paytone" font-size="${s.title.length>24?46:58}" fill="${cream}">${s.title}</text><text x="65" y="250" font-family="Barlow" font-size="41" fill="${gold}">${s.sub}</text><rect y="314" width="1080" height="6" fill="${gold}"/>`,{target:'store/screenshots'});
+ }
+ const feature=await imageData(shot(3,.75));
+ await output('feature-1024x500',1024,500,`<rect width="1024" height="500" fill="${ink}"/><image x="482" y="0" width="542" height="500" href="${feature}" preserveAspectRatio="xMidYMid slice"/><rect x="0" width="515" height="500" fill="${ink}"/><text x="60" y="210" font-family="Paytone" font-size="95" fill="${cream}">demlio</text><path d="M65 250Q245 284 430 250" fill="none" stroke="${gold}" stroke-width="8" stroke-linecap="round"/><text x="64" y="323" font-family="Barlow" font-size="32" fill="${gold}">KENDİ KAFENİN HİKÂYESİNİ YAZ.</text><text x="64" y="376" font-family="Barlow" font-size="25" fill="${cream}">SERVİS • TEMİZLİK • BÜYÜME</text>`,{target:'store'});
+ await output('brand-board',1600,1100,`<rect width="1600" height="1100" fill="${ink}"/><text x="88" y="105" font-family="Barlow" font-size="30" fill="${gold}">DEMLIO / GÖRSEL KİMLİK / 2026</text><g transform="translate(225 365) scale(1.25)">${mark}</g><text x="410" y="412" font-family="Paytone" font-size="208" fill="${cream}">demlio</text><text x="95" y="573" font-family="Barlow" font-size="49" fill="${gold}">Küçük bir masadan kendi kafene.</text>${[ink,teal,cream,gold,'#cb7849'].map((color,i)=>`<rect x="${95+i*288}" y="666" width="258" height="140" rx="20" fill="${color}" stroke="#fff3d8" stroke-opacity=".2"/><text x="${95+i*288}" y="854" font-family="Barlow" font-size="29" fill="${cream}">${color.toUpperCase()}</text>`).join('')}<text x="95" y="973" font-family="Paytone" font-size="40" fill="${cream}">Paytone One</text><text x="600" y="973" font-family="Barlow" font-size="44" fill="${gold}">Barlow Condensed Bold • ÇĞİÖŞÜ çğıöşü</text>`);
+ const thumbs=await Promise.all(shots.map(async(s,i)=>({input:await sharp(resolve(root,'store/screenshots',s.id+'.png')).resize(270,480).toBuffer(),left:i*270,top:0})));
+ await sharp({create:{width:1620,height:480,channels:3,background:ink}}).composite(thumbs).png().toFile(resolve(root,'review/store-contact.png'));
+ await writeFile(resolve(root,'review/brand-files.json'),JSON.stringify(entries,null,2));console.log('Logo, icon, feature, 6 screenshots and editable SVG sources generated.');
+}finally{await browser?.close();await server.close();}

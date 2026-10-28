@@ -1,0 +1,15 @@
+1
+00:00:00,020 --> 00:00:01,434
+Her şey bir çayla başlar.
+
+2
+00:00:04,337 --> 00:00:05,792
+Yeni misafirlere yer aç.
+
+3
+00:00:08,700 --> 00:00:09,925
+Kazancınla ekibini kur.
+
+4
+00:00:15,083 --> 00:00:17,394
+Kafe Caddesi, şimdi sıra sende.

@@ -1,0 +1,43 @@
+import { createServer } from 'vite';
+import { chromium } from 'playwright';
+import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { resolve } from 'node:path';
+
+const out = resolve('store-assets');
+await mkdir(out + '/audit', { recursive: true });
+await mkdir(out + '/captures', { recursive: true });
+const files = [];
+async function walk(dir) { for (const item of await readdir(dir, { withFileTypes: true })) {
+  const path = dir + '/' + item.name;
+  if (item.isDirectory()) await walk(path); else files.push(path);
+}}
+for (const dir of ['src', 'public', 'docs']) await walk(dir);
+files.push('README.md','package.json','package-lock.json','capacitor.config.ts','vite.config.ts','index.html','android/app/build.gradle','android/app/src/main/AndroidManifest.xml');
+const hashes = {};
+for (const path of files) hashes[path] = createHash('sha256').update(await readFile(path)).digest('hex');
+await writeFile(out + '/audit/project-before.json', JSON.stringify(hashes, null, 2));
+const server = await createServer({ configFile: false, cacheDir: out + '/.cache', optimizeDeps: { noDiscovery: true }, server: { host: '127.0.0.1', port: 5187, strictPort: true, open: false, hmr: false, watch: null } });
+await server.listen();
+const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--enable-unsafe-swiftshader'] });
+const context = await browser.newContext({ viewport: { width: 540, height: 960 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'tr-TR' });
+const page = await context.newPage();
+page.setDefaultTimeout(180000);
+const errors = []; page.on('pageerror', e => errors.push(e.message));
+await page.goto('http://127.0.0.1:5187/', { waitUntil: 'domcontentloaded' });
+await page.waitForFunction(() => !!window.__fincan);
+await page.locator('#boot-screen').waitFor({ state: 'detached' });
+await page.evaluate(() => { const g = window.__fincan; g.stop(); g.persistDisabled = true; });
+await page.screenshot({ path: out + '/captures/initial.png' });
+console.log('Initial game captured');
+await page.addScriptTag({ content: await readFile('tools/balance-bot.js','utf8') });
+const bot = await page.evaluate(() => window.__runBalanceBot({minutes: 8, sync: true}));
+await writeFile(out + '/audit/initial-playthrough.json', JSON.stringify(bot,null,2));
+await page.evaluate(() => { const g=window.__fincan; for(let i=0;i<60;i++)g.stepVisual(1/60); g.scene3d.render(); });
+await page.screenshot({ path: out + '/captures/eight-minutes.png' });
+const state = await page.evaluate(() => { const g=window.__fincan,w=g.world; return {state:g.state.save(),world:w.save(),player:{x:g.player.x,z:g.player.z,slots:g.player.slots},stations:w.stations.map(s=>({id:s.id,kind:s.def.kind,item:s.def.item,x:s.x,z:s.z,locked:s.locked,stock:s.output,cash:s.cash,dishes:s.dishes,soil:s.soil})),ui:document.body.innerText,renderer:{width:g.scene3d.renderer.domElement.width,height:g.scene3d.renderer.domElement.height},storage:Object.keys(localStorage)}; });
+await writeFile(out + '/audit/probe.json', JSON.stringify({state,errors},null,2));
+await writeFile(out + '/captures/playthrough-save.json', JSON.stringify(await page.evaluate(()=>({state:window.__fincan.state.save(),worlds:Object.fromEntries([...window.__fincan.worlds].map(([id,w])=>[id,w.save()]))})),null,2));
+console.log(JSON.stringify({served:bot.served,tutorial:bot.tutorialComplete,errors,player:state.player,ui:state.ui,renderer:state.renderer}));
+await browser.close();
+console.log('Read-only preview server available at http://127.0.0.1:5187/');

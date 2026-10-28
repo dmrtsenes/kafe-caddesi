@@ -1,0 +1,109 @@
+{
+  "author": "Quaternius",
+  "license": "CC0-1.0",
+  "generatedBy": "tools/prepare-cafe-cast.mjs",
+  "records": [
+    {
+      "file": "characters/female-casual.glb",
+      "bytes": 1009204,
+      "clips": [
+        "HitRecieve_2",
+        "Idle_Gun",
+        "Idle_Neutral",
+        "Interact",
+        "Run",
+        "Walk",
+        "Wave"
+      ]
+    },
+    {
+      "file": "characters/female-formal.glb",
+      "bytes": 972376,
+      "clips": [
+        "HitRecieve_2",
+        "Idle_Gun",
+        "Idle_Neutral",
+        "Interact",
+        "Run",
+        "Walk",
+        "Wave"
+      ]
+    },
+    {
+      "file": "characters/female-suit.glb",
+      "bytes": 1016352,
+      "clips": [
+        "HitRecieve_2",
+        "Idle_Gun",
+        "Idle_Neutral",
+        "Interact",
+        "Run",
+        "Walk",
+        "Wave"
+      ]
+    },
+    {
+      "file": "characters/female-worker.glb",
+      "bytes": 979392,
+      "clips": [
+        "HitRecieve_2",
+        "Idle_Gun",
+        "Idle_Neutral",
+        "Interact",
+        "Run",
+        "Walk",
+        "Wave"
+      ]
+    },
+    {
+      "file": "characters/male-casual.glb",
+      "bytes": 952992,
+      "clips": [
+        "HitRecieve_2",
+        "Idle_Gun",
+        "Idle_Neutral",
+        "Interact",
+        "Run",
+        "Walk",
+        "Wave"
+      ]
+    },
+    {
+      "file": "characters/male-hoodie.glb",
+      "bytes": 987708,
+      "clips": [
+        "HitRecieve_2",
+        "Idle_Gun",
+        "Idle_Neutral",
+        "Interact",
+        "Run",
+        "Walk",
+        "Wave"
+      ]
+    },
+    {
+      "file": "characters/male-suit.glb",
+      "bytes": 1142764,
+      "clips": [
+        "HitRecieve_2",
+        "Idle_Gun",
+        "Idle_Neutral",
+        "Interact",
+        "Run",
+        "Walk",
+        "Wave"
+      ]
+    },
+    {
+      "file": "animations/library.glb",
+      "bytes": 341736,
+      "clips": [
+        "Idle_Talking_Loop",
+        "PickUp_Table",
+        "Push_Loop",
+        "Sitting_Idle_Loop",
+        "Sitting_Talking_Loop"
+      ]
+    }
+  ]
+}

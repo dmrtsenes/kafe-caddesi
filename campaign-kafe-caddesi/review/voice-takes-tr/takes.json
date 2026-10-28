@@ -1,0 +1,62 @@
+[
+  {
+    "name": "hook-tr",
+    "text": "Her şey bir çayla başlar.",
+    "seed": 121,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "seconds": 1.41375,
+    "transcript": "Her şey bir çayla başlar.",
+    "meanWordProbability": 0.9223519384860992
+  },
+  {
+    "name": "welcome-tr",
+    "text": "Yeni misafirlere yer aç.",
+    "seed": 122,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "seconds": 1.455125,
+    "transcript": "Yeni misafirlere yer aç.",
+    "meanWordProbability": 0.9478665627539158
+  },
+  {
+    "name": "grow-tr",
+    "text": "Kazancınla ekibini kur.",
+    "seed": 123,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "seconds": 1.2245,
+    "transcript": "Kazancınla ekibini kur.",
+    "meanWordProbability": 0.8905070390966204
+  },
+  {
+    "name": "brand-tr",
+    "text": "Kafe Caddesi. Sıra sende.",
+    "seed": 124,
+    "exaggeration": 0.3,
+    "cfg_weight": 0.5,
+    "seconds": 1.8859583333333334,
+    "transcript": "Kafe caddesi. Sıra sende.",
+    "meanWordProbability": 0.7307813974718252
+  },
+  {
+    "name": "brand-tr-b",
+    "text": "Kafe Caddesi. Sıra sende.",
+    "seed": 125,
+    "exaggeration": 0.25,
+    "cfg_weight": 0.3,
+    "seconds": 1.8170833333333334,
+    "transcript": "Kafe caddesi. Sıra sende.",
+    "meanWordProbability": 0.7421019872029623
+  },
+  {
+    "name": "brand-tr-c",
+    "text": "Kafe Caddesi, şimdi sıra sende.",
+    "seed": 126,
+    "exaggeration": 0.25,
+    "cfg_weight": 0.5,
+    "seconds": 2.3108333333333335,
+    "transcript": "Kafe caddesi. Şimdi sıra sende.",
+    "meanWordProbability": 0.7563880388935407
+  }
+]

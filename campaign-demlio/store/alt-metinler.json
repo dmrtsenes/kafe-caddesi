@@ -1,0 +1,32 @@
+[
+  {
+    "file": "01-servis.png",
+    "title": "Servis sende.",
+    "alt": "Oyuncu tepsisindeki çayı iki müşterinin oturduğu masaya servis ediyor."
+  },
+  {
+    "file": "02-hazirlik.png",
+    "title": "Sıcacık hazır.",
+    "alt": "Oyuncu semaverden çıkan çayları servis tepsisine alıyor."
+  },
+  {
+    "file": "03-temizlik.png",
+    "title": "Yeni misafire yer aç.",
+    "alt": "Kirli masada kalan fincan ve peçeteler toplanmayı bekliyor."
+  },
+  {
+    "file": "04-kazanc.png",
+    "title": "Emeğin kazanca dönüşür.",
+    "alt": "Oyuncu gerçek servis gelirini kafedeki kasadan topluyor."
+  },
+  {
+    "file": "05-ekip.png",
+    "title": "Ekibini kur.",
+    "alt": "Oyuncu tezgâhtar işe alma karesinde kalan bedeli ödüyor."
+  },
+  {
+    "file": "06-raf.png",
+    "title": "Birlikte daha fazlası.",
+    "alt": "İşe alınan tezgâhtar üretilen çayı paket rafına yerleştiriyor."
+  }
+]

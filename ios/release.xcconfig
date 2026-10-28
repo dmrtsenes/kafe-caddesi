@@ -1,0 +1,4 @@
+// Fallback Google Mobile Ads iOS App ID prevents GADInvalidInitializationException
+// before the live iOS AdMob App ID is obtained after App Store approval.
+// Codemagic overwrites this automatically when IOS_ADMOB_APP_ID is set.
+ADMOB_APP_ID = ca-app-pub-3940256099942544~1458002511

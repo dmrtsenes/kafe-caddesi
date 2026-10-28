@@ -1,0 +1,1034 @@
+{
+  "state": {
+    "state": {
+      "money": 492.99999999999994,
+      "totalEarned": 1248,
+      "revenueEarned": 1248,
+      "reputation": 100,
+      "upgrades": {
+        "speed": 0,
+        "capacity": 1,
+        "hands": 0,
+        "charm": 0,
+        "vault": 0
+      },
+      "staffCount": {
+        "waiter": 1,
+        "cashier": 0,
+        "barista": 0,
+        "busser": 0
+      },
+      "staffLevel": {
+        "waiter": 0,
+        "cashier": 0,
+        "barista": 0,
+        "busser": 0
+      },
+      "staffByLocation": {
+        "kose": {
+          "waiter": 1,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        }
+      },
+      "staffLevelByLocation": {
+        "kose": {
+          "waiter": 0,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        }
+      },
+      "staffHireDeposits": {},
+      "zones": [
+        "kose:a1",
+        "kose:t1",
+        "kose:a3"
+      ],
+      "locations": [
+        "kose"
+      ],
+      "seenLocations": [
+        "kose"
+      ],
+      "activeLocation": "kose",
+      "goalIndex": 9,
+      "goalProgress": 16,
+      "goalBase": 0,
+      "prestigePoints": 0,
+      "prestigeCount": 0,
+      "prestigeLevels": {},
+      "dailyDay": "2026-09-13",
+      "dailyStreak": 0,
+      "dailyClaimed": false,
+      "vacuumHinted": true,
+      "dailyMissionDone": [
+        false,
+        false,
+        false
+      ],
+      "dailyMissions": [
+        {
+          "counter": "mopped",
+          "target": 10
+        },
+        {
+          "counter": "dashers",
+          "target": 1
+        },
+        {
+          "counter": "orders",
+          "target": 25
+        }
+      ],
+      "dailyBase": {
+        "served": 0,
+        "cleaned": 0,
+        "mopped": 0,
+        "refills": 0,
+        "dashers": 0,
+        "orders": 0
+      },
+      "regularVisits": {},
+      "regularMilestones": {},
+      "coupons": 0,
+      "weekKey": "2026-W37",
+      "weekBase": 0,
+      "weekClaimed": false,
+      "festivalWeek": "2026-W37",
+      "festivalBase": 0,
+      "festivalClaimed": false,
+      "festivalGoalId": "f_misafir",
+      "festivalGoalTarget": 100,
+      "adBuffs": {
+        "happy": 0,
+        "robot": 0,
+        "usta": 0,
+        "rush": 0,
+        "tip": 0,
+        "shield": 0
+      },
+      "dailyPrevDone": {},
+      "weekPrevServed": 0,
+      "festPrevItem": 0,
+      "stats": {
+        "sold": 26,
+        "orders": 18,
+        "served": 26,
+        "dashers": 1,
+        "angry": 2,
+        "stationUpgrades": 0,
+        "cleaned": 8,
+        "tablesCleaned": 7,
+        "mopped": 7,
+        "refills": 0,
+        "produced": {},
+        "sale": {
+          "cay": 24,
+          "latte": 2
+        }
+      },
+      "statsBase": {
+        "served": 0,
+        "cleaned": 0,
+        "tablesCleaned": 0,
+        "mopped": 0,
+        "refills": 0,
+        "dashers": 0,
+        "stationUpgrades": 0
+      },
+      "playTime": 480.88330000016697,
+      "tutorialStep": 7,
+      "cosmetics": {
+        "wall": "krem",
+        "floor": "mese",
+        "table": "bal",
+        "uniform": "sokak"
+      },
+      "cosmeticsOwned": []
+    },
+    "world": {
+      "stations": {
+        "k_semaver": {
+          "s": 0,
+          "c": 0,
+          "o": 6,
+          "p": 0.009240740740699582,
+          "m": 0,
+          "mv": 0,
+          "t": 38,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_cay": {
+          "s": 0,
+          "c": 0,
+          "o": 8,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": [
+            "cay",
+            "cay",
+            "cay",
+            "cay",
+            "cay",
+            "cay",
+            "cay",
+            "cay"
+          ]
+        },
+        "k_tezgah_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 7,
+          "mv": 605,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0.2991332842843145,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 1,
+          "k": 0.65,
+          "cl": 0,
+          "u": {}
+        },
+        "k_supurge": {
+          "s": 0,
+          "c": 0,
+          "o": 1,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_kova_1": {
+          "s": 0,
+          "c": 0,
+          "o": 8,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 8,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_3": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_4": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_5": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_6": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_sutbar": {
+          "s": 0,
+          "c": 0,
+          "o": 6,
+          "p": 0.011111111111092864,
+          "m": 0,
+          "mv": 0,
+          "t": 16,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_latte": {
+          "s": 0,
+          "c": 0,
+          "o": 8,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": [
+            "latte",
+            "latte",
+            "latte",
+            "latte",
+            "latte",
+            "latte",
+            "latte",
+            "latte"
+          ]
+        },
+        "k_tost": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_tost": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": []
+        },
+        "k_tezgah_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_kova_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_wc_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {
+            "pecete": 6,
+            "kagit": 6
+          }
+        },
+        "k_wc_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {
+            "pecete": 6,
+            "kagit": 6
+          }
+        },
+        "k_pecete": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_kagit": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_7": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_8": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_masa_9": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_waffle": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_waffle": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": []
+        },
+        "k_frappe": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_raf_frappe": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {},
+          "ct": []
+        },
+        "k_vip_1": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_vip_2": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        },
+        "k_vip_3": {
+          "s": 0,
+          "c": 0,
+          "o": 0,
+          "p": 0,
+          "m": 0,
+          "mv": 0,
+          "t": 0,
+          "d": 0,
+          "k": 0,
+          "cl": 0,
+          "u": {}
+        }
+      },
+      "spills": {
+        "s": [
+          {
+            "x": 8.77711366787553,
+            "z": 19.620131009351468,
+            "k": 2,
+            "a": 1
+          },
+          {
+            "x": -0.657726436237761,
+            "z": 4.8829944813609,
+            "k": 2,
+            "a": 1
+          },
+          {
+            "x": -4.473208454365733,
+            "z": -0.5446334471512668,
+            "k": 2,
+            "a": 0.8072289156626506
+          },
+          {
+            "x": -7.601591994961478,
+            "z": 2.0651107585649355,
+            "k": 2,
+            "a": 1
+          },
+          {
+            "x": -3.926902053505182,
+            "z": 3.308076143264771,
+            "k": 0,
+            "a": 1
+          }
+        ]
+      },
+      "grime": {
+        "c": 0.6,
+        "w": 60,
+        "h": 66,
+        "d": "AAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkYAAABGRgAAAABGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARgAAAABGRgAAAABGRkZGRkZGRkZGRkZGRkZGRkYAAEZGRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAAAARkYAAABGRgAAAABGRkZGRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAABGRkZGRkZGcUb/oWBGRv///25GRkZGRkZGRgAAAAAAAAAAAAAAAAAAAABGAAAAAAAAAAAAAAAAAAAAAABGRkZGRkZGUGb/uWtGRv///0pGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAABGRkZGRkZGRkZGRkZGRkYARkZGRkZGAAAAAGaw/2tGRv/c/wAAAAAARkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZ5/25GRv/y/0ZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZQ/2tGRv//tEZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZG/2tGY///a0ZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZG/25Gs///a0ZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZG/7dG0P//SkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZG//9G////RkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGUf9G///VRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRgBGRkZGRv9G//92RkZGAABGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRv9N//9uRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRv+s//9rRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRv/t//9GRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRv////9GRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGAAAAAAAAAAAAAAAAAAAAAABGRkZGRgBGRkZGRpP//79GRkZGRkZGRkZGRgAAAAAAAAAAAAAAAAAAAABGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkb//5NGAAAARkZGRkZGRgAARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkb//4hGAAAARkZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkYAAABGRoD//2tGRgAAAEZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkYAAABGRrf//0ZGRgAAAEZGRkZGRkYARkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRnuhj0ZGRkZGRkZGRkZGRkYARkZGRkZGRkZGRkZGRkZG"
+      },
+      "hygiene": 55.95590824767998,
+      "income": 3.940410592533012,
+      "pads": {
+        "a4": 945.0000000000003
+      },
+      "sideActivities": {
+        "v": 1,
+        "activities": {
+          "garden": {
+            "id": "garden",
+            "level": 0,
+            "completed": 0,
+            "order": 0,
+            "phase": "locked",
+            "lines": [],
+            "workProgress": 0,
+            "cleanProgress": 0,
+            "reward": 0,
+            "bonus": 0,
+            "purchaseDeposit": 0
+          },
+          "courtyard": {
+            "id": "courtyard",
+            "level": 0,
+            "completed": 0,
+            "order": 0,
+            "phase": "locked",
+            "lines": [],
+            "workProgress": 0,
+            "cleanProgress": 0,
+            "reward": 0,
+            "bonus": 0,
+            "purchaseDeposit": 0
+          }
+        }
+      }
+    },
+    "player": {
+      "x": 2.8578318329450494,
+      "z": -6.035941564487938,
+      "slots": []
+    },
+    "stations": [
+      {
+        "id": "k_semaver",
+        "kind": "machine",
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5,
+        "locked": false,
+        "stock": 6,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_raf_cay",
+        "kind": "pickup",
+        "item": "cay",
+        "x": -6.45,
+        "z": -4.4,
+        "locked": false,
+        "stock": 8,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_tezgah_1",
+        "kind": "counter",
+        "x": 3,
+        "z": -4.4,
+        "locked": false,
+        "stock": 0,
+        "cash": 7,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_1",
+        "kind": "table",
+        "x": -5.2,
+        "z": 2.2,
+        "locked": false,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 1,
+        "soil": 0.65
+      },
+      {
+        "id": "k_supurge",
+        "kind": "vacuum",
+        "x": -7.4,
+        "z": -1.5,
+        "locked": false,
+        "stock": 1,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_kova_1",
+        "kind": "bin",
+        "x": -8.5,
+        "z": 4.8,
+        "locked": false,
+        "stock": 8,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_2",
+        "kind": "table",
+        "x": 0,
+        "z": 2.2,
+        "locked": false,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_3",
+        "kind": "table",
+        "x": 5.2,
+        "z": 2.2,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_4",
+        "kind": "table",
+        "x": -5.2,
+        "z": 6,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_5",
+        "kind": "table",
+        "x": 0,
+        "z": 6,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_6",
+        "kind": "table",
+        "x": 5.2,
+        "z": 6,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_sutbar",
+        "kind": "machine",
+        "item": "latte",
+        "x": -3.45,
+        "z": -10.5,
+        "locked": false,
+        "stock": 6,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_raf_latte",
+        "kind": "pickup",
+        "item": "latte",
+        "x": -4.85,
+        "z": -4.4,
+        "locked": false,
+        "stock": 8,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_tost",
+        "kind": "machine",
+        "item": "tost",
+        "x": 0,
+        "z": -10.5,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_raf_tost",
+        "kind": "pickup",
+        "item": "tost",
+        "x": -3.25,
+        "z": -4.4,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_tezgah_2",
+        "kind": "counter",
+        "x": 5.65,
+        "z": -4.4,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_kova_2",
+        "kind": "bin",
+        "x": 8.5,
+        "z": 4.8,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_wc_1",
+        "kind": "toilet",
+        "x": 10.6,
+        "z": -15.8,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_wc_2",
+        "kind": "toilet",
+        "x": 13.4,
+        "z": -15.8,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_pecete",
+        "kind": "supply",
+        "item": "pecete",
+        "x": 11.4,
+        "z": -10.82,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_kagit",
+        "kind": "supply",
+        "item": "kagit",
+        "x": 14.7,
+        "z": -10.82,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_7",
+        "kind": "table",
+        "x": 15,
+        "z": 15.8,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_8",
+        "kind": "table",
+        "x": 15,
+        "z": 12.1,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_masa_9",
+        "kind": "table",
+        "x": 11.4,
+        "z": 15.8,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_waffle",
+        "kind": "machine",
+        "item": "waffle",
+        "x": 3.26,
+        "z": -10.5,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_raf_waffle",
+        "kind": "pickup",
+        "item": "waffle",
+        "x": -1.65,
+        "z": -4.4,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_frappe",
+        "kind": "machine",
+        "item": "frappe",
+        "x": 6.49,
+        "z": -10.5,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_raf_frappe",
+        "kind": "pickup",
+        "item": "frappe",
+        "x": -0.05,
+        "z": -4.4,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_vip_1",
+        "kind": "table",
+        "x": -14.9,
+        "z": 15.8,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_vip_2",
+        "kind": "table",
+        "x": -14.9,
+        "z": 12.2,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      },
+      {
+        "id": "k_vip_3",
+        "kind": "table",
+        "x": -11.6,
+        "z": 15.8,
+        "locked": true,
+        "stock": 0,
+        "cash": 0,
+        "dishes": 0,
+        "soil": 0
+      }
+    ],
+    "ui": "₺492\nYan işler\nSİPARİŞ AL\n25 latte hazırla\n16/25\n+₺500\n1/4\n1\n5\nYÜKSELT\nPERSONEL\nŞUBE\nAYAR\nSÜPÜRGEYİ AL\nHer yerden al\nSOSYAL MEDYA FENOMENİ\nKaçak müşteri yakalandı! +₺200",
+    "renderer": {
+      "width": 1080,
+      "height": 1920
+    },
+    "storage": [
+      "fincan-sokagi:language:v1",
+      "fincan-sokagi:metrics:v1"
+    ]
+  },
+  "errors": []
+}

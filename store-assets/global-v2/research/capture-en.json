@@ -1,0 +1,3694 @@
+{
+  "method": "Normal game and earned progression; native language loaded before modules; default camera and rendering; isolated profile; accelerated genuine simulation.",
+  "base": "http://127.0.0.1:5187/",
+  "lang": "en",
+  "captures": [
+    {
+      "id": "03-clean",
+      "description": "Powered vacuum cleaning actual traffic dirt",
+      "locale": "en",
+      "playTime": 601.8832333334433,
+      "state": {
+        "money": 652.4222222222222,
+        "totalEarned": 2349.9999999999995,
+        "revenueEarned": 2349.9999999999995,
+        "reputation": 94.09999999999998,
+        "upgrades": {
+          "speed": 0,
+          "capacity": 1,
+          "hands": 0,
+          "charm": 0,
+          "vault": 0
+        },
+        "staffCount": {
+          "waiter": 1,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        },
+        "staffLevel": {
+          "waiter": 0,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        },
+        "staffByLocation": {
+          "kose": {
+            "waiter": 1,
+            "cashier": 0,
+            "barista": 0,
+            "busser": 0
+          }
+        },
+        "staffLevelByLocation": {
+          "kose": {
+            "waiter": 0,
+            "cashier": 0,
+            "barista": 0,
+            "busser": 0
+          }
+        },
+        "staffHireDeposits": {},
+        "zones": [
+          "kose:a1",
+          "kose:t1",
+          "kose:a3"
+        ],
+        "locations": [
+          "kose"
+        ],
+        "seenLocations": [
+          "kose"
+        ],
+        "activeLocation": "kose",
+        "goalIndex": 9,
+        "goalProgress": 19,
+        "goalBase": 0,
+        "prestigePoints": 0,
+        "prestigeCount": 0,
+        "prestigeLevels": {},
+        "dailyDay": "2026-09-13",
+        "dailyStreak": 0,
+        "dailyClaimed": false,
+        "vacuumHinted": true,
+        "dailyMissionDone": [
+          false,
+          false,
+          false
+        ],
+        "dailyMissions": [
+          {
+            "counter": "mopped",
+            "target": 10
+          },
+          {
+            "counter": "dashers",
+            "target": 1
+          },
+          {
+            "counter": "orders",
+            "target": 25
+          }
+        ],
+        "dailyBase": {
+          "served": 0,
+          "cleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "orders": 0
+        },
+        "regularVisits": {},
+        "regularMilestones": {},
+        "coupons": 0,
+        "weekKey": "2026-W37",
+        "weekBase": 0,
+        "weekClaimed": false,
+        "festivalWeek": "2026-W37",
+        "festivalBase": 0,
+        "festivalClaimed": false,
+        "festivalGoalId": "f_misafir",
+        "festivalGoalTarget": 100,
+        "adBuffs": {
+          "happy": 0,
+          "robot": 0,
+          "usta": 0,
+          "rush": 0,
+          "tip": 0,
+          "shield": 0
+        },
+        "dailyPrevDone": {},
+        "weekPrevServed": 0,
+        "festPrevItem": 0,
+        "stats": {
+          "sold": 29,
+          "orders": 21,
+          "served": 29,
+          "dashers": 0,
+          "angry": 2,
+          "stationUpgrades": 0,
+          "cleaned": 14,
+          "tablesCleaned": 8,
+          "mopped": 10,
+          "refills": 0,
+          "produced": {},
+          "sale": {
+            "cay": 24,
+            "latte": 5
+          }
+        },
+        "statsBase": {
+          "served": 0,
+          "cleaned": 0,
+          "tablesCleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "stationUpgrades": 0
+        },
+        "playTime": 601.8832333334433,
+        "tutorialStep": 7,
+        "cosmetics": {
+          "wall": "krem",
+          "floor": "mese",
+          "table": "bal",
+          "uniform": "sokak"
+        },
+        "cosmeticsOwned": []
+      },
+      "player": {
+        "x": -5.495876091554459,
+        "z": 0.05597335495326771,
+        "slots": [],
+        "interaction": "mop",
+        "interacting": true,
+        "vacuum": true,
+        "armKey": null,
+        "model": "PlayerS01"
+      },
+      "world": {
+        "id": "kose",
+        "stations": [
+          {
+            "id": "k_semaver",
+            "x": -6.9,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 6,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_cay",
+            "x": -6.45,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_1",
+            "x": 3,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 1,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_1",
+            "x": -5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_supurge",
+            "x": -7.4,
+            "z": -1.5,
+            "kind": "vacuum",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_1",
+            "x": -8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_2",
+            "x": 0,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_3",
+            "x": 5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_4",
+            "x": -5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_5",
+            "x": 0,
+            "z": 6,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_6",
+            "x": 5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_sutbar",
+            "x": -3.45,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 6,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_latte",
+            "x": -4.85,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tost",
+            "x": 0,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_tost",
+            "x": -3.25,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_2",
+            "x": 5.65,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_2",
+            "x": 8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_1",
+            "x": 10.6,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_2",
+            "x": 13.4,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_pecete",
+            "x": 11.4,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kagit",
+            "x": 14.7,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_7",
+            "x": 15,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_8",
+            "x": 15,
+            "z": 12.1,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_9",
+            "x": 11.4,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_waffle",
+            "x": 3.26,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_waffle",
+            "x": -1.65,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_frappe",
+            "x": 6.49,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_frappe",
+            "x": -0.05,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_1",
+            "x": -14.9,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_2",
+            "x": -14.9,
+            "z": 12.2,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_3",
+            "x": -11.6,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          }
+        ],
+        "customers": [
+          {
+            "state": "seated",
+            "table": "k_masa_1",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 2,
+                "served": 1
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_1",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 1,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "order"
+          },
+          {
+            "state": "queue"
+          },
+          {
+            "state": "queue"
+          }
+        ],
+        "staff": [
+          {
+            "role": "waiter",
+            "x": -7.479039902183054,
+            "z": -6.8271904464658215
+          }
+        ]
+      },
+      "ui": "₺652\nSide jobs\nSWEEP DUST\nPrepare 25 lattes\n19/25\n+₺500\n2/4\n2\n6\nUPGRADE\nSTAFF\nCAFÉS\nSETTINGS\nRETURN VACUUM\nBack to serving\nSURPRISE DELIVERY",
+      "viewport": {
+        "width": 540,
+        "height": 960,
+        "dpr": 2
+      },
+      "renderer": {
+        "width": 1080,
+        "height": 1920
+      },
+      "camera": {
+        "fov": 40,
+        "framing": {
+          "close": false,
+          "aspect": 0.5625,
+          "distance": 27.5,
+          "fov": 40,
+          "offsetY": 0,
+          "maxLead": 1.1,
+          "southPad": 3.7
+        }
+      },
+      "overflow": false,
+      "debugHud": false
+    },
+    {
+      "id": "01-serve",
+      "description": "Hands-on serving of a requested product to seated guests",
+      "locale": "en",
+      "playTime": 1710.0832333324354,
+      "state": {
+        "money": 723.6637500000006,
+        "totalEarned": 15968.66375,
+        "revenueEarned": 15968.66375,
+        "reputation": 98.5,
+        "upgrades": {
+          "speed": 1,
+          "capacity": 1,
+          "hands": 0,
+          "charm": 0,
+          "vault": 0
+        },
+        "staffCount": {
+          "waiter": 1,
+          "cashier": 1,
+          "barista": 0,
+          "busser": 1
+        },
+        "staffLevel": {
+          "waiter": 0,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        },
+        "staffByLocation": {
+          "kose": {
+            "waiter": 1,
+            "cashier": 1,
+            "barista": 0,
+            "busser": 1
+          }
+        },
+        "staffLevelByLocation": {
+          "kose": {
+            "waiter": 0,
+            "cashier": 0,
+            "barista": 0,
+            "busser": 0
+          }
+        },
+        "staffHireDeposits": {
+          "kose": {}
+        },
+        "zones": [
+          "kose:a1",
+          "kose:t1",
+          "kose:a3",
+          "kose:a4",
+          "kose:t2",
+          "kose:a5",
+          "kose:t3",
+          "kose:t4"
+        ],
+        "locations": [
+          "kose"
+        ],
+        "seenLocations": [
+          "kose"
+        ],
+        "activeLocation": "kose",
+        "goalIndex": 17,
+        "goalProgress": 0,
+        "goalBase": 0,
+        "prestigePoints": 0,
+        "prestigeCount": 0,
+        "prestigeLevels": {},
+        "dailyDay": "2026-09-13",
+        "dailyStreak": 0,
+        "dailyClaimed": false,
+        "vacuumHinted": true,
+        "dailyMissionDone": [
+          false,
+          false,
+          false
+        ],
+        "dailyMissions": [
+          {
+            "counter": "mopped",
+            "target": 10
+          },
+          {
+            "counter": "dashers",
+            "target": 1
+          },
+          {
+            "counter": "orders",
+            "target": 25
+          }
+        ],
+        "dailyBase": {
+          "served": 0,
+          "cleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "orders": 0
+        },
+        "regularVisits": {},
+        "regularMilestones": {},
+        "coupons": 0,
+        "weekKey": "2026-W37",
+        "weekBase": 0,
+        "weekClaimed": false,
+        "festivalWeek": "2026-W37",
+        "festivalBase": 0,
+        "festivalClaimed": false,
+        "festivalGoalId": "f_misafir",
+        "festivalGoalTarget": 100,
+        "adBuffs": {
+          "happy": 0,
+          "robot": 0,
+          "usta": 0,
+          "rush": 0,
+          "tip": 0,
+          "shield": 0
+        },
+        "dailyPrevDone": {},
+        "weekPrevServed": 0,
+        "festPrevItem": 0,
+        "stats": {
+          "sold": 99,
+          "orders": 73,
+          "served": 99,
+          "dashers": 2,
+          "angry": 6,
+          "stationUpgrades": 7,
+          "cleaned": 43,
+          "tablesCleaned": 22,
+          "mopped": 28,
+          "refills": 0,
+          "produced": {},
+          "sale": {
+            "cay": 39,
+            "latte": 45,
+            "tost": 15
+          }
+        },
+        "statsBase": {
+          "served": 0,
+          "cleaned": 0,
+          "tablesCleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "stationUpgrades": 0
+        },
+        "playTime": 1710.0832333324354,
+        "tutorialStep": 7,
+        "cosmetics": {
+          "wall": "krem",
+          "floor": "mese",
+          "table": "bal",
+          "uniform": "sokak"
+        },
+        "cosmeticsOwned": []
+      },
+      "player": {
+        "x": -0.5475730561148205,
+        "z": 0.934103460126851,
+        "slots": [
+          "latte"
+        ],
+        "interaction": "reach",
+        "interacting": true,
+        "vacuum": false,
+        "armKey": "serve:k_masa_2:latte",
+        "model": "PlayerS01"
+      },
+      "world": {
+        "id": "kose",
+        "stations": [
+          {
+            "id": "k_semaver",
+            "x": -6.9,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_cay",
+            "x": -6.45,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 1,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_1",
+            "x": 3,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 21,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_1",
+            "x": -5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_supurge",
+            "x": -7.4,
+            "z": -1.5,
+            "kind": "vacuum",
+            "locked": false,
+            "stock": 1,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_1",
+            "x": -8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_2",
+            "x": 0,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_3",
+            "x": 5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.65,
+            "dishes": 1
+          },
+          {
+            "id": "k_masa_4",
+            "x": -5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_5",
+            "x": 0,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_6",
+            "x": 5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_sutbar",
+            "x": -3.45,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_latte",
+            "x": -4.85,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tost",
+            "x": 0,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_tost",
+            "x": -3.25,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 4,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_2",
+            "x": 5.65,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_2",
+            "x": 8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 4,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_1",
+            "x": 10.6,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_2",
+            "x": 13.4,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_pecete",
+            "x": 11.4,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kagit",
+            "x": 14.7,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_7",
+            "x": 15,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_8",
+            "x": 15,
+            "z": 12.1,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_9",
+            "x": 11.4,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_waffle",
+            "x": 3.26,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_waffle",
+            "x": -1.65,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_frappe",
+            "x": 6.49,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_frappe",
+            "x": -0.05,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_1",
+            "x": -14.9,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_2",
+            "x": -14.9,
+            "z": 12.2,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_3",
+            "x": -11.6,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          }
+        ],
+        "customers": [
+          {
+            "state": "seated",
+            "table": "k_masa_3",
+            "order": [
+              {
+                "item": "cay",
+                "qty": 2,
+                "served": 2
+              }
+            ]
+          },
+          {
+            "state": "order"
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_2",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 1,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_3",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 1,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "order"
+          },
+          {
+            "state": "queue"
+          },
+          {
+            "state": "grab"
+          }
+        ],
+        "staff": [
+          {
+            "role": "waiter",
+            "x": -7.354909902351878,
+            "z": -6.555056733902993
+          },
+          {
+            "role": "cashier",
+            "x": 3.261323352741503,
+            "z": -6.48244268070941
+          },
+          {
+            "role": "busser",
+            "x": -4.522669046344132,
+            "z": -7.076500491606557
+          }
+        ]
+      },
+      "ui": "₺723\n0%\nSide jobs\nBRING LATTE TO M2\nEarn ₺50,000\n16.0K/50.0K\n+₺7,500\n3/14\n2\n1\n7\nUPGRADE\nSTAFF\nCAFÉS\nSETTINGS\nPICK UP VACUUM\nEmpty your tray first\n🥛\nINFLUENCER IMPRESSED\nYour café is trending!",
+      "viewport": {
+        "width": 540,
+        "height": 960,
+        "dpr": 2
+      },
+      "renderer": {
+        "width": 1080,
+        "height": 1920
+      },
+      "camera": {
+        "fov": 40,
+        "framing": {
+          "close": false,
+          "aspect": 0.5625,
+          "distance": 27.5,
+          "fov": 40,
+          "offsetY": 0,
+          "maxLead": 1.1,
+          "southPad": 3.7
+        }
+      },
+      "overflow": false,
+      "debugHud": false
+    },
+    {
+      "id": "02-production",
+      "description": "Actual item pickup at a production station",
+      "locale": "en",
+      "playTime": 1713.9165666657652,
+      "state": {
+        "money": 723.6637500000006,
+        "totalEarned": 15968.66375,
+        "revenueEarned": 15968.66375,
+        "reputation": 97.6,
+        "upgrades": {
+          "speed": 1,
+          "capacity": 1,
+          "hands": 0,
+          "charm": 0,
+          "vault": 0
+        },
+        "staffCount": {
+          "waiter": 1,
+          "cashier": 1,
+          "barista": 0,
+          "busser": 1
+        },
+        "staffLevel": {
+          "waiter": 0,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        },
+        "staffByLocation": {
+          "kose": {
+            "waiter": 1,
+            "cashier": 1,
+            "barista": 0,
+            "busser": 1
+          }
+        },
+        "staffLevelByLocation": {
+          "kose": {
+            "waiter": 0,
+            "cashier": 0,
+            "barista": 0,
+            "busser": 0
+          }
+        },
+        "staffHireDeposits": {
+          "kose": {}
+        },
+        "zones": [
+          "kose:a1",
+          "kose:t1",
+          "kose:a3",
+          "kose:a4",
+          "kose:t2",
+          "kose:a5",
+          "kose:t3",
+          "kose:t4"
+        ],
+        "locations": [
+          "kose"
+        ],
+        "seenLocations": [
+          "kose"
+        ],
+        "activeLocation": "kose",
+        "goalIndex": 17,
+        "goalProgress": 0,
+        "goalBase": 0,
+        "prestigePoints": 0,
+        "prestigeCount": 0,
+        "prestigeLevels": {},
+        "dailyDay": "2026-09-13",
+        "dailyStreak": 0,
+        "dailyClaimed": false,
+        "vacuumHinted": true,
+        "dailyMissionDone": [
+          false,
+          false,
+          false
+        ],
+        "dailyMissions": [
+          {
+            "counter": "mopped",
+            "target": 10
+          },
+          {
+            "counter": "dashers",
+            "target": 1
+          },
+          {
+            "counter": "orders",
+            "target": 25
+          }
+        ],
+        "dailyBase": {
+          "served": 0,
+          "cleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "orders": 0
+        },
+        "regularVisits": {},
+        "regularMilestones": {},
+        "coupons": 0,
+        "weekKey": "2026-W37",
+        "weekBase": 0,
+        "weekClaimed": false,
+        "festivalWeek": "2026-W37",
+        "festivalBase": 0,
+        "festivalClaimed": false,
+        "festivalGoalId": "f_misafir",
+        "festivalGoalTarget": 100,
+        "adBuffs": {
+          "happy": 0,
+          "robot": 0,
+          "usta": 0,
+          "rush": 0,
+          "tip": 0,
+          "shield": 0
+        },
+        "dailyPrevDone": {},
+        "weekPrevServed": 0,
+        "festPrevItem": 0,
+        "stats": {
+          "sold": 100,
+          "orders": 73,
+          "served": 100,
+          "dashers": 2,
+          "angry": 6,
+          "stationUpgrades": 7,
+          "cleaned": 43,
+          "tablesCleaned": 22,
+          "mopped": 28,
+          "refills": 0,
+          "produced": {},
+          "sale": {
+            "cay": 39,
+            "latte": 46,
+            "tost": 15
+          }
+        },
+        "statsBase": {
+          "served": 0,
+          "cleaned": 0,
+          "tablesCleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "stationUpgrades": 0
+        },
+        "playTime": 1713.9165666657652,
+        "tutorialStep": 7,
+        "cosmetics": {
+          "wall": "krem",
+          "floor": "mese",
+          "table": "bal",
+          "uniform": "sokak"
+        },
+        "cosmeticsOwned": []
+      },
+      "player": {
+        "x": -3.3454508823828832,
+        "z": -8.222272900634097,
+        "slots": [
+          "latte"
+        ],
+        "interaction": "reach",
+        "interacting": true,
+        "vacuum": false,
+        "armKey": "take:k_sutbar",
+        "model": "PlayerS01"
+      },
+      "world": {
+        "id": "kose",
+        "stations": [
+          {
+            "id": "k_semaver",
+            "x": -6.9,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_cay",
+            "x": -6.45,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_1",
+            "x": 3,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 22,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_1",
+            "x": -5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_supurge",
+            "x": -7.4,
+            "z": -1.5,
+            "kind": "vacuum",
+            "locked": false,
+            "stock": 1,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_1",
+            "x": -8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_2",
+            "x": 0,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_3",
+            "x": 5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.65,
+            "dishes": 1
+          },
+          {
+            "id": "k_masa_4",
+            "x": -5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_5",
+            "x": 0,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_6",
+            "x": 5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_sutbar",
+            "x": -3.45,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_latte",
+            "x": -4.85,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tost",
+            "x": 0,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_tost",
+            "x": -3.25,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 4,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_2",
+            "x": 5.65,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_2",
+            "x": 8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 4,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_1",
+            "x": 10.6,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_2",
+            "x": 13.4,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_pecete",
+            "x": 11.4,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kagit",
+            "x": 14.7,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_7",
+            "x": 15,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_8",
+            "x": 15,
+            "z": 12.1,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_9",
+            "x": 11.4,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_waffle",
+            "x": 3.26,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_waffle",
+            "x": -1.65,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_frappe",
+            "x": 6.49,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_frappe",
+            "x": -0.05,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_1",
+            "x": -14.9,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_2",
+            "x": -14.9,
+            "z": 12.2,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_3",
+            "x": -11.6,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          }
+        ],
+        "customers": [
+          {
+            "state": "seated",
+            "table": "k_masa_3",
+            "order": [
+              {
+                "item": "cay",
+                "qty": 2,
+                "served": 2
+              }
+            ]
+          },
+          {
+            "state": "order"
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_2",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 1,
+                "served": 1
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_3",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 1,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "order"
+          },
+          {
+            "state": "queue"
+          },
+          {
+            "state": "flee"
+          }
+        ],
+        "staff": [
+          {
+            "role": "waiter",
+            "x": -7.354909902351878,
+            "z": -6.555056733902993
+          },
+          {
+            "role": "cashier",
+            "x": 3.261323352741503,
+            "z": -6.48244268070941
+          },
+          {
+            "role": "busser",
+            "x": -4.522669046344132,
+            "z": -7.076500491606557
+          }
+        ]
+      },
+      "ui": "₺723\n0%\nSide jobs\nPICK UP LATTE\nEarn ₺50,000\n16.0K/50.0K\n+₺7,500\n3/14\n1\n1\n7\nUPGRADE\nSTAFF\nCAFÉS\nSETTINGS\nPICK UP VACUUM\nEmpty your tray first\n🥛",
+      "viewport": {
+        "width": 540,
+        "height": 960,
+        "dpr": 2
+      },
+      "renderer": {
+        "width": 1080,
+        "height": 1920
+      },
+      "camera": {
+        "fov": 40,
+        "framing": {
+          "close": false,
+          "aspect": 0.5625,
+          "distance": 27.5,
+          "fov": 40,
+          "offsetY": 0,
+          "maxLead": 1.1,
+          "southPad": 3.7
+        }
+      },
+      "overflow": false,
+      "debugHud": false
+    },
+    {
+      "id": "04-cash",
+      "description": "Actual earned income collected at the counter",
+      "locale": "en",
+      "playTime": 1844.5165666656465,
+      "state": {
+        "money": 812.6637500000006,
+        "totalEarned": 16057.66375,
+        "revenueEarned": 16057.66375,
+        "reputation": 99.99999999999999,
+        "upgrades": {
+          "speed": 1,
+          "capacity": 1,
+          "hands": 0,
+          "charm": 0,
+          "vault": 0
+        },
+        "staffCount": {
+          "waiter": 1,
+          "cashier": 1,
+          "barista": 0,
+          "busser": 1
+        },
+        "staffLevel": {
+          "waiter": 0,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        },
+        "staffByLocation": {
+          "kose": {
+            "waiter": 1,
+            "cashier": 1,
+            "barista": 0,
+            "busser": 1
+          }
+        },
+        "staffLevelByLocation": {
+          "kose": {
+            "waiter": 0,
+            "cashier": 0,
+            "barista": 0,
+            "busser": 0
+          }
+        },
+        "staffHireDeposits": {
+          "kose": {}
+        },
+        "zones": [
+          "kose:a1",
+          "kose:t1",
+          "kose:a3",
+          "kose:a4",
+          "kose:t2",
+          "kose:a5",
+          "kose:t3",
+          "kose:t4"
+        ],
+        "locations": [
+          "kose"
+        ],
+        "seenLocations": [
+          "kose"
+        ],
+        "activeLocation": "kose",
+        "goalIndex": 17,
+        "goalProgress": 0,
+        "goalBase": 0,
+        "prestigePoints": 0,
+        "prestigeCount": 0,
+        "prestigeLevels": {},
+        "dailyDay": "2026-09-13",
+        "dailyStreak": 0,
+        "dailyClaimed": false,
+        "vacuumHinted": true,
+        "dailyMissionDone": [
+          false,
+          false,
+          false
+        ],
+        "dailyMissions": [
+          {
+            "counter": "mopped",
+            "target": 10
+          },
+          {
+            "counter": "dashers",
+            "target": 1
+          },
+          {
+            "counter": "orders",
+            "target": 25
+          }
+        ],
+        "dailyBase": {
+          "served": 0,
+          "cleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "orders": 0
+        },
+        "regularVisits": {},
+        "regularMilestones": {},
+        "coupons": 0,
+        "weekKey": "2026-W37",
+        "weekBase": 0,
+        "weekClaimed": false,
+        "festivalWeek": "2026-W37",
+        "festivalBase": 0,
+        "festivalClaimed": false,
+        "festivalGoalId": "f_misafir",
+        "festivalGoalTarget": 100,
+        "adBuffs": {
+          "happy": 0,
+          "robot": 0,
+          "usta": 0,
+          "rush": 0,
+          "tip": 0,
+          "shield": 0
+        },
+        "dailyPrevDone": {},
+        "weekPrevServed": 0,
+        "festPrevItem": 0,
+        "stats": {
+          "sold": 112,
+          "orders": 83,
+          "served": 112,
+          "dashers": 2,
+          "angry": 8,
+          "stationUpgrades": 7,
+          "cleaned": 46,
+          "tablesCleaned": 24,
+          "mopped": 30,
+          "refills": 0,
+          "produced": {},
+          "sale": {
+            "cay": 40,
+            "latte": 54,
+            "tost": 18
+          }
+        },
+        "statsBase": {
+          "served": 0,
+          "cleaned": 0,
+          "tablesCleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "stationUpgrades": 0
+        },
+        "playTime": 1844.5165666656465,
+        "tutorialStep": 7,
+        "cosmetics": {
+          "wall": "krem",
+          "floor": "mese",
+          "table": "bal",
+          "uniform": "sokak"
+        },
+        "cosmeticsOwned": []
+      },
+      "player": {
+        "x": 1.8814889875833052,
+        "z": -5.535073910541165,
+        "slots": [],
+        "interaction": "cash",
+        "interacting": true,
+        "vacuum": false,
+        "armKey": "cash:k_tezgah_1",
+        "model": "PlayerS01"
+      },
+      "world": {
+        "id": "kose",
+        "stations": [
+          {
+            "id": "k_semaver",
+            "x": -6.9,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_cay",
+            "x": -6.45,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 2,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_1",
+            "x": 3,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 40,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_1",
+            "x": -5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_supurge",
+            "x": -7.4,
+            "z": -1.5,
+            "kind": "vacuum",
+            "locked": false,
+            "stock": 1,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_1",
+            "x": -8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_2",
+            "x": 0,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.65,
+            "dishes": 1
+          },
+          {
+            "id": "k_masa_3",
+            "x": 5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_4",
+            "x": -5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_5",
+            "x": 0,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_6",
+            "x": 5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_sutbar",
+            "x": -3.45,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 6,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_latte",
+            "x": -4.85,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 1,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tost",
+            "x": 0,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_tost",
+            "x": -3.25,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 2,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_2",
+            "x": 5.65,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_2",
+            "x": 8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 7,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_1",
+            "x": 10.6,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_2",
+            "x": 13.4,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_pecete",
+            "x": 11.4,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kagit",
+            "x": 14.7,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_7",
+            "x": 15,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_8",
+            "x": 15,
+            "z": 12.1,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_9",
+            "x": 11.4,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_waffle",
+            "x": 3.26,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_waffle",
+            "x": -1.65,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_frappe",
+            "x": 6.49,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_frappe",
+            "x": -0.05,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_1",
+            "x": -14.9,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_2",
+            "x": -14.9,
+            "z": 12.2,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_3",
+            "x": -11.6,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          }
+        ],
+        "customers": [
+          {
+            "state": "seated",
+            "table": "k_masa_2",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 1,
+                "served": 1
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_5",
+            "order": [
+              {
+                "item": "cay",
+                "qty": 2,
+                "served": 1
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_5",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 2,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_3",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 2,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "order"
+          },
+          {
+            "state": "toCounter"
+          }
+        ],
+        "staff": [
+          {
+            "role": "waiter",
+            "x": -6.543480584222494,
+            "z": -6.545426317604857
+          },
+          {
+            "role": "cashier",
+            "x": 3.261323352741503,
+            "z": -6.48244268070941
+          },
+          {
+            "role": "busser",
+            "x": -4.065378245720604,
+            "z": -6.517420751957995
+          }
+        ]
+      },
+      "ui": "₺812\n0%\nSide jobs\nCOUNTER FULL · COLLECT\nEarn ₺50,000\n16.1K/50.0K\n+₺7,500\n4/14\n3\n1\n7\nUPGRADE\nSTAFF\nCAFÉS\nSETTINGS\nPICK UP VACUUM\nUse anywhere",
+      "viewport": {
+        "width": 540,
+        "height": 960,
+        "dpr": 2
+      },
+      "renderer": {
+        "width": 1080,
+        "height": 1920
+      },
+      "camera": {
+        "fov": 40,
+        "framing": {
+          "close": false,
+          "aspect": 0.5625,
+          "distance": 27.5,
+          "fov": 40,
+          "offsetY": 0,
+          "maxLead": 1.1,
+          "southPad": 3.7
+        }
+      },
+      "overflow": false,
+      "debugHud": false
+    },
+    {
+      "id": "05-staff",
+      "description": "Native staff panel and real bought roles",
+      "locale": "en",
+      "playTime": 4544.51656666931,
+      "state": {
+        "money": 7156.25,
+        "totalEarned": 73906.25,
+        "revenueEarned": 73906.25,
+        "reputation": 97.6,
+        "upgrades": {
+          "speed": 2,
+          "capacity": 3,
+          "hands": 1,
+          "charm": 0,
+          "vault": 0
+        },
+        "staffCount": {
+          "waiter": 2,
+          "cashier": 1,
+          "barista": 1,
+          "busser": 1
+        },
+        "staffLevel": {
+          "waiter": 1,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        },
+        "staffByLocation": {
+          "kose": {
+            "waiter": 2,
+            "cashier": 1,
+            "barista": 1,
+            "busser": 1
+          }
+        },
+        "staffLevelByLocation": {
+          "kose": {
+            "waiter": 1,
+            "cashier": 0,
+            "barista": 0,
+            "busser": 0
+          }
+        },
+        "staffHireDeposits": {
+          "kose": {
+            "busser": {
+              "count": 1,
+              "paid": 5464
+            }
+          }
+        },
+        "zones": [
+          "kose:a1",
+          "kose:t1",
+          "kose:a3",
+          "kose:a4",
+          "kose:t2",
+          "kose:a5",
+          "kose:t3",
+          "kose:t4",
+          "kose:a6",
+          "kose:t5",
+          "kose:r1",
+          "kose:a7",
+          "kose:t6",
+          "kose:z_muzik"
+        ],
+        "locations": [
+          "kose"
+        ],
+        "seenLocations": [
+          "kose"
+        ],
+        "activeLocation": "kose",
+        "goalIndex": 24,
+        "goalProgress": 16,
+        "goalBase": 0,
+        "prestigePoints": 0,
+        "prestigeCount": 0,
+        "prestigeLevels": {},
+        "dailyDay": "2026-09-13",
+        "dailyStreak": 0,
+        "dailyClaimed": false,
+        "vacuumHinted": true,
+        "dailyMissionDone": [
+          false,
+          false,
+          false
+        ],
+        "dailyMissions": [
+          {
+            "counter": "mopped",
+            "target": 10
+          },
+          {
+            "counter": "dashers",
+            "target": 1
+          },
+          {
+            "counter": "orders",
+            "target": 25
+          }
+        ],
+        "dailyBase": {
+          "served": 0,
+          "cleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "orders": 0
+        },
+        "regularVisits": {},
+        "regularMilestones": {},
+        "coupons": 0,
+        "weekKey": "2026-W37",
+        "weekBase": 0,
+        "weekClaimed": false,
+        "festivalWeek": "2026-W37",
+        "festivalBase": 0,
+        "festivalClaimed": false,
+        "festivalGoalId": "f_misafir",
+        "festivalGoalTarget": 100,
+        "adBuffs": {
+          "happy": 0,
+          "robot": 0,
+          "usta": 0,
+          "rush": 0,
+          "tip": 0,
+          "shield": 0
+        },
+        "dailyPrevDone": {},
+        "weekPrevServed": 0,
+        "festPrevItem": 0,
+        "stats": {
+          "sold": 341,
+          "orders": 243,
+          "served": 341,
+          "dashers": 9,
+          "angry": 48,
+          "stationUpgrades": 10,
+          "cleaned": 53,
+          "tablesCleaned": 33,
+          "mopped": 71,
+          "refills": 10,
+          "produced": {},
+          "sale": {
+            "cay": 95,
+            "latte": 166,
+            "tost": 72,
+            "waffle": 8
+          }
+        },
+        "statsBase": {
+          "served": 0,
+          "cleaned": 0,
+          "tablesCleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "stationUpgrades": 0
+        },
+        "playTime": 4544.51656666931,
+        "tutorialStep": 7,
+        "cosmetics": {
+          "wall": "krem",
+          "floor": "mese",
+          "table": "bal",
+          "uniform": "sokak"
+        },
+        "cosmeticsOwned": []
+      },
+      "player": {
+        "x": -2.352485627920482,
+        "z": 2.0910020160061498,
+        "slots": [
+          "latte"
+        ],
+        "interaction": "generic",
+        "interacting": false,
+        "vacuum": false,
+        "armKey": null,
+        "model": "PlayerS01"
+      },
+      "world": {
+        "id": "kose",
+        "stations": [
+          {
+            "id": "k_semaver",
+            "x": -6.9,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 14,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_cay",
+            "x": -6.45,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 3,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_1",
+            "x": 3,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 31,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_1",
+            "x": -5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_supurge",
+            "x": -7.4,
+            "z": -1.5,
+            "kind": "vacuum",
+            "locked": false,
+            "stock": 1,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_1",
+            "x": -8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_2",
+            "x": 0,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_3",
+            "x": 5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_4",
+            "x": -5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_5",
+            "x": 0,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_6",
+            "x": 5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 1,
+            "dishes": 2
+          },
+          {
+            "id": "k_sutbar",
+            "x": -3.45,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 6,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_latte",
+            "x": -4.85,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 2,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tost",
+            "x": 0,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_tost",
+            "x": -3.25,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_2",
+            "x": 5.65,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 8,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_2",
+            "x": 8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_1",
+            "x": 10.6,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.8434799999999999,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_2",
+            "x": 13.4,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.42551999999999995,
+            "dishes": 0
+          },
+          {
+            "id": "k_pecete",
+            "x": 11.4,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kagit",
+            "x": 14.7,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_7",
+            "x": 15,
+            "z": 15.8,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_8",
+            "x": 15,
+            "z": 12.1,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_9",
+            "x": 11.4,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_waffle",
+            "x": 3.26,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_waffle",
+            "x": -1.65,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_frappe",
+            "x": 6.49,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_frappe",
+            "x": -0.05,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_1",
+            "x": -14.9,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_2",
+            "x": -14.9,
+            "z": 12.2,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_3",
+            "x": -11.6,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          }
+        ],
+        "customers": [
+          {
+            "state": "order"
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_4",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 2,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "leave"
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_4",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 2,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_5",
+            "order": [
+              {
+                "item": "cay",
+                "qty": 1,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "leave"
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_4",
+            "order": [
+              {
+                "item": "latte",
+                "qty": 1,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "toCounter"
+          }
+        ],
+        "staff": [
+          {
+            "role": "waiter",
+            "x": -7.850130146069471,
+            "z": -7.115731467612745
+          },
+          {
+            "role": "cashier",
+            "x": 2.5029684691412233,
+            "z": -6.0976277733835325
+          },
+          {
+            "role": "busser",
+            "x": -3.990401123036405,
+            "z": -6.713062444143813
+          },
+          {
+            "role": "waiter",
+            "x": -4.855316563734665,
+            "z": -6.569671050371479
+          },
+          {
+            "role": "barista",
+            "x": 3.5701815472043075,
+            "z": -8.683933825367884
+          }
+        ]
+      },
+      "ui": "₺7,156\n0%\n0\n0.85×\nSide jobs\nBRING LATTE TO M4\nPrepare 20 waffles\n16/20\n+₺9,000\n4/26\n4\n1\n10\n38%\nCorner Café\nUPGRADE\nSTAFF\nCAFÉS\nSETTINGS\nPICK UP VACUUM\nEmpty your tray first\n🥛\nStaff\n✕\nShelf Assistant\n2/2\nRegularly restocks the assigned product shelf. Higher levels increase the batch carried. Unlock more stations to expand your team.\nAssignment: Samovar, Coffee Bar · You: tables and special orders\nSpeed 2.4 · carry 2 items · shelf target up to 2\n→ Speed 2.55 · carry 3 items · shelf target up to 3\nLv 1/10\nTeam Full\nLevel Up\n₺550\nCashier\n1/2\nTakes orders and keeps the queue moving. You collect the money.\nAssignment: Counter · You: table service and collecting earnings\nBase 2.4 s/order · register upgrades add speed\n→ Base 2.28 s/order · register upgrades add speed\nLv 0/10\nHire\n₺10.9K\nLevel Up\n₺1,800\nBusser\n1/2\nClears dishes and wipes assigned tables. You clean the floor and restrooms.\nYou: serving and the table care you start\n1.65 s/job · 3 dishes\n→ 1.55 s/job · 3 dishes\nLv 0/10\nHire\n₺30.5K\nLevel Up\n₺6,000\nBarista\n1/2\nSpeeds up the assigned machine. Does not carry items or stock shelves.\nAssignment: Waffle Maker · You: choosing, carrying and serving products\nPreparation ×1.25\n→ Preparation ×1.31\nLv 0/10\nHire\n₺82.8K\nLevel Up\n₺8,000",
+      "viewport": {
+        "width": 540,
+        "height": 960,
+        "dpr": 2
+      },
+      "renderer": {
+        "width": 1080,
+        "height": 1920
+      },
+      "camera": {
+        "fov": 40,
+        "framing": {
+          "close": false,
+          "aspect": 0.5625,
+          "distance": 27.5,
+          "fov": 40,
+          "offsetY": 0,
+          "maxLead": 1.1,
+          "southPad": 3.7
+        }
+      },
+      "overflow": false,
+      "debugHud": false
+    },
+    {
+      "id": "06-growth",
+      "description": "An earned salon expansion, with its actual tables and purchase pads",
+      "locale": "en",
+      "playTime": 4740.149900005134,
+      "state": {
+        "money": 10675.8625,
+        "totalEarned": 77425.8625,
+        "revenueEarned": 77425.8625,
+        "reputation": 100,
+        "upgrades": {
+          "speed": 2,
+          "capacity": 3,
+          "hands": 1,
+          "charm": 0,
+          "vault": 0
+        },
+        "staffCount": {
+          "waiter": 2,
+          "cashier": 1,
+          "barista": 1,
+          "busser": 1
+        },
+        "staffLevel": {
+          "waiter": 1,
+          "cashier": 0,
+          "barista": 0,
+          "busser": 0
+        },
+        "staffByLocation": {
+          "kose": {
+            "waiter": 2,
+            "cashier": 1,
+            "barista": 1,
+            "busser": 1
+          }
+        },
+        "staffLevelByLocation": {
+          "kose": {
+            "waiter": 1,
+            "cashier": 0,
+            "barista": 0,
+            "busser": 0
+          }
+        },
+        "staffHireDeposits": {
+          "kose": {
+            "busser": {
+              "count": 1,
+              "paid": 5464
+            }
+          }
+        },
+        "zones": [
+          "kose:a1",
+          "kose:t1",
+          "kose:a3",
+          "kose:a4",
+          "kose:t2",
+          "kose:a5",
+          "kose:t3",
+          "kose:t4",
+          "kose:a6",
+          "kose:t5",
+          "kose:r1",
+          "kose:a7",
+          "kose:t6",
+          "kose:z_muzik"
+        ],
+        "locations": [
+          "kose"
+        ],
+        "seenLocations": [
+          "kose"
+        ],
+        "activeLocation": "kose",
+        "goalIndex": 24,
+        "goalProgress": 17,
+        "goalBase": 0,
+        "prestigePoints": 0,
+        "prestigeCount": 0,
+        "prestigeLevels": {},
+        "dailyDay": "2026-09-13",
+        "dailyStreak": 0,
+        "dailyClaimed": false,
+        "vacuumHinted": true,
+        "dailyMissionDone": [
+          false,
+          false,
+          false
+        ],
+        "dailyMissions": [
+          {
+            "counter": "mopped",
+            "target": 10
+          },
+          {
+            "counter": "dashers",
+            "target": 1
+          },
+          {
+            "counter": "orders",
+            "target": 25
+          }
+        ],
+        "dailyBase": {
+          "served": 0,
+          "cleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "orders": 0
+        },
+        "regularVisits": {},
+        "regularMilestones": {},
+        "coupons": 0,
+        "weekKey": "2026-W37",
+        "weekBase": 0,
+        "weekClaimed": false,
+        "festivalWeek": "2026-W37",
+        "festivalBase": 0,
+        "festivalClaimed": false,
+        "festivalGoalId": "f_misafir",
+        "festivalGoalTarget": 100,
+        "adBuffs": {
+          "happy": 0,
+          "robot": 0,
+          "usta": 0,
+          "rush": 0,
+          "tip": 0,
+          "shield": 0
+        },
+        "dailyPrevDone": {},
+        "weekPrevServed": 0,
+        "festPrevItem": 0,
+        "stats": {
+          "sold": 359,
+          "orders": 254,
+          "served": 359,
+          "dashers": 9,
+          "angry": 50,
+          "stationUpgrades": 10,
+          "cleaned": 55,
+          "tablesCleaned": 34,
+          "mopped": 75,
+          "refills": 10,
+          "produced": {},
+          "sale": {
+            "cay": 97,
+            "latte": 175,
+            "tost": 78,
+            "waffle": 9
+          }
+        },
+        "statsBase": {
+          "served": 0,
+          "cleaned": 0,
+          "tablesCleaned": 0,
+          "mopped": 0,
+          "refills": 0,
+          "dashers": 0,
+          "stationUpgrades": 0
+        },
+        "playTime": 4740.149900005134,
+        "tutorialStep": 7,
+        "cosmetics": {
+          "wall": "krem",
+          "floor": "mese",
+          "table": "bal",
+          "uniform": "sokak"
+        },
+        "cosmeticsOwned": []
+      },
+      "player": {
+        "x": 10.00346795185484,
+        "z": 12.338657844654037,
+        "slots": [
+          "tost"
+        ],
+        "interaction": "generic",
+        "interacting": false,
+        "vacuum": false,
+        "armKey": null,
+        "model": "PlayerS01"
+      },
+      "world": {
+        "id": "kose",
+        "stations": [
+          {
+            "id": "k_semaver",
+            "x": -6.9,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 14,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_cay",
+            "x": -6.45,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 2,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_1",
+            "x": 3,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 39,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_1",
+            "x": -5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_supurge",
+            "x": -7.4,
+            "z": -1.5,
+            "kind": "vacuum",
+            "locked": false,
+            "stock": 1,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_1",
+            "x": -8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_2",
+            "x": 0,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_3",
+            "x": 5.2,
+            "z": 2.2,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.65,
+            "dishes": 1
+          },
+          {
+            "id": "k_masa_4",
+            "x": -5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.65,
+            "dishes": 1
+          },
+          {
+            "id": "k_masa_5",
+            "x": 0,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_6",
+            "x": 5.2,
+            "z": 6,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_sutbar",
+            "x": -3.45,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 6,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_latte",
+            "x": -4.85,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 2,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tost",
+            "x": 0,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_tost",
+            "x": -3.25,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_tezgah_2",
+            "x": 5.65,
+            "z": -4.4,
+            "kind": "counter",
+            "locked": false,
+            "stock": 0,
+            "cash": 8,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kova_2",
+            "x": 8.5,
+            "z": 4.8,
+            "kind": "bin",
+            "locked": false,
+            "stock": 12,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_1",
+            "x": 10.6,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.8434799999999999,
+            "dishes": 0
+          },
+          {
+            "id": "k_wc_2",
+            "x": 13.4,
+            "z": -15.8,
+            "kind": "toilet",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0.63828,
+            "dishes": 0
+          },
+          {
+            "id": "k_pecete",
+            "x": 11.4,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_kagit",
+            "x": 14.7,
+            "z": -10.82,
+            "kind": "supply",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_7",
+            "x": 15,
+            "z": 15.8,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_8",
+            "x": 15,
+            "z": 12.1,
+            "kind": "table",
+            "locked": false,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_masa_9",
+            "x": 11.4,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_waffle",
+            "x": 3.26,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": false,
+            "stock": 5,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_waffle",
+            "x": -1.65,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": false,
+            "stock": 8,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_frappe",
+            "x": 6.49,
+            "z": -10.5,
+            "kind": "machine",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_raf_frappe",
+            "x": -0.05,
+            "z": -4.4,
+            "kind": "pickup",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_1",
+            "x": -14.9,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_2",
+            "x": -14.9,
+            "z": 12.2,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          },
+          {
+            "id": "k_vip_3",
+            "x": -11.6,
+            "z": 15.8,
+            "kind": "table",
+            "locked": true,
+            "stock": 0,
+            "cash": 0,
+            "soil": 0,
+            "dishes": 0
+          }
+        ],
+        "customers": [
+          {
+            "state": "leave"
+          },
+          {
+            "state": "order"
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_8",
+            "order": [
+              {
+                "item": "tost",
+                "qty": 2,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "leave"
+          },
+          {
+            "state": "queue"
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_3",
+            "order": [
+              {
+                "item": "waffle",
+                "qty": 1,
+                "served": 1
+              }
+            ]
+          },
+          {
+            "state": "seated",
+            "table": "k_masa_1",
+            "order": [
+              {
+                "item": "tost",
+                "qty": 2,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "toPickup",
+            "order": [
+              {
+                "item": "tost",
+                "qty": 2,
+                "served": 0
+              }
+            ]
+          },
+          {
+            "state": "toCounter"
+          }
+        ],
+        "staff": [
+          {
+            "role": "waiter",
+            "x": -7.292278374004365,
+            "z": -6.905288968663319
+          },
+          {
+            "role": "cashier",
+            "x": 3.1699143072852864,
+            "z": -6.559184026227168
+          },
+          {
+            "role": "busser",
+            "x": -0.8336681741764367,
+            "z": -2.082412521014799
+          },
+          {
+            "role": "waiter",
+            "x": -7.439343472718362,
+            "z": -6.057946619408756
+          },
+          {
+            "role": "barista",
+            "x": 3.554091782393021,
+            "z": -8.744568646573379
+          }
+        ]
+      },
+      "ui": "₺10.7K\n0%\n0\n0.85×\nSide jobs\nBRING TOASTIE TO M8\nPrepare 20 waffles\n17/20\n+₺9,000\n3/26\n3\n2\n9\n38%\nCorner Café\nUPGRADE\nSTAFF\nCAFÉS\nSETTINGS\nPICK UP VACUUM\nEmpty your tray first\nINFLUENCER",
+      "viewport": {
+        "width": 540,
+        "height": 960,
+        "dpr": 2
+      },
+      "renderer": {
+        "width": 1080,
+        "height": 1920
+      },
+      "camera": {
+        "fov": 40,
+        "framing": {
+          "close": false,
+          "aspect": 0.5625,
+          "distance": 27.5,
+          "fov": 40,
+          "offsetY": 0,
+          "maxLead": 1.1,
+          "southPad": 3.7
+        }
+      },
+      "overflow": false,
+      "debugHud": false
+    }
+  ],
+  "errors": [],
+  "failedRequests": []
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Kafe Caddesi",
+  "short_name": "Kafe Caddesi",
+  "description": "Sokağın en sıcak kafesi — sipariş al, masaya servis et, mekânı temiz tut.",
+  "lang": "tr",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#20302b",
+  "theme_color": "#376152",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "pwa-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "pwa-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

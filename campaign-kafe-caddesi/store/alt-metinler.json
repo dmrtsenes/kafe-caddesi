@@ -1,0 +1,56 @@
+[
+  {
+    "file": "01-servis.png",
+    "phase": 3,
+    "time": 2.833333333333328,
+    "source": "phase-3-0084.png",
+    "title": "KENDİ KAFENİ YÖNET",
+    "alt": "Oyuncu gerçek çay siparişlerini masadaki iki misafire servis ediyor.",
+    "method": "Actual game frame with separate SVG headline; no object retouching or UI replacement."
+  },
+  {
+    "file": "02-hazirla.png",
+    "phase": 2,
+    "time": 1.2333333333333338,
+    "source": "phase-2-0036.png",
+    "title": "SICACIK HAZIR SERVİSE TAŞI",
+    "alt": "Semaverin ürettiği çaylar oyuncunun gerçek tepsisine alınıyor.",
+    "method": "Actual game frame with separate SVG headline; no object retouching or UI replacement."
+  },
+  {
+    "file": "03-temizlik.png",
+    "phase": 1,
+    "time": 7.6333333333333115,
+    "source": "phase-1-0228.png",
+    "title": "YENİ MİSAFİRE YER AÇ",
+    "alt": "Bulaşığı alınmış masa oyuncunun silme hareketiyle yeniden kullanılabilir hale geliyor.",
+    "method": "Actual game frame with separate SVG headline; no object retouching or UI replacement."
+  },
+  {
+    "file": "04-kazanc.png",
+    "phase": 4,
+    "time": 9.633333333333391,
+    "source": "phase-4-0288.png",
+    "title": "EMEĞİNİ KAZANCA ÇEVİR",
+    "alt": "Gösterilen servislerin kazancı gerçek kasadan toplanıyor.",
+    "method": "Actual game frame with separate SVG headline; no object retouching or UI replacement."
+  },
+  {
+    "file": "05-ekip.png",
+    "phase": 5,
+    "time": 11.633333333333491,
+    "source": "phase-5-0348.png",
+    "title": "KAZANCINLA EKİBİNİ KUR",
+    "alt": "Oyuncu mevcut işe alma alanına ödeme yapıyor.",
+    "method": "Actual game frame with separate SVG headline; no object retouching or UI replacement."
+  },
+  {
+    "file": "06-raflar.png",
+    "phase": 6,
+    "time": 14.83333333333365,
+    "source": "phase-6-0444.png",
+    "title": "RAFLARINI EKİBİN DOLDURSUN",
+    "alt": "İşe alınan tezgâhtar çayları gerçek paket rafına yerleştiriyor.",
+    "method": "Actual game frame with separate SVG headline; no object retouching or UI replacement."
+  }
+]

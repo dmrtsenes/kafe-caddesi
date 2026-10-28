@@ -1,0 +1,45 @@
+{
+  "kenneyFurniture": {
+    "zip": "_paketler/kenney_furniture-kit.zip",
+    "zipPrefix": "Models/GLTF format/",
+    "outDir": "public/packs/kenney",
+    "files": {
+      "table-round": "tableRound.glb",
+      "table-square": "table.glb",
+      "table-vip": "tableCross.glb",
+      "chair": "loungeChair.glb",
+      "chair-vip": "loungeDesignChair.glb",
+      "cafe-bench": "benchCushion.glb",
+      "cafe-sofa": "loungeSofa.glb",
+      "floor-plant": "pottedPlant.glb",
+      "counter": "kitchenBar.glb",
+      "coffee-machine": "kitchenCoffeeMachine.glb",
+      "stove": "kitchenStove.glb",
+      "toaster": "toaster.glb",
+      "blender": "kitchenBlender.glb",
+      "waffle-iron": "kitchenStoveElectric.glb",
+      "fridge": "kitchenFridgeSmall.glb",
+      "cabinet": "kitchenCabinet.glb",
+      "toilet": "toilet.glb",
+      "bin": "trashcan.glb",
+      "plant": "plantSmall1.glb"
+    }
+  },
+  "kenneyFood": {
+    "zip": "_paketler/kenney_food-kit.zip",
+    "zipPrefix": "Models/GLB format/",
+    "outDir": "public/packs/kenney",
+    "files": {
+      "cup-tea": "cup-tea.glb",
+      "cup-coffee": "cup-coffee.glb",
+      "sandwich": "sandwich.glb",
+      "waffle": "waffle.glb",
+      "frappe": "frappe.glb",
+      "soda-glass": "soda-glass.glb",
+      "ice-cream": "ice-cream-cne.glb",
+      "sundae": "sundae.glb",
+      "plate": "plate.glb",
+      "mug": "mug.glb"
+    }
+  }
+}

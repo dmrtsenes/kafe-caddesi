@@ -1,0 +1,108 @@
+{
+  "engine": "Vosk Turkish small 0.3; independent unrestricted recognition, no supplied transcript grammar",
+  "results": [
+    {
+      "file": "01-hook-master.wav",
+      "recognition": "ile başlar",
+      "words": [
+        {
+          "conf": 0.64871,
+          "end": 0.45,
+          "start": 0.33,
+          "word": "ile"
+        },
+        {
+          "conf": 0.991822,
+          "end": 0.87,
+          "start": 0.45,
+          "word": "başlar"
+        }
+      ],
+      "seconds": 0.9370625,
+      "peak_dbfs": -7.433094622258589,
+      "rms_dbfs": -22.50860816736362
+    },
+    {
+      "file": "02-welcome-master.wav",
+      "recognition": "yeni misafirlere yeraç",
+      "words": [
+        {
+          "conf": 0.705291,
+          "end": 0.21,
+          "start": 0.06,
+          "word": "yeni"
+        },
+        {
+          "conf": 0.945493,
+          "end": 0.9,
+          "start": 0.21,
+          "word": "misafirlere"
+        },
+        {
+          "conf": 0.45525,
+          "end": 1.38,
+          "start": 0.9,
+          "word": "yeraç"
+        }
+      ],
+      "seconds": 1.3889375,
+      "peak_dbfs": -8.411194759038468,
+      "rms_dbfs": -21.8531218425675
+    },
+    {
+      "file": "03-grow-master.wav",
+      "recognition": "kazancını ekibini koş",
+      "words": [
+        {
+          "conf": 0.867372,
+          "end": 0.63,
+          "start": 0.06,
+          "word": "kazancını"
+        },
+        {
+          "conf": 0.991674,
+          "end": 1.05,
+          "start": 0.66,
+          "word": "ekibini"
+        },
+        {
+          "conf": 0.455119,
+          "end": 1.35,
+          "start": 1.05,
+          "word": "koş"
+        }
+      ],
+      "seconds": 1.372375,
+      "peak_dbfs": -6.118698408324171,
+      "rms_dbfs": -22.7025097541558
+    },
+    {
+      "file": "04-brand-master.wav",
+      "recognition": "caddesi sıra sende",
+      "words": [
+        {
+          "conf": 1.0,
+          "end": 0.96,
+          "start": 0.39,
+          "word": "caddesi"
+        },
+        {
+          "conf": 1.0,
+          "end": 1.41,
+          "start": 1.11,
+          "word": "sıra"
+        },
+        {
+          "conf": 1.0,
+          "end": 1.86,
+          "start": 1.41,
+          "word": "sende"
+        }
+      ],
+      "seconds": 1.8695625,
+      "peak_dbfs": -6.602689539102654,
+      "rms_dbfs": -23.681064094238025
+    }
+  ],
+  "limitation": "ASR is not human listening or professional voice-artist certification; coined brand may be out of vocabulary."
+}

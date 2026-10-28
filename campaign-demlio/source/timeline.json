@@ -1,0 +1,974 @@
+{
+  "duration": 18.533333333333335,
+  "fps": 30,
+  "cuts": [
+    {
+      "time": 0,
+      "kind": "cut",
+      "data": {
+        "phase": 0
+      }
+    },
+    {
+      "time": 1.3333,
+      "kind": "cut",
+      "data": {
+        "phase": 8
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "cut",
+      "data": {
+        "phase": 1
+      }
+    },
+    {
+      "time": 4.45,
+      "kind": "cut",
+      "data": {
+        "phase": 2
+      }
+    },
+    {
+      "time": 6.4667,
+      "kind": "cut",
+      "data": {
+        "phase": 3
+      }
+    },
+    {
+      "time": 8.9,
+      "kind": "cut",
+      "data": {
+        "phase": 4
+      }
+    },
+    {
+      "time": 10.3167,
+      "kind": "cut",
+      "data": {
+        "phase": 5
+      }
+    },
+    {
+      "time": 13.1167,
+      "kind": "cut",
+      "data": {
+        "phase": 6
+      }
+    },
+    {
+      "time": 15.2833,
+      "kind": "cut",
+      "data": {
+        "phase": 7
+      }
+    }
+  ],
+  "voice": [
+    {
+      "id": "01-hook",
+      "text": "Şu masaya bak.",
+      "spoken": "Şu masaya bak.",
+      "phase": 0,
+      "offset": 0.04,
+      "start": 0.04,
+      "length": 1.011396,
+      "end": 1.051396
+    },
+    {
+      "id": "02-start",
+      "text": "Küçük bir başlangıç.",
+      "spoken": "Küçük bir başlangıç.",
+      "phase": 2,
+      "offset": 0.12,
+      "start": 4.57,
+      "length": 1.357021,
+      "end": 5.927021
+    },
+    {
+      "id": "03-service",
+      "text": "Bir adım daha.",
+      "spoken": "Bir adım daha.",
+      "phase": 3,
+      "offset": 0.34,
+      "start": 6.8067,
+      "length": 1.008667,
+      "end": 7.815367
+    },
+    {
+      "id": "04-team",
+      "text": "Birlikte daha fazlası.",
+      "spoken": "Birlikte daha fazlası.",
+      "phase": 5,
+      "offset": 0.5,
+      "start": 10.8167,
+      "length": 1.509479,
+      "end": 12.326179000000002
+    },
+    {
+      "id": "05-brand",
+      "text": "Demlio. Sıra sende.",
+      "spoken": "Demliyo. Sıra sende.",
+      "phase": 7,
+      "offset": 0.04,
+      "start": 15.3233,
+      "length": 1.733333,
+      "end": 17.056632999999998
+    }
+  ],
+  "events": [
+    {
+      "time": 0,
+      "kind": "cut",
+      "data": {
+        "phase": 0
+      }
+    },
+    {
+      "time": 0,
+      "kind": "task",
+      "data": {
+        "key": "clear-dishes",
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 0,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 0.5333,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.45
+      }
+    },
+    {
+      "time": 0.95,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.45
+      }
+    },
+    {
+      "time": 0.9667,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 1.3333,
+      "kind": "cut",
+      "data": {
+        "phase": 8
+      }
+    },
+    {
+      "time": 1.3333,
+      "kind": "task",
+      "data": {
+        "key": "dispose-dishes",
+        "x": -6.9,
+        "z": 4.8
+      }
+    },
+    {
+      "time": 1.3333,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 1.7833,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 1.8833,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 2.3,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 2.3167,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 2.4,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "cut",
+      "data": {
+        "phase": 1
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "task",
+      "data": {
+        "key": "clean",
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "action",
+      "data": {
+        "kind": "wipe"
+      }
+    },
+    {
+      "time": 2.8,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 3,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 3.2833,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 3.55,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 3.5833,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 3.7667,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 3.9667,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 4.0333,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 4.0667,
+      "kind": "cleaned",
+      "data": {
+        "id": "k_masa_2"
+      }
+    },
+    {
+      "time": 4.0667,
+      "kind": "sfx",
+      "data": {
+        "id": "upgrade",
+        "vol": 0.35
+      }
+    },
+    {
+      "time": 4.0833,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 4.2,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 4.45,
+      "kind": "cut",
+      "data": {
+        "phase": 2
+      }
+    },
+    {
+      "time": 4.45,
+      "kind": "task",
+      "data": {
+        "key": "prepare",
+        "x": -6.9,
+        "z": -8.35
+      }
+    },
+    {
+      "time": 4.45,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 4.5,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 4.8,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 4.95,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 5.2333,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 5.2333,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 5.6,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 5.65,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 5.65,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 5.85,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 6,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 6.0833,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 6.0833,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 6.1,
+      "kind": "task",
+      "data": {
+        "key": "carry",
+        "x": -6.9,
+        "z": -8.35
+      }
+    },
+    {
+      "time": 6.1,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 6.4667,
+      "kind": "cut",
+      "data": {
+        "phase": 3
+      }
+    },
+    {
+      "time": 6.4667,
+      "kind": "task",
+      "data": {
+        "key": "serve",
+        "x": -5.2,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 6.4667,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 6.5167,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 7.05,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 7.2,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 7.3833,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 7.3833,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 7.8,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 7.8,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 8.2333,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 8.2333,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 8.25,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 8.4,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 8.4,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 8.85,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 8.9,
+      "kind": "cut",
+      "data": {
+        "phase": 4
+      }
+    },
+    {
+      "time": 8.9,
+      "kind": "task",
+      "data": {
+        "key": "collect",
+        "x": 3,
+        "z": -6.1000000000000005
+      }
+    },
+    {
+      "time": 8.9,
+      "kind": "action",
+      "data": {
+        "kind": "cash"
+      }
+    },
+    {
+      "time": 8.95,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 9,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 9.6,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 9.6,
+      "kind": "collected",
+      "data": {
+        "amount": 41.333333333333336
+      }
+    },
+    {
+      "time": 9.6,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.7667,
+      "kind": "collected",
+      "data": {
+        "amount": 41.33333333333333
+      }
+    },
+    {
+      "time": 9.7667,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.95,
+      "kind": "collected",
+      "data": {
+        "amount": 41.33333333333333
+      }
+    },
+    {
+      "time": 9.95,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.9667,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 10.3167,
+      "kind": "cut",
+      "data": {
+        "phase": 5
+      }
+    },
+    {
+      "time": 10.3167,
+      "kind": "task",
+      "data": {
+        "key": "hire",
+        "x": -8.1,
+        "z": -4.8
+      }
+    },
+    {
+      "time": 10.35,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 10.65,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 11.2,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 12,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 12,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 12.45,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 12.6,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 12.65,
+      "kind": "hired",
+      "data": {
+        "role": "waiter",
+        "count": 1,
+        "location": "kose",
+        "totalCost": 400,
+        "method": "pad"
+      }
+    },
+    {
+      "time": 12.65,
+      "kind": "sfx",
+      "data": {
+        "id": "hire"
+      }
+    },
+    {
+      "time": 13.1167,
+      "kind": "cut",
+      "data": {
+        "phase": 6
+      }
+    },
+    {
+      "time": 13.1167,
+      "kind": "task",
+      "data": {
+        "key": "leave-workspace",
+        "x": -6.2,
+        "z": -7.1
+      }
+    },
+    {
+      "time": 13.1667,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 13.2667,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.22
+      }
+    },
+    {
+      "time": 14,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 14.0167,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.22
+      }
+    },
+    {
+      "time": 14.25,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 14.4,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 14.7667,
+      "kind": "stocked",
+      "data": {
+        "item": "cay",
+        "x": -6.45,
+        "z": -4.4
+      }
+    },
+    {
+      "time": 14.7667,
+      "kind": "sfx",
+      "data": {
+        "id": "stock",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 15,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 15.2833,
+      "kind": "cut",
+      "data": {
+        "phase": 7
+      }
+    },
+    {
+      "time": 15.2833,
+      "kind": "task",
+      "data": {
+        "key": "leave-workspace",
+        "x": -6.2,
+        "z": -7.1
+      }
+    },
+    {
+      "time": 15.5167,
+      "kind": "stocked",
+      "data": {
+        "item": "cay",
+        "x": -6.45,
+        "z": -4.4
+      }
+    },
+    {
+      "time": 15.5167,
+      "kind": "sfx",
+      "data": {
+        "id": "stock",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 16.05,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 17.85,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 18,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    }
+  ]
+}

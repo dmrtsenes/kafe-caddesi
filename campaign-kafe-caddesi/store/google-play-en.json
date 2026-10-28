@@ -1,0 +1,25 @@
+{
+  "locale": "en-GB",
+  "brand": "Cafe Avenue",
+  "title": "Cafe Avenue: Idle Tycoon",
+  "short": "Run a coffee shop, serve customers and grow your team in a hands-on cafe game",
+  "full": "Cafe Avenue is a hands-on cafe management game with idle arcade flow and tycoon progression. Carry orders, collect your earnings and turn a small coffee shop into a growing business.\n\nPrepare coffee and tea, bring toast and drinks to the right tables, and keep the takeaway shelves stocked. Follow customer orders and collect the money waiting at the counter. Touch and drag to move; picking up products and serving happen when you approach the right spot.\n\nKeep your cafe ready for the next guest. Clear dishes, wipe tables and use your powered vacuum to clean the floor. Find your own rhythm between serving, preparing products and caring for the shop.\n\nBuild a team of shelf assistants, cashiers, bussers and baristas. Each role helps with specific tasks while you stay involved in table service and collecting earnings. Invest in equipment, carrying capacity and new areas.\n\nUnlock more tables and rooms, then work towards a seaside branch. Choose decorations and uniforms to give your cafe its own character. Daily goals and festival tasks add new objectives as you grow.\n\nThis is an active business game: machines can build stock while you are away, but money is earned through active play.\n\nPlay in English or Turkish.",
+  "lengths": {
+    "title": 24,
+    "short": 77,
+    "full": 1225
+  },
+  "alternateTitle": "Cafe Avenue: Coffee Tycoon",
+  "assetAlt": {
+    "icon": "Stylised coffee machine, serving tray and cup.",
+    "feature": "Cafe Avenue logo beside a stylised tea, coffee and toast preparation counter.",
+    "screenshots": [
+      "An order is carried on a tray to guests at a table.",
+      "A drink is picked up at the tea and coffee production stations.",
+      "A powered vacuum cleans the floor near seated customers.",
+      "In-game earnings are collected at the service counter.",
+      "The staff panel shows hiring and level options for shelf assistants, cashiers and bussers.",
+      "An unlocked dining room shows tables and a new table purchase area."
+    ]
+  }
+}

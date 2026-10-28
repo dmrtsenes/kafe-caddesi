@@ -1,0 +1,4 @@
+# AdMob app-ads.txt — Kafe Caddesi
+# Bu dosyayı oyununuzun Google Play Store mağaza kaydındaki geliştirici web sitesinin kök dizinine yükleyin.
+# AdMob hesabınızdan (admob.google.com -> Uygulamalar -> app-ads.txt) Yayıncı Kimliğinizi (pub-XXXXXXXXXXXXXXXX) alıp alttaki satıra girin:
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

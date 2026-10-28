@@ -1,0 +1,53 @@
+node_modules
+dist
+dist-2d
+dist-ssr
+*.local
+.DS_Store
+.vite
+.devshots
+
+# Capacitor / Android — üretilen native proje çıktıları
+android/app/build
+android/build
+android/.gradle
+android/local.properties
+android/app/src/main/assets/public
+android/app/src/main/assets/capacitor.config.json
+android/capacitor-cordova-android-plugins
+ios/App/App/public
+*.apk
+*.aab
+*.keystore
+*.jks
+android/key.properties
+*.xapk
+
+# Unity projeleri ve arsivler (web oyunundan bagimsiz)
+Kafe idle/
+Kafe/
+_paketler/
+*.rar
+
+# Lisanslı üçüncü taraf kaynak paketlerinin geçici import alanı
+_imports/*
+!_imports/README.md
+!_imports/synty-office/
+_imports/synty-office/*
+!_imports/synty-office/README.md
+
+# Private comparison assets and local playtest records
+.asset-preview/
+.local-data/
+
+# Local video encoding tools (not game assets)
+.tools/
+.env
+*.mp4
+*.zip
+campaign-film/
+campaign-ua/
+growth-cowork/
+.agents/
+.cursor/
+.vscode/

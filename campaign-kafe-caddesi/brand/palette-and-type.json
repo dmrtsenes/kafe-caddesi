@@ -1,0 +1,95 @@
+{
+  "palette": {
+    "ink": "#103D40",
+    "deep": "#082D32",
+    "teal": "#128D80",
+    "mint": "#9FE9C5",
+    "cream": "#FFF3D7",
+    "gold": "#FFC44A",
+    "copper": "#BB7037"
+  },
+  "copy": {
+    "tr": {
+      "brand": "Kafe Caddesi",
+      "logo": [
+        "KAFE",
+        "CADDESİ"
+      ],
+      "tag": "SERVİS ET. KAZAN. BÜYÜT.",
+      "screens": [
+        [
+          "KENDİ KAFENİ",
+          "YÖNET"
+        ],
+        [
+          "HAZIRLA",
+          "SERVİSE TAŞI"
+        ],
+        [
+          "TEMİZLİK",
+          "SENDE"
+        ],
+        [
+          "KAZANCINI",
+          "TOPLA"
+        ],
+        [
+          "EKİBİNİ",
+          "GELİŞTİR"
+        ],
+        [
+          "KAFENE",
+          "YER AÇ"
+        ]
+      ]
+    },
+    "en": {
+      "brand": "Cafe Avenue",
+      "logo": [
+        "CAFE",
+        "AVENUE"
+      ],
+      "tag": "SERVE. EARN. EXPAND.",
+      "screens": [
+        [
+          "RUN YOUR",
+          "OWN CAFÉ"
+        ],
+        [
+          "BREW IT",
+          "SERVE IT"
+        ],
+        [
+          "MAKE IT",
+          "SHINE"
+        ],
+        [
+          "COLLECT",
+          "YOUR EARNINGS"
+        ],
+        [
+          "BUILD",
+          "YOUR TEAM"
+        ],
+        [
+          "MAKE ROOM",
+          "FOR MORE"
+        ]
+      ]
+    }
+  },
+  "shots": [
+    "01-serve",
+    "02-production",
+    "03-clean",
+    "04-cash",
+    "05-staff",
+    "06-growth"
+  ],
+  "canvas": {
+    "width": 1080,
+    "height": 1920
+  },
+  "headlineBandHeight": 352,
+  "method": "Opaque vector headline layer over unmodified full-resolution gameplay. No rescale, camera change, new scene objects, or scene retouching."
+}

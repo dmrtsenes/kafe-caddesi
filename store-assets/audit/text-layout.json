@@ -1,0 +1,438 @@
+[
+  {
+    "path": "brand/logo-transparent.png",
+    "width": 1600,
+    "height": 420,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 359,
+        "y": 15,
+        "w": 936.25,
+        "h": 360,
+        "right": 1295.25,
+        "bottom": 375
+      }
+    ]
+  },
+  {
+    "path": "brand/logo-light-transparent.png",
+    "width": 1600,
+    "height": 420,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 359,
+        "y": 15,
+        "w": 936.25,
+        "h": 360,
+        "right": 1295.25,
+        "bottom": 375
+      }
+    ]
+  },
+  {
+    "path": "brand/brand-mark.png",
+    "width": 256,
+    "height": 256,
+    "text": []
+  },
+  {
+    "path": "google-play/feature-1024x500.png",
+    "width": 1024,
+    "height": 500,
+    "text": [
+      {
+        "text": "TAŞI · SERVİS ET · BÜYÜT",
+        "x": 149,
+        "y": 80,
+        "w": 270.453125,
+        "h": 23,
+        "right": 419.453125,
+        "bottom": 103
+      },
+      {
+        "text": "Tepsilo",
+        "x": 52,
+        "y": 136,
+        "w": 377.109375,
+        "h": 148,
+        "right": 429.109375,
+        "bottom": 284
+      },
+      {
+        "text": "Kafenin ritmi sende.",
+        "x": 56,
+        "y": 288,
+        "w": 304.828125,
+        "h": 45,
+        "right": 360.828125,
+        "bottom": 333
+      }
+    ]
+  },
+  {
+    "path": "google-play/screenshots/01-serve.png",
+    "width": 1080,
+    "height": 1920,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 58,
+        "y": 27,
+        "w": 152.51795959472656,
+        "h": 62,
+        "right": 210.51795959472656,
+        "bottom": 89
+      },
+      {
+        "text": "01",
+        "x": 960.1875,
+        "y": 48,
+        "w": 34.8125,
+        "h": 32,
+        "right": 995,
+        "bottom": 80
+      },
+      {
+        "text": "Servis sende!",
+        "x": 56,
+        "y": 93,
+        "w": 515.28125,
+        "h": 109,
+        "right": 571.28125,
+        "bottom": 202
+      },
+      {
+        "text": "Tepsiyi doldur, siparişleri yetiştir.",
+        "x": 58,
+        "y": 209,
+        "w": 459.015625,
+        "h": 41,
+        "right": 517.015625,
+        "bottom": 250
+      }
+    ]
+  },
+  {
+    "path": "google-play/screenshots/02-production.png",
+    "width": 1080,
+    "height": 1920,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 58,
+        "y": 27,
+        "w": 152.51795959472656,
+        "h": 62,
+        "right": 210.51795959472656,
+        "bottom": 89
+      },
+      {
+        "text": "02",
+        "x": 960.1875,
+        "y": 48,
+        "w": 34.8125,
+        "h": 32,
+        "right": 995,
+        "bottom": 80
+      },
+      {
+        "text": "Lezzetleri hazırla",
+        "x": 56,
+        "y": 93,
+        "w": 699.125,
+        "h": 109,
+        "right": 755.125,
+        "bottom": 202
+      },
+      {
+        "text": "Çay, latte ve tostla servise devam.",
+        "x": 59,
+        "y": 209,
+        "w": 472.6875,
+        "h": 41,
+        "right": 531.6875,
+        "bottom": 250
+      }
+    ]
+  },
+  {
+    "path": "google-play/screenshots/03-clean.png",
+    "width": 1080,
+    "height": 1920,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 58,
+        "y": 27,
+        "w": 152.51795959472656,
+        "h": 62,
+        "right": 210.51795959472656,
+        "bottom": 89
+      },
+      {
+        "text": "03",
+        "x": 960.1875,
+        "y": 48,
+        "w": 34.8125,
+        "h": 32,
+        "right": 995,
+        "bottom": 80
+      },
+      {
+        "text": "Süpür, ferahla!",
+        "x": 56,
+        "y": 93,
+        "w": 569.359375,
+        "h": 109,
+        "right": 625.359375,
+        "bottom": 202
+      },
+      {
+        "text": "Yoğun servisin izlerini temizle.",
+        "x": 57,
+        "y": 209,
+        "w": 420.625,
+        "h": 41,
+        "right": 477.625,
+        "bottom": 250
+      }
+    ]
+  },
+  {
+    "path": "google-play/screenshots/04-cash.png",
+    "width": 1080,
+    "height": 1920,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 58,
+        "y": 27,
+        "w": 152.51795959472656,
+        "h": 62,
+        "right": 210.51795959472656,
+        "bottom": 89
+      },
+      {
+        "text": "04",
+        "x": 960.1875,
+        "y": 48,
+        "w": 34.8125,
+        "h": 32,
+        "right": 995,
+        "bottom": 80
+      },
+      {
+        "text": "Kazancını topla",
+        "x": 56,
+        "y": 93,
+        "w": 603.109375,
+        "h": 109,
+        "right": 659.109375,
+        "bottom": 202
+      },
+      {
+        "text": "Kasadaki parayı yeni adımlara ayır.",
+        "x": 59,
+        "y": 209,
+        "w": 481.140625,
+        "h": 41,
+        "right": 540.140625,
+        "bottom": 250
+      }
+    ]
+  },
+  {
+    "path": "google-play/screenshots/05-staff.png",
+    "width": 1080,
+    "height": 1920,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 58,
+        "y": 27,
+        "w": 152.51795959472656,
+        "h": 62,
+        "right": 210.51795959472656,
+        "bottom": 89
+      },
+      {
+        "text": "05",
+        "x": 960.1875,
+        "y": 48,
+        "w": 34.8125,
+        "h": 32,
+        "right": 995,
+        "bottom": 80
+      },
+      {
+        "text": "Ekibini kur",
+        "x": 56,
+        "y": 93,
+        "w": 405.6900939941406,
+        "h": 109,
+        "right": 461.6900939941406,
+        "bottom": 202
+      },
+      {
+        "text": "İşe al, görevleri paylaş, geliştir.",
+        "x": 59,
+        "y": 209,
+        "w": 431.015625,
+        "h": 41,
+        "right": 490.015625,
+        "bottom": 250
+      }
+    ]
+  },
+  {
+    "path": "google-play/screenshots/06-growth.png",
+    "width": 1080,
+    "height": 1920,
+    "text": [
+      {
+        "text": "Tepsilo",
+        "x": 58,
+        "y": 27,
+        "w": 152.51795959472656,
+        "h": 62,
+        "right": 210.51795959472656,
+        "bottom": 89
+      },
+      {
+        "text": "06",
+        "x": 960.1875,
+        "y": 48,
+        "w": 34.8125,
+        "h": 32,
+        "right": 995,
+        "bottom": 80
+      },
+      {
+        "text": "Kafeni büyüt",
+        "x": 56,
+        "y": 93,
+        "w": 500.77008056640625,
+        "h": 109,
+        "right": 556.7700805664062,
+        "bottom": 202
+      },
+      {
+        "text": "Yeni alanlar, daha çok masa.",
+        "x": 57,
+        "y": 209,
+        "w": 393.140625,
+        "h": 41,
+        "right": 450.140625,
+        "bottom": 250
+      }
+    ]
+  },
+  {
+    "path": "preview/brand-board.png",
+    "width": 1600,
+    "height": 1000,
+    "text": [
+      {
+        "text": "TEPSILO / GÖRSEL KİMLİK",
+        "x": 81,
+        "y": 68,
+        "w": 391.640625,
+        "h": 30,
+        "right": 472.640625,
+        "bottom": 98
+      },
+      {
+        "text": "Tepsilo",
+        "x": 316,
+        "y": 130,
+        "w": 640.796875,
+        "h": 248,
+        "right": 956.796875,
+        "bottom": 378
+      },
+      {
+        "text": "Kafenin ritmi sende.",
+        "x": 87,
+        "y": 405,
+        "w": 387.96875,
+        "h": 57,
+        "right": 474.96875,
+        "bottom": 462
+      },
+      {
+        "text": "Tepsi · sıcak servis · yaşayan bir kafe",
+        "x": 87,
+        "y": 495,
+        "w": 471.125,
+        "h": 38,
+        "right": 558.125,
+        "bottom": 533
+      },
+      {
+        "text": "Fredoka 600 — sıcak, güçlü başlıklar",
+        "x": 85,
+        "y": 650,
+        "w": 784.9342041015625,
+        "h": 60,
+        "right": 869.9342041015625,
+        "bottom": 710
+      },
+      {
+        "text": "Nunito Sans 700 — Çay, Şube, Büyüt, İşe Al, Süpür",
+        "x": 86,
+        "y": 722,
+        "w": 707.2496948242188,
+        "h": 41,
+        "right": 793.2496948242188,
+        "bottom": 763
+      },
+      {
+        "text": "PETROL #123D38",
+        "x": 84,
+        "y": 899,
+        "w": 204.609375,
+        "h": 32,
+        "right": 288.609375,
+        "bottom": 931
+      },
+      {
+        "text": "LEAF #247769",
+        "x": 374,
+        "y": 899,
+        "w": 166.140625,
+        "h": 32,
+        "right": 540.140625,
+        "bottom": 931
+      },
+      {
+        "text": "CREAM #FFF3D6",
+        "x": 664,
+        "y": 899,
+        "w": 193.90625,
+        "h": 32,
+        "right": 857.90625,
+        "bottom": 931
+      },
+      {
+        "text": "COPPER #D88D55",
+        "x": 954,
+        "y": 899,
+        "w": 211.734375,
+        "h": 32,
+        "right": 1165.734375,
+        "bottom": 931
+      },
+      {
+        "text": "AMBER #E9A94D",
+        "x": 1243,
+        "y": 899,
+        "w": 201.546875,
+        "h": 32,
+        "right": 1444.546875,
+        "bottom": 931
+      }
+    ]
+  }
+]

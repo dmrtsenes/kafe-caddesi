@@ -1,0 +1,95 @@
+import {chromium} from 'playwright';
+import {createServer} from 'vite';
+import {mkdir,writeFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const externalUrl=process.argv.find(a=>a.startsWith('--url='))?.slice(6);
+const out=process.argv.find(a=>a.startsWith('--output='))?.slice(9)??(externalUrl?'.devshots/cleanit-optimization/lifecycle':'.devshots/premium-performance/lifecycle');
+await mkdir(out,{recursive:true});
+const server=externalUrl?null:await createServer({configFile:false,root:process.cwd(),optimizeDeps:{noDiscovery:true},server:{host:'127.0.0.1',port:5361,strictPort:true,hmr:false,watch:null,open:false}});
+await server?.listen();
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--enable-unsafe-swiftshader']});
+try {
+ const context=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true,storageState:{cookies:[],origins:[]}});
+ const page=await context.newPage(),errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await page.addInitScript(()=>{
+  localStorage.setItem('fincan-sokagi:settings:v2',JSON.stringify({quality:'low',qualityAuto:false,fps:30,music:false,muted:true}));
+  let instance;Object.defineProperty(window,'__fincan',{get:()=>instance,set:g=>{instance=g;g.persistDisabled=true;}});
+ });
+ await page.goto(externalUrl??'http://127.0.0.1:5361/?characters=quaternius',{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>window.__fincan,null,{timeout:90000});
+ await page.locator('#boot-screen').waitFor({state:'detached',timeout:90000});
+ const result=await page.evaluate(async()=>{
+  const g=window.__fincan,s=g.scene3d,w=g.world,r=s.renderer;
+  g.stop();g.ui.closePanels();g.ui.setTutorial(null);g.state.tutorialStep=99;
+  const pixels=()=>{
+   const gl=r.getContext(),data=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);
+   gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,data);return data;
+  };
+  const compare=(a,b)=>{
+   let bad=0,max=0;
+   for(let i=0;i<a.length;i+=4){let d=0;for(let c=0;c<3;c++)d=Math.max(d,Math.abs(a[i+c]-b[i+c]));max=Math.max(max,d);if(d>4)bad++;}
+   return {differentFraction:bad/(a.length/4),max};
+  };
+  const pairs=[];
+  const check=(name,mutate)=>{
+   s.render();s.render();mutate();s.render();
+   const actual=pixels(),path=s.renderPath;
+   s.haveCacheView=false;s.render();
+   pairs.push({name,path,...compare(actual,pixels())});
+  };
+  const pickup=[...w.pickupVisuals.values()][0];
+  g.player.setPosition(pickup.root.position.x,pickup.root.position.z+2);
+  s.setOpeningFrame(false);s.snapTo(g.player.x,g.player.z);w.setViewFromCamera(s.camera);w.updateVisuals(0);
+  pickup.setLocked(false);pickup.update(1);s.invalidateStatic();
+  check('stock-full',()=>pickup.setContents(Array(8).fill('cay'),8));
+  check('stock-empty',()=>pickup.setContents([],8));
+  check('pop-start',()=>{pickup.pop();pickup.update(.01);});
+  check('pop-mid',()=>pickup.update(.12));
+  check('pop-settled',()=>pickup.update(1));
+  check('pickup-locked',()=>pickup.setLocked(true));
+  check('pickup-unlock-delay',()=>{pickup.playUnlock(.2);pickup.update(.05);});
+  check('pickup-unlock-moving',()=>pickup.update(.25));
+  check('pickup-unlock-settled',()=>pickup.update(1));
+  check('pickup-hidden',()=>pickup.setLocked(false,true));
+  check('pickup-shown',()=>{pickup.setLocked(false);pickup.update(0);});
+  const station=w.stationVisuals.get(w.counters[0].id);
+  s.snapTo(station.root.position.x,station.root.position.z+2);station.setLocked(false);station.update(1);s.invalidateStatic();
+  check('counter-money',()=>station.setOutput(5,100,null));
+  check('counter-locked',()=>station.setLocked(true));
+  check('counter-unlock-delay',()=>{station.playUnlock(.2);station.update(.05);});
+  check('counter-unlock-moving',()=>station.update(.25));
+  check('counter-unlock-settled',()=>station.update(1));
+  const table=w.stationVisuals.get(w.tables[0].id);
+  table.setLocked(false);table.update(1);s.snapTo(table.root.position.x,table.root.position.z+2);s.invalidateStatic();
+  check('table-served',()=>table.setInput([{item:'cay',count:2,cap:2}]));
+  check('table-meal-changed',()=>table.setInput([{item:'tost',count:1,cap:2}]));
+  check('table-meal-cleared',()=>table.setInput([]));
+  s.snapTo(g.player.x,g.player.z);s.invalidateStatic();
+  check('carry-added',()=>g.player.give('cay'));
+  check('carry-moves-with-player',()=>{g.player.x+=.4;g.player.char.root.position.x+=.4;g.player.char.update(1/30,0);});
+  check('carry-removed',()=>g.player.takeItem('cay'));
+  Object.assign(g.state.staffCount,{waiter:1,barista:1,cashier:1,busser:1});w.syncStaff();
+  const staffBefore=w.staff.map(staff=>staff.char);
+  g.setQualityTier('medium');g.setQualityTier('low');
+  const staffPreserved=w.staff.every((staff,i)=>staff.char===staffBefore[i]);
+  const quality=await import('/src/core/Quality.ts');
+  const size=()=>r.domElement.width*r.domElement.height;
+  const thermal={before:size()};
+  quality.setNativeThermalStatus(5);thermal.hot=size();thermal.hotLevel=quality.currentHeat();
+  quality.applyTier('high');thermal.manualHot=quality.currentHeat();
+  quality.setNativeThermalStatus(0);quality.evaluateHeat(1,30,30,{dt:44});thermal.cooling=quality.currentHeat();
+  quality.evaluateHeat(1,30,30,{dt:2});thermal.cooled=quality.currentHeat();thermal.restoredTier=quality.QUALITY.tier;
+  quality.applyTier('low');
+  return {pairs,thermal,staffPreserved,glError:r.getContext().getError()};
+ });
+ await writeFile(out+'/result.json',JSON.stringify({result,errors},null,2));
+ assert.deepEqual(errors,[]);assert.equal(result.glError,0);
+ assert.equal(result.staffPreserved,true);
+ assert.ok(result.pairs.every(pair=>pair.differentFraction<.005),JSON.stringify(result.pairs));
+ assert.ok(result.thermal.hot<result.thermal.before*.61,JSON.stringify(result.thermal));
+ assert.equal(result.thermal.hotLevel,5);assert.equal(result.thermal.manualHot,5);
+ assert.equal(result.thermal.cooling,5);assert.equal(result.thermal.cooled,0);assert.equal(result.thermal.restoredTier,'high');
+ console.log(JSON.stringify(result));
+} finally {await browser.close();await server?.close();}

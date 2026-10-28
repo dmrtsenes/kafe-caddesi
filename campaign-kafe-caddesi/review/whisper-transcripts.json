@@ -1,0 +1,171 @@
+{
+  "engine": "faster-whisper small multilingual CPU int8",
+  "promptSupplied": false,
+  "results": [
+    {
+      "file": "01-hook-master.wav",
+      "transcript": "Her şey bir çayla başlar.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 1.3,
+          "text": " Her şey bir çayla başlar.",
+          "avg_logprob": -0.3196520358324051,
+          "words": [
+            {
+              "word": " Her",
+              "start": 0.0,
+              "end": 0.16,
+              "probability": 0.8030361533164978
+            },
+            {
+              "word": " şey",
+              "start": 0.16,
+              "end": 0.36,
+              "probability": 0.8954603672027588
+            },
+            {
+              "word": " bir",
+              "start": 0.36,
+              "end": 0.54,
+              "probability": 0.8779694437980652
+            },
+            {
+              "word": " çayla",
+              "start": 0.54,
+              "end": 0.92,
+              "probability": 0.9909749031066895
+            },
+            {
+              "word": " başlar.",
+              "start": 0.92,
+              "end": 1.3,
+              "probability": 0.9940629005432129
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "02-welcome-master.wav",
+      "transcript": "Yeni misafirlere yer aç.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 1.32,
+          "text": " Yeni misafirlere yer aç.",
+          "avg_logprob": -0.3270712196826935,
+          "words": [
+            {
+              "word": " Yeni",
+              "start": 0.0,
+              "end": 0.22,
+              "probability": 0.9121419489383698
+            },
+            {
+              "word": " misafirlere",
+              "start": 0.22,
+              "end": 0.9,
+              "probability": 0.8994100242853165
+            },
+            {
+              "word": " yer",
+              "start": 0.9,
+              "end": 1.06,
+              "probability": 0.9826081991195679
+            },
+            {
+              "word": " aç.",
+              "start": 1.06,
+              "end": 1.32,
+              "probability": 0.997316300868988
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "03-grow-master.wav",
+      "transcript": "Kazancın'la ekibini kur.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 1.06,
+          "text": " Kazancın'la ekibini kur.",
+          "avg_logprob": -0.41397398251753587,
+          "words": [
+            {
+              "word": " Kazancın",
+              "start": 0.0,
+              "end": 0.5,
+              "probability": 0.8646194140116373
+            },
+            {
+              "word": "'la",
+              "start": 0.5,
+              "end": 0.56,
+              "probability": 0.657533124089241
+            },
+            {
+              "word": " ekibini",
+              "start": 0.56,
+              "end": 0.92,
+              "probability": 0.9562970797220866
+            },
+            {
+              "word": " kur.",
+              "start": 0.92,
+              "end": 1.06,
+              "probability": 0.8651236295700073
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "04-brand-master.wav",
+      "transcript": "Kâfe caddesi. Şimdi sıra sende.",
+      "segments": [
+        {
+          "start": 0.0,
+          "end": 2.28,
+          "text": " Kâfe caddesi. Şimdi sıra sende.",
+          "avg_logprob": -0.475040003657341,
+          "words": [
+            {
+              "word": " Kâfe",
+              "start": 0.0,
+              "end": 0.28,
+              "probability": 0.4567216982444127
+            },
+            {
+              "word": " caddesi.",
+              "start": 0.28,
+              "end": 0.94,
+              "probability": 0.8485100269317627
+            },
+            {
+              "word": " Şimdi",
+              "start": 1.06,
+              "end": 1.38,
+              "probability": 0.917693018913269
+            },
+            {
+              "word": " sıra",
+              "start": 1.38,
+              "end": 1.8,
+              "probability": 0.9591572284698486
+            },
+            {
+              "word": " sende.",
+              "start": 1.8,
+              "end": 2.28,
+              "probability": 0.870541125535965
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "Automatic transcript; not a human listening or subjective naturalness certification."
+}

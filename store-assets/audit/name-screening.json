@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-09-13",
+  "candidateCount": 14,
+  "method": "Public web search and exact-name queries restricted to Google Play, Apple App Store and Steam domains. Search result inspection, not an exhaustive live catalogue or trademark registry search.",
+  "criteria": ["Fit with active carrying, serving, maintenance and reinvestment", "Recall and pronunciation", "Turkish and international spelling", "Visual wordmark and icon potential", "Obvious public-name collisions"],
+  "shortlist": [
+    {"name":"Tepsilo","selected":true,"exactQueries":["\"Tepsilo\"","\"Tepsilo\" (site:play.google.com OR site:apps.apple.com OR site:store.steampowered.com)","Tepsilo game app cafe"],"finding":"No obvious exact game/app match returned. Broad search also returned unrelated and approximate matches; these are not treated as availability evidence."},
+    {"name":"Tepsora","selected":false,"exactQueries":["\"Tepsora\"","\"Tepsora\" (site:play.google.com OR site:apps.apple.com OR site:store.steampowered.com)","Tepsora game app cafe"],"finding":"No obvious exact game/app match returned. Broad query surfaced a similar cafe name, Tepisora, reducing distinctiveness.","nearMatchSource":"https://linktr.ee/tepisora"},
+    {"name":"Tepsi Turu","selected":false,"exactQueries":["\"Tepsi Turu\"","\"Tepsi Turu\" (site:play.google.com OR site:apps.apple.com OR site:store.steampowered.com)"],"finding":"No obvious exact game/app title returned. Ordinary descriptive uses of the words were returned. Turkish meaning is clear; international comprehension is weaker."}
+  ],
+  "screenedOutCollisionEvidence": [
+    {"source":"https://play.google.com/store/apps/details?id=app.servora.mobile","finding":"An exact app-name collision was used to remove an earlier candidate."},
+    {"source":"https://shop.app/m/ehvjw3yfnt","finding":"An existing tray/homeware shop name was used to remove an earlier candidate."},
+    {"source":"https://litmarket.ru/books/tepsiva","finding":"An exact creative-work title and nearby commercial spelling weakened an earlier candidate."}
+  ],
+  "notChecked": ["All countries and regions of app stores", "Unindexed/private/unreleased products", "Domain registrations and social handle availability", "TURKPATENT", "WIPO", "EUIPO", "USPTO", "Legal clearance"],
+  "guarantee": false
+}

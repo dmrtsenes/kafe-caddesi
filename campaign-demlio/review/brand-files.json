@@ -1,0 +1,79 @@
+[
+  {
+    "name": "logo-transparent",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\brand\\logo-transparent.png",
+    "width": 1200,
+    "height": 480,
+    "alpha": true
+  },
+  {
+    "name": "logo-dark-transparent",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\brand\\logo-dark-transparent.png",
+    "width": 1200,
+    "height": 480,
+    "alpha": true
+  },
+  {
+    "name": "icon-master-1024",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\brand\\icon-master-1024.png",
+    "width": 1024,
+    "height": 1024,
+    "alpha": true
+  },
+  {
+    "name": "01-servis",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\store\\screenshots\\01-servis.png",
+    "width": 1080,
+    "height": 1920,
+    "alpha": false
+  },
+  {
+    "name": "02-hazirlik",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\store\\screenshots\\02-hazirlik.png",
+    "width": 1080,
+    "height": 1920,
+    "alpha": false
+  },
+  {
+    "name": "03-temizlik",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\store\\screenshots\\03-temizlik.png",
+    "width": 1080,
+    "height": 1920,
+    "alpha": false
+  },
+  {
+    "name": "04-kazanc",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\store\\screenshots\\04-kazanc.png",
+    "width": 1080,
+    "height": 1920,
+    "alpha": false
+  },
+  {
+    "name": "05-ekip",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\store\\screenshots\\05-ekip.png",
+    "width": 1080,
+    "height": 1920,
+    "alpha": false
+  },
+  {
+    "name": "06-raf",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\store\\screenshots\\06-raf.png",
+    "width": 1080,
+    "height": 1920,
+    "alpha": false
+  },
+  {
+    "name": "feature-1024x500",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\store\\feature-1024x500.png",
+    "width": 1024,
+    "height": 500,
+    "alpha": false
+  },
+  {
+    "name": "brand-board",
+    "path": "C:\\Users\\Enes\\Desktop\\oyun\\campaign-demlio\\brand\\brand-board.png",
+    "width": 1600,
+    "height": 1100,
+    "alpha": false
+  }
+]

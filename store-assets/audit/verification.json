@@ -1,0 +1,178 @@
+{
+  "date": "2026-09-13",
+  "passed": true,
+  "files": [
+    {
+      "path": "google-play/icon-512.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 332977,
+      "channels": 4,
+      "pngColorType": 6,
+      "hasAlpha": true,
+      "sha256": "5c43c03d9e68047ce04d3e6856c6a01be39adca6b356ea4fecee68b89e702efe"
+    },
+    {
+      "path": "google-play/feature-1024x500.png",
+      "width": 1024,
+      "height": 500,
+      "bytes": 356832,
+      "channels": 3,
+      "pngColorType": 2,
+      "hasAlpha": false,
+      "sha256": "a7d1aa136879bec7b71ac9297c7a16280192ba93b73521af2868450dad64566a"
+    },
+    {
+      "path": "google-play/screenshots/01-serve.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1191120,
+      "channels": 3,
+      "pngColorType": 2,
+      "hasAlpha": false,
+      "sha256": "da5c4cf0b44eafd9098b33e7a979de6766aff046260e41a494f72aaa3aa365f3"
+    },
+    {
+      "path": "google-play/screenshots/02-production.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 652790,
+      "channels": 3,
+      "pngColorType": 2,
+      "hasAlpha": false,
+      "sha256": "fed621efbf715dcd59df39ea3b921eaf64ae6911183f4cf6668869b74fc055e8"
+    },
+    {
+      "path": "google-play/screenshots/03-clean.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1149406,
+      "channels": 3,
+      "pngColorType": 2,
+      "hasAlpha": false,
+      "sha256": "dcce00425ae6f591e7bbee2e73a9b0e4dc0f45586edddc11c770ff51cafb3345"
+    },
+    {
+      "path": "google-play/screenshots/04-cash.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 911051,
+      "channels": 3,
+      "pngColorType": 2,
+      "hasAlpha": false,
+      "sha256": "1bf4177a836c9580fe22de52ae0cb767987f0e51ff843f2f2258dd5181b3b572"
+    },
+    {
+      "path": "google-play/screenshots/05-staff.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 287779,
+      "channels": 3,
+      "pngColorType": 2,
+      "hasAlpha": false,
+      "sha256": "97d9a51a562591ac0f91fc1559a0c0fdb2bed45837c0994e1521eb6459a5807a"
+    },
+    {
+      "path": "google-play/screenshots/06-growth.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1145474,
+      "channels": 3,
+      "pngColorType": 2,
+      "hasAlpha": false,
+      "sha256": "47783df0bd1d95f6f1eb702c281ae8ee8fb8d5c8a6720bfbd8c4d5fe3090c38b"
+    },
+    {
+      "path": "brand/logo-transparent.png",
+      "width": 1600,
+      "height": 420,
+      "bytes": 25989,
+      "channels": 4,
+      "pngColorType": 6,
+      "hasAlpha": true,
+      "sha256": "eaeab3fab6353aa6f185d9bf6cf77aafbb505f7918e8aebd982731e5b37212dc"
+    },
+    {
+      "path": "brand/logo-light-transparent.png",
+      "width": 1600,
+      "height": 420,
+      "bytes": 25812,
+      "channels": 4,
+      "pngColorType": 6,
+      "hasAlpha": true,
+      "sha256": "3893771bb0630b61882067a537aa396d04da9d3f0912096b17cf8d7c186217a7"
+    }
+  ],
+  "gameplayPixelChecks": [
+    {
+      "id": "01-serve",
+      "changedChannels": 0,
+      "maxDelta": 0,
+      "oneToOne": true
+    },
+    {
+      "id": "02-production",
+      "changedChannels": 0,
+      "maxDelta": 0,
+      "oneToOne": true
+    },
+    {
+      "id": "03-clean",
+      "changedChannels": 0,
+      "maxDelta": 0,
+      "oneToOne": true
+    },
+    {
+      "id": "04-cash",
+      "changedChannels": 0,
+      "maxDelta": 0,
+      "oneToOne": true
+    },
+    {
+      "id": "05-staff",
+      "changedChannels": 0,
+      "maxDelta": 0,
+      "oneToOne": true
+    },
+    {
+      "id": "06-growth",
+      "changedChannels": 0,
+      "maxDelta": 0,
+      "oneToOne": true
+    }
+  ],
+  "textChecks": [
+    {
+      "id": "01-serve",
+      "altLength": 84,
+      "normalized": true
+    },
+    {
+      "id": "02-production",
+      "altLength": 97,
+      "normalized": true
+    },
+    {
+      "id": "03-clean",
+      "altLength": 87,
+      "normalized": true
+    },
+    {
+      "id": "04-cash",
+      "altLength": 88,
+      "normalized": true
+    },
+    {
+      "id": "05-staff",
+      "altLength": 100,
+      "normalized": true
+    },
+    {
+      "id": "06-growth",
+      "altLength": 111,
+      "normalized": true
+    }
+  ],
+  "rightsStatus": "UNVERIFIED_EXISTING_CHARACTER_DISTRIBUTION_LICENSE",
+  "projectFilesUnchanged": 341
+}

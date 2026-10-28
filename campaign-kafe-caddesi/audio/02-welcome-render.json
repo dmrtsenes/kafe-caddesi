@@ -1,0 +1,12 @@
+{
+  "name": "welcome-tr",
+  "text": "Yeni misafirlere yer aç.",
+  "seed": 122,
+  "exaggeration": 0.3,
+  "cfg_weight": 0.5,
+  "seconds": 1.455125,
+  "transcript": "Yeni misafirlere yer aç.",
+  "meanWordProbability": 0.9478665627539158,
+  "id": "02-welcome",
+  "voice": "Chatterbox V3 conditioned with synthesized Piper stock Turkish accent reference; no real-person sample"
+}

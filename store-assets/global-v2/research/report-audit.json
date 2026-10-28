@@ -1,0 +1,78 @@
+{
+  "pages": [
+    {
+      "page": 1,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2301
+    },
+    {
+      "page": 2,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2383
+    },
+    {
+      "page": 3,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2969
+    },
+    {
+      "page": 4,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2635
+    },
+    {
+      "page": 5,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2412
+    },
+    {
+      "page": 6,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2745
+    },
+    {
+      "page": 7,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2542
+    },
+    {
+      "page": 8,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 2785
+    },
+    {
+      "page": 9,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 1812
+    },
+    {
+      "page": 10,
+      "height": 1122.515625,
+      "expectedHeight": 1122.5196850393702,
+      "textLength": 1991
+    }
+  ],
+  "metadata": [
+    {
+      "lang": "tr",
+      "title": 27,
+      "short": 64,
+      "full": 1219
+    },
+    {
+      "lang": "en",
+      "title": 24,
+      "short": 77,
+      "full": 1225
+    }
+  ]
+}

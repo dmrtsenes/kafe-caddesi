@@ -1,0 +1,65 @@
+Loading local multilingual v3 / stock voice
+C:\Users\Enes\Desktop\oyun\.tools\voice-studio\Lib\site-packages\diffusers\models\lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+WARNING:chatterbox.models.tokenizers.tokenizer:Could not load Cangjie mapping: An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.
+Local model ready. NVIDIA GeForce RTX 5070 Laptop GPU
+C:\Users\Enes\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 1/1000 [00:00<03:13,  5.17it/s]
+Sampling:   1%|          | 6/1000 [00:00<00:41, 23.76it/s]
+Sampling:   1%|          | 11/1000 [00:00<00:29, 33.29it/s]
+Sampling:   2%|▏         | 16/1000 [00:00<00:25, 38.96it/s]
+Sampling:   2%|▏         | 21/1000 [00:00<00:23, 42.32it/s]
+Sampling:   3%|▎         | 26/1000 [00:00<00:21, 44.64it/s]
+Sampling:   3%|▎         | 32/1000 [00:00<00:20, 46.42it/s]
+Sampling:   4%|▎         | 37/1000 [00:00<00:20, 47.17it/s]
+Sampling:   4%|▍         | 42/1000 [00:01<00:20, 47.82it/s]
+Sampling:   5%|▍         | 47/1000 [00:01<00:19, 48.04it/s]
+Sampling:   5%|▌         | 50/1000 [00:01<00:22, 41.88it/s]
+{"id": "01-hook", "text": "Bir çayla başlar.", "phase": 2, "offset": 0.02, "untilPhase": 0, "seconds": 1.96, "seed": 61, "renderSeconds": 12.015000000000327, "sampleRate": 24000, "voice": "Chatterbox V3 bundled stock voice; Turkish; no reference person", "settings": {"exaggeration": 0.42, "cfg_weight": 0, "temperature": 0.65}}
+C:\Users\Enes\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:20, 48.63it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:20, 48.43it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:20, 48.98it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:20, 48.61it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:19, 48.87it/s]
+Sampling:   3%|▎         | 30/1000 [00:00<00:19, 49.14it/s]
+Sampling:   4%|▎         | 35/1000 [00:00<00:19, 49.31it/s]
+Sampling:   4%|▍         | 40/1000 [00:00<00:19, 49.14it/s]
+Sampling:   4%|▍         | 45/1000 [00:00<00:19, 49.08it/s]
+Sampling:   5%|▍         | 47/1000 [00:00<00:19, 49.01it/s]
+{"id": "02-welcome", "text": "Yeni misafirlere yer aç.", "phase": 0, "offset": 0.12, "untilPhase": 4, "seconds": 1.84, "seed": 62, "renderSeconds": 1.4369999999998981, "sampleRate": 24000, "voice": "Chatterbox V3 bundled stock voice; Turkish; no reference person", "settings": {"exaggeration": 0.42, "cfg_weight": 0, "temperature": 0.65}}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:20, 47.86it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:20, 48.47it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:20, 48.47it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:20, 48.84it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:19, 49.04it/s]
+Sampling:   3%|▎         | 31/1000 [00:00<00:19, 49.43it/s]
+Sampling:   4%|▎         | 37/1000 [00:00<00:19, 49.68it/s]
+Sampling:   4%|▍         | 42/1000 [00:00<00:19, 49.66it/s]
+Sampling:   5%|▍         | 47/1000 [00:00<00:19, 49.75it/s]
+Sampling:   5%|▌         | 51/1000 [00:01<00:19, 49.28it/s]
+{"id": "03-grow", "text": "Kazancınla ekibini kur.", "phase": 4, "offset": 0.05, "untilPhase": 6, "seconds": 2.0, "seed": 63, "renderSeconds": 1.5320000000001528, "sampleRate": 24000, "voice": "Chatterbox V3 bundled stock voice; Turkish; no reference person", "settings": {"exaggeration": 0.42, "cfg_weight": 0, "temperature": 0.65}}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:21, 47.13it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:20, 47.92it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:20, 48.41it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:20, 48.97it/s]
+Sampling:   3%|▎         | 26/1000 [00:00<00:19, 49.40it/s]
+Sampling:   3%|▎         | 31/1000 [00:00<00:19, 48.74it/s]
+Sampling:   4%|▎         | 36/1000 [00:00<00:19, 48.37it/s]
+Sampling:   4%|▍         | 41/1000 [00:00<00:19, 48.24it/s]
+Sampling:   5%|▍         | 46/1000 [00:00<00:19, 48.44it/s]
+Sampling:   5%|▌         | 52/1000 [00:01<00:19, 49.14it/s]
+Sampling:   6%|▌         | 58/1000 [00:01<00:19, 49.46it/s]
+Sampling:   6%|▌         | 62/1000 [00:01<00:19, 48.89it/s]
+{"id": "04-brand", "text": "Kafe Caddesi. Sıra sende.", "phase": 7, "offset": 0.05, "untilPhase": null, "seconds": 2.44, "seed": 64, "renderSeconds": 1.780999999999949, "sampleRate": 24000, "voice": "Chatterbox V3 bundled stock voice; Turkish; no reference person", "settings": {"exaggeration": 0.42, "cfg_weight": 0, "temperature": 0.65}}
+Voice files written locally.

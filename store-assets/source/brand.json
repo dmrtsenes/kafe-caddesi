@@ -1,0 +1,17 @@
+{
+  "name": "Tepsilo",
+  "pronunciation": "tep-si-lo",
+  "tagline": "Kafenin ritmi sende.",
+  "storeTitleTR": "Tepsilo: Kafe İşletme Oyunu",
+  "storeTitleEN": "Tepsilo: Cafe Life",
+  "palette": {"petrol":"#123D38","leaf":"#247769","cream":"#FFF3D6","copper":"#D88D55","amber":"#E9A94D"},
+  "fonts": {"display":"Fredoka 600","body":"Nunito Sans 700"},
+  "screenshots": [
+    {"id":"01-serve","title":"Servis sende!","subtitle":"Tepsiyi doldur, siparişleri yetiştir.","alt":"Oyuncu, tepsisindeki siparişi kafenin salonunda masada bekleyen müşteriye götürüyor."},
+    {"id":"02-production","title":"Lezzetleri hazırla","subtitle":"Çay, latte ve tostla servise devam.","alt":"Oyuncu üretim tezgâhından ürün alıyor; çay, latte ve tost makineleri ile paket rafları görünüyor."},
+    {"id":"03-clean","title":"Süpür, ferahla!","subtitle":"Yoğun servisin izlerini temizle.","alt":"Oyuncu elektrikli süpürgeyle kafenin zeminindeki trafiğin bıraktığı kirleri temizliyor."},
+    {"id":"04-cash","title":"Kazancını topla","subtitle":"Kasadaki parayı yeni adımlara ayır.","alt":"Oyuncu kasanın yanında biriken satış gelirini topluyor; müşteriler ve çalışanlar kafede."},
+    {"id":"05-staff","title":"Ekibini kur","subtitle":"İşe al, görevleri paylaş, geliştir.","alt":"Oyunun Personel ekranında tezgâhtar ve kasiyer için işe alım, görev ve seviye seçenekleri görünüyor."},
+    {"id":"06-growth","title":"Kafeni büyüt","subtitle":"Yeni alanlar, daha çok masa.","alt":"Kazançla genişletilen kafede oyuncu servise devam ediyor; yeni masalar ve alanların gerçek yerleşimi görünüyor."}
+  ]
+}

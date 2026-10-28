@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Demlio • Reklam çekimi</title>
+<style>
+@font-face{font-family:Paytone;src:url('/campaign-demlio/source/fonts/paytoneone-PaytoneOne-Regular.ttf')}
+@font-face{font-family:Barlow;src:url('/campaign-demlio/source/fonts/barlowcondensed-BarlowCondensed-Bold.ttf');font-weight:700}
+*{box-sizing:border-box}body{margin:0;background:#123b39;overflow:hidden}#stage{position:fixed;left:-12000px}#film{display:block;width:100vw;height:100vh;object-fit:contain}#status{position:fixed;inset:45% 10%;color:#fff;text-align:center;font:24px sans-serif}#replay{position:fixed;bottom:24px;right:24px;padding:12px 20px;background:#ffce78;border:0;border-radius:30px;color:#173f35;cursor:pointer}[hidden]{display:none!important}
+</style></head><body><canvas id="stage" width="1080" height="1920"></canvas><canvas id="film" width="1080" height="1920"></canvas><p id="status">Kafe çekime hazırlanıyor…</p><button id="replay" hidden onclick="location.reload()">Tekrar oynat</button><script type="module" src="/src/promo-campaign/main.ts"></script></body></html>

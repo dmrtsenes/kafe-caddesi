@@ -1,0 +1,30 @@
+{
+  "icon": "Bakır kenarlı tepside ince belli çay bardağı; petrol yeşili zemin üzerinde Tepsilo simgesi.",
+  "feature": "Tepsilo logosu ve Kafenin ritmi sende sloganı; yanında stilize tepside çay bardağı.",
+  "screenshots": [
+    {
+      "file": "screenshots/01-serve.png",
+      "alt": "Oyuncu, tepsisindeki siparişi kafenin salonunda masada bekleyen müşteriye götürüyor."
+    },
+    {
+      "file": "screenshots/02-production.png",
+      "alt": "Oyuncu üretim tezgâhından ürün alıyor; çay, latte ve tost makineleri ile paket rafları görünüyor."
+    },
+    {
+      "file": "screenshots/03-clean.png",
+      "alt": "Oyuncu elektrikli süpürgeyle kafenin zeminindeki trafiğin bıraktığı kirleri temizliyor."
+    },
+    {
+      "file": "screenshots/04-cash.png",
+      "alt": "Oyuncu kasanın yanında biriken satış gelirini topluyor; müşteriler ve çalışanlar kafede."
+    },
+    {
+      "file": "screenshots/05-staff.png",
+      "alt": "Oyunun Personel ekranında tezgâhtar ve kasiyer için işe alım, görev ve seviye seçenekleri görünüyor."
+    },
+    {
+      "file": "screenshots/06-growth.png",
+      "alt": "Kazançla genişletilen kafede oyuncu servise devam ediyor; yeni masalar ve alanların gerçek yerleşimi görünüyor."
+    }
+  ]
+}

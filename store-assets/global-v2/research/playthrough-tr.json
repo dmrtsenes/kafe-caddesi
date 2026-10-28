@@ -1,0 +1,4459 @@
+[
+  {
+    "minutes": 10,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 261,
+        "id": "capacity",
+        "level": 1
+      }
+    ],
+    "zoneTimes": {
+      "t1": "1:59",
+      "a3": "4:20"
+    },
+    "staffTimes": {
+      "kose:waiter1": "3:02"
+    },
+    "goalTimes": {
+      "g00": "0:01",
+      "g01": "0:15",
+      "g03": "1:11",
+      "g04": "1:59",
+      "g05": "3:02",
+      "g07": "3:03",
+      "g08": "4:20",
+      "g09": "4:21"
+    },
+    "incomeSamples": [
+      {
+        "t": "0:30",
+        "para": 75,
+        "toplam": 45,
+        "revenue": 45,
+        "goal": 1,
+        "hygiene": 94,
+        "dirtyTables": 0,
+        "spills": 1,
+        "heavyFloor": 0.00006037488384480122,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 0.24,
+          "traffic": 0.0002414995353792049,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 0.24024149953537918,
+          "target": 93.99396251161552
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "1:00",
+        "para": 83,
+        "toplam": 53,
+        "revenue": 53,
+        "goal": 1,
+        "hygiene": 94,
+        "dirtyTables": 0,
+        "spills": 1,
+        "heavyFloor": 0.004551040617281183,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 0.24,
+          "traffic": 0.01820416246912473,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 0.2582041624691247,
+          "target": 93.54489593827189
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "1:30",
+        "para": 214,
+        "toplam": 64,
+        "revenue": 64,
+        "goal": 3,
+        "hygiene": 84,
+        "dirtyTables": 1,
+        "spills": 3,
+        "heavyFloor": 0.01504801144039202,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 0.504,
+          "traffic": 0.06019204576156808,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 0.7951920457615682,
+          "target": 80.1201988559608
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "2:00",
+        "para": 156,
+        "toplam": 186,
+        "revenue": 186,
+        "goal": 4,
+        "hygiene": 81,
+        "dirtyTables": 0,
+        "spills": 3,
+        "heavyFloor": 0.0212440569556431,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 0.6933333333333332,
+          "traffic": 0.0849762278225724,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 0.7783095611559057,
+          "target": 80.54226097110235
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "2:30",
+        "para": 284,
+        "toplam": 314,
+        "revenue": 314,
+        "goal": 4,
+        "hygiene": 74,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.03163593909379083,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 0.8601626016260161,
+          "traffic": 0.12654375637516332,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.2177063580011793,
+          "target": 69.55734104997052
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "3:00",
+        "para": 308,
+        "toplam": 338,
+        "revenue": 338,
+        "goal": 4,
+        "hygiene": 62,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.04739343392847538,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 1.0621138211382113,
+          "traffic": 0.18957373571390151,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.6716875568521128,
+          "target": 58.20781107869718
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "3:30",
+        "para": 883,
+        "toplam": 463,
+        "revenue": 463,
+        "goal": 7,
+        "hygiene": 68,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.05782128178282108,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 0.7895212285456188,
+          "traffic": 0.23128512713128432,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.2518063556769032,
+          "target": 68.70484110807742
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "4:00",
+        "para": 883,
+        "toplam": 463,
+        "revenue": 463,
+        "goal": 7,
+        "hygiene": 66,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.0623170447399756,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 0.8743992773261066,
+          "traffic": 0.2492681789599024,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.354667456286009,
+          "target": 66.13331359284977
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "4:30",
+        "para": 699,
+        "toplam": 709,
+        "revenue": 709,
+        "goal": 9,
+        "hygiene": 60,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.07494056506115766,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 0.8743992773261066,
+          "traffic": 0.29976226024463065,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.5941615375707372,
+          "target": 60.14596156073158
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "5:00",
+        "para": 718,
+        "toplam": 728,
+        "revenue": 728,
+        "goal": 9,
+        "hygiene": 66,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.07840616359618499,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.0328359508494682,
+          "traffic": 0.31362465438473996,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.346460605234208,
+          "target": 66.33848486914479
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "5:30",
+        "para": 0,
+        "toplam": 923,
+        "revenue": 923,
+        "goal": 9,
+        "hygiene": 66,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.08464992946789625,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.0090334236675702,
+          "traffic": 0.338599717871585,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.3476331415391551,
+          "target": 66.30917146152112
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "6:00",
+        "para": 16,
+        "toplam": 1059,
+        "revenue": 1059,
+        "goal": 9,
+        "hygiene": 60,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.09419091387239056,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.0682926829268293,
+          "traffic": 0.37676365548956225,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.6760563384163918,
+          "target": 58.0985915395902
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "6:30",
+        "para": 16,
+        "toplam": 1059,
+        "revenue": 1059,
+        "goal": 9,
+        "hygiene": 52,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.10144310385900261,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.0682926829268293,
+          "traffic": 0.40577241543601045,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.93606509836284,
+          "target": 51.598372540929006
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "7:00",
+        "para": 458,
+        "toplam": 1501,
+        "revenue": 1501,
+        "goal": 9,
+        "hygiene": 61,
+        "dirtyTables": 1,
+        "spills": 3,
+        "heavyFloor": 0.1074681184094365,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 0.72,
+          "traffic": 0.429872473637746,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.569872473637746,
+          "target": 60.75318815905635
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "7:30",
+        "para": 710,
+        "toplam": 1753,
+        "revenue": 1753,
+        "goal": 9,
+        "hygiene": 64,
+        "dirtyTables": 0,
+        "spills": 4,
+        "heavyFloor": 0.11680353344879202,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 0.96,
+          "traffic": 0.4672141337951681,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.427214133795168,
+          "target": 64.3196466551208
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "8:00",
+        "para": 710,
+        "toplam": 1753,
+        "revenue": 1753,
+        "goal": 9,
+        "hygiene": 67,
+        "dirtyTables": 0,
+        "spills": 4,
+        "heavyFloor": 0.11787312221711281,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 0.7902439024390243,
+          "traffic": 0.47149248886845124,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.2617363913074755,
+          "target": 68.45659021731312
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "8:30",
+        "para": 1119,
+        "toplam": 2162,
+        "revenue": 2162,
+        "goal": 9,
+        "hygiene": 57,
+        "dirtyTables": 0,
+        "spills": 4,
+        "heavyFloor": 0.126749568951238,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.14,
+          "spills": 0.96,
+          "traffic": 0.506998275804952,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.6069982758049521,
+          "target": 59.825043104876194
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "9:00",
+        "para": 1356,
+        "toplam": 2199,
+        "revenue": 2199,
+        "goal": 9,
+        "hygiene": 59,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.13096774926358498,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 0.96,
+          "traffic": 0.5238709970543399,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.7148709970543399,
+          "target": 57.1282250736415
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "9:30",
+        "para": 1356,
+        "toplam": 2199,
+        "revenue": 2199,
+        "goal": 9,
+        "hygiene": 53,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.13324912131924624,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 0.96,
+          "traffic": 0.532996485276985,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.912996485276985,
+          "target": 52.17508786807537
+        },
+        "recoveries": 0
+      }
+    ],
+    "gaps": [],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 4,
+    "trailingPurchaseGap": 339,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 0,
+      "capacity": 1,
+      "hands": 0,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 0,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 1356,
+    "finalEarned": 2199,
+    "angry": 2,
+    "served": 30,
+    "tutorialComplete": true,
+    "cleaned": 16,
+    "mopped": 11,
+    "tableCleanups": 8,
+    "longestInactivity": 41,
+    "goalIndex": 9,
+    "hygiene": 50.65554287990928,
+    "hygieneLoad": {
+      "dishes": 0,
+      "surfaces": 0.14,
+      "spills": 1.1525925925925926,
+      "traffic": 0.5373584046176684,
+      "toilets": 0,
+      "supplies": 0,
+      "total": 1.8299509972102612,
+      "target": 54.25122506974347
+    },
+    "staffRecovery": {
+      "count": 0,
+      "last": []
+    },
+    "dirtyTables": 1,
+    "lastTarget": {
+      "x": -6.9,
+      "z": 4.8,
+      "label": "KOVAYA AT",
+      "color": 6003669
+    },
+    "lastPosition": {
+      "x": -2.8679777906550017,
+      "z": 2.5440149565288417
+    },
+    "lastSteeringTarget": {
+      "x": -6.9,
+      "z": 4.8
+    },
+    "hasVacuum": false,
+    "carried": [
+      "bulasik"
+    ],
+    "lock": {
+      "take": null,
+      "drop": null
+    },
+    "customerStates": [
+      {
+        "state": "order"
+      },
+      {
+        "state": "queue"
+      },
+      {
+        "state": "queue"
+      }
+    ],
+    "matched": true
+  },
+  {
+    "minutes": 8,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 1,
+        "id": "capacity",
+        "level": 1
+      }
+    ],
+    "zoneTimes": {
+      "t1": "0:01",
+      "a3": "0:01"
+    },
+    "staffTimes": {
+      "kose:waiter1": "0:01"
+    },
+    "goalTimes": {
+      "g09": "0:01"
+    },
+    "incomeSamples": [],
+    "gaps": [],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 0,
+    "trailingPurchaseGap": 1,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 0,
+      "capacity": 1,
+      "hands": 0,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 0,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 1356,
+    "finalEarned": 2199,
+    "angry": 2,
+    "served": 30,
+    "tutorialComplete": true,
+    "cleaned": 16,
+    "mopped": 11,
+    "tableCleanups": 0,
+    "longestInactivity": 1,
+    "goalIndex": 9,
+    "hygiene": 52.62743573695899,
+    "hygieneLoad": {
+      "dishes": 0,
+      "surfaces": 0.14,
+      "spills": 1.1525925925925926,
+      "traffic": 0.5366959337907269,
+      "toilets": 0,
+      "supplies": 0,
+      "total": 1.8292885263833196,
+      "target": 54.26778684041701
+    },
+    "staffRecovery": {
+      "count": 0,
+      "last": []
+    },
+    "dirtyTables": 1,
+    "lastTarget": {
+      "x": -1.6112633407957082,
+      "z": 1.4029871563812484,
+      "label": "TOZU SÜPÜR",
+      "color": 6003669
+    },
+    "lastPosition": {
+      "x": -7.485044983502497,
+      "z": 3.9532524786030665
+    },
+    "lastSteeringTarget": {
+      "x": -7.66,
+      "z": 3.96
+    },
+    "hasVacuum": true,
+    "carried": [],
+    "lock": {
+      "take": "k_kova_1",
+      "drop": null
+    },
+    "customerStates": [
+      {
+        "state": "order"
+      },
+      {
+        "state": "queue"
+      },
+      {
+        "state": "queue"
+      }
+    ],
+    "matched": true
+  },
+  {
+    "minutes": 18,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 1,
+        "id": "capacity",
+        "level": 1
+      },
+      {
+        "t": 1039,
+        "id": "speed",
+        "level": 1
+      },
+      {
+        "t": 1039,
+        "id": "hands",
+        "level": 1
+      }
+    ],
+    "zoneTimes": {
+      "t1": "0:01",
+      "a3": "0:01",
+      "t2": "0:11",
+      "a4": "6:38",
+      "t3": "17:25"
+    },
+    "staffTimes": {
+      "kose:waiter1": "0:01",
+      "kose:cashier1": "12:57"
+    },
+    "goalTimes": {
+      "g09": "0:01",
+      "g10": "6:28",
+      "g12": "12:58",
+      "g13": "15:37",
+      "g14": "17:27"
+    },
+    "incomeSamples": [
+      {
+        "t": "0:30",
+        "para": 1231,
+        "toplam": 3974,
+        "revenue": 3974,
+        "goal": 9,
+        "hygiene": 58,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.1279154647881924,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.1560975609756097,
+          "traffic": 0.5116618591527696,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.6677594201283794,
+          "target": 58.30601449679052
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "1:00",
+        "para": 1249,
+        "toplam": 3992,
+        "revenue": 3992,
+        "goal": 9,
+        "hygiene": 51,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.13351706653092957,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.2,
+          "traffic": 0.5340682661237183,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.9650682661237182,
+          "target": 50.87329334690705
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "1:30",
+        "para": 1259,
+        "toplam": 4002,
+        "revenue": 4002,
+        "goal": 9,
+        "hygiene": 51,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.13646308793952824,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.2,
+          "traffic": 0.545852351758113,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.976852351758113,
+          "target": 50.578691206047175
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "2:00",
+        "para": 135,
+        "toplam": 4137,
+        "revenue": 4137,
+        "goal": 9,
+        "hygiene": 48,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.1382971003170842,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.1851851851851851,
+          "traffic": 0.5531884012683368,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.060373586453522,
+          "target": 48.490660338661954
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "2:30",
+        "para": 153,
+        "toplam": 4155,
+        "revenue": 4155,
+        "goal": 9,
+        "hygiene": 59,
+        "dirtyTables": 0,
+        "spills": 4,
+        "heavyFloor": 0.14132060591947607,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.13050574712643687,
+          "spills": 0.957037037037037,
+          "traffic": 0.5652824236779043,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.6528252078413783,
+          "target": 58.67936980396554
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "3:00",
+        "para": 10,
+        "toplam": 4324,
+        "revenue": 4324,
+        "goal": 9,
+        "hygiene": 60,
+        "dirtyTables": 0,
+        "spills": 4,
+        "heavyFloor": 0.14760563152417996,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 0.8266666666666667,
+          "traffic": 0.5904225260967199,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.5080891927633866,
+          "target": 62.297770180915336
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "3:30",
+        "para": 38,
+        "toplam": 4352,
+        "revenue": 4352,
+        "goal": 9,
+        "hygiene": 57,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.15000027597648366,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 0.96,
+          "traffic": 0.6000011039059346,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.7910011039059346,
+          "target": 55.22497240235163
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "4:00",
+        "para": 38,
+        "toplam": 4352,
+        "revenue": 4352,
+        "goal": 9,
+        "hygiene": 49,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.15129553559035888,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.2,
+          "traffic": 0.6051821423614355,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.0361821423614357,
+          "target": 49.09544644096411
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "4:30",
+        "para": 56,
+        "toplam": 4370,
+        "revenue": 4370,
+        "goal": 9,
+        "hygiene": 41,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.1561158388007933,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.14,
+          "spills": 1.2,
+          "traffic": 0.6244633552031732,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.3844633552031733,
+          "target": 40.38841611992067
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "5:00",
+        "para": 0,
+        "toplam": 4719,
+        "revenue": 4719,
+        "goal": 9,
+        "hygiene": 34,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.159928937130996,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.14,
+          "spills": 1.44,
+          "traffic": 0.639715748523984,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.639715748523984,
+          "target": 34.0071062869004
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "5:30",
+        "para": 0,
+        "toplam": 4719,
+        "revenue": 4719,
+        "goal": 9,
+        "hygiene": 39,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.1629241605381418,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.392,
+          "traffic": 0.6516966421525672,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.414696642152567,
+          "target": 39.63258394618583
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "6:00",
+        "para": 29,
+        "toplam": 4748,
+        "revenue": 4748,
+        "goal": 9,
+        "hygiene": 43,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.16335187963454023,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.377,
+          "traffic": 0.6534075185381609,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.261407518538161,
+          "target": 43.46481203654597
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "6:30",
+        "para": 547,
+        "toplam": 4766,
+        "revenue": 4766,
+        "goal": 10,
+        "hygiene": 44,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.16482471717924627,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.2,
+          "traffic": 0.6592988687169851,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.321298868716985,
+          "target": 41.96752828207537
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "7:00",
+        "para": 319,
+        "toplam": 6188,
+        "revenue": 6188,
+        "goal": 10,
+        "hygiene": 42,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.16617348524686193,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.434074074074074,
+          "traffic": 0.6646939409874477,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.329768015061522,
+          "target": 41.755799623461954
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "7:30",
+        "para": 345,
+        "toplam": 6214,
+        "revenue": 6214,
+        "goal": 10,
+        "hygiene": 44,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.17027080071252226,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 1.1437037037037037,
+          "traffic": 0.681083202850089,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2447869065537924,
+          "target": 43.88032733615519
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "8:00",
+        "para": 345,
+        "toplam": 6214,
+        "revenue": 6214,
+        "goal": 10,
+        "hygiene": 40,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.17153367602775346,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.14,
+          "spills": 1.1437037037037037,
+          "traffic": 0.6861347041110138,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.3898384078147177,
+          "target": 40.25403980463206
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "8:30",
+        "para": 363,
+        "toplam": 6232,
+        "revenue": 6232,
+        "goal": 10,
+        "hygiene": 39,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.17314541899988445,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.14,
+          "spills": 1.2,
+          "traffic": 0.6925816759995378,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.4525816759995376,
+          "target": 38.68545810001156
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "9:00",
+        "para": 563,
+        "toplam": 6232,
+        "revenue": 6232,
+        "goal": 10,
+        "hygiene": 49,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.17430028673264047,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.02735632183908059,
+          "spills": 1.2,
+          "traffic": 0.6972011469305619,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.9245574687696425,
+          "target": 51.88606328075893
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "9:30",
+        "para": 1238,
+        "toplam": 6907,
+        "revenue": 6907,
+        "goal": 10,
+        "hygiene": 58,
+        "dirtyTables": 0,
+        "spills": 4,
+        "heavyFloor": 0.1766592879796333,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 0.96,
+          "traffic": 0.7066371519185332,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.666637151918533,
+          "target": 58.334071202036675
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "10:00",
+        "para": 0,
+        "toplam": 6907,
+        "revenue": 6907,
+        "goal": 10,
+        "hygiene": 44,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.17702299450047063,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.44,
+          "traffic": 0.7080919780018825,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2390919780018823,
+          "target": 44.022700549952944
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "10:30",
+        "para": 26,
+        "toplam": 6933,
+        "revenue": 6933,
+        "goal": 10,
+        "hygiene": 52,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.17796112329597308,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.2,
+          "traffic": 0.7118444931838923,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.9118444931838923,
+          "target": 52.20388767040269
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "11:00",
+        "para": 391,
+        "toplam": 7298,
+        "revenue": 7298,
+        "goal": 10,
+        "hygiene": 46,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.1804515823014459,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.1941463414634146,
+          "traffic": 0.7218063292057836,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.146952670669198,
+          "target": 46.326183233270044
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "11:30",
+        "para": 876,
+        "toplam": 7783,
+        "revenue": 7783,
+        "goal": 10,
+        "hygiene": 46,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.18291405087156037,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.14,
+          "spills": 1.1205781391147245,
+          "traffic": 0.7316562034862415,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.132234342600966,
+          "target": 46.694141434975855
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "12:00",
+        "para": 896,
+        "toplam": 7803,
+        "revenue": 7803,
+        "goal": 10,
+        "hygiene": 49,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.18315595894403874,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.0910930442637758,
+          "traffic": 0.732623835776155,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.0547168800399307,
+          "target": 48.63207799900173
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "12:30",
+        "para": 896,
+        "toplam": 7803,
+        "revenue": 7803,
+        "goal": 10,
+        "hygiene": 49,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.1833159899916862,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.0910930442637758,
+          "traffic": 0.7332639599667448,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.0553570042305207,
+          "target": 48.61607489423698
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "13:00",
+        "para": 2759,
+        "toplam": 10446,
+        "revenue": 10446,
+        "goal": 12,
+        "hygiene": 41,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.1858271673289694,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.1496296296296296,
+          "traffic": 0.7433086693158776,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.354938298945507,
+          "target": 41.12654252636232
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "13:30",
+        "para": 2777,
+        "toplam": 10464,
+        "revenue": 10464,
+        "goal": 12,
+        "hygiene": 30,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.19084864249498576,
+        "hygieneLoad": {
+          "dishes": 0.56,
+          "surfaces": 0.28,
+          "spills": 1.2,
+          "traffic": 0.763394569979943,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.803394569979943,
+          "target": 29.91513575050142
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "14:00",
+        "para": 2797,
+        "toplam": 10484,
+        "revenue": 10484,
+        "goal": 12,
+        "hygiene": 33,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.19261616426923728,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.1092682926829267,
+          "traffic": 0.7704646570769491,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.5307329497598756,
+          "target": 36.73167625600311
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "14:30",
+        "para": 2813,
+        "toplam": 10500,
+        "revenue": 10500,
+        "goal": 12,
+        "hygiene": 40,
+        "dirtyTables": 2,
+        "spills": 4,
+        "heavyFloor": 0.19276019214385842,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 0.96,
+          "traffic": 0.7710407685754337,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.3820407685754335,
+          "target": 40.44898078561416
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "15:00",
+        "para": 2851,
+        "toplam": 10538,
+        "revenue": 10538,
+        "goal": 12,
+        "hygiene": 47,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.19401154339305052,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 0.96,
+          "traffic": 0.7760461735722021,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.156046173572202,
+          "target": 46.098845660694955
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "15:30",
+        "para": 2869,
+        "toplam": 10556,
+        "revenue": 10556,
+        "goal": 12,
+        "hygiene": 42,
+        "dirtyTables": 2,
+        "spills": 4,
+        "heavyFloor": 0.195386353877655,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 0.96,
+          "traffic": 0.78154541551062,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.39254541551062,
+          "target": 40.186364612234506
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "16:00",
+        "para": 4469,
+        "toplam": 10556,
+        "revenue": 10556,
+        "goal": 13,
+        "hygiene": 44,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.19728077119079038,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14804597701149438,
+          "spills": 0.9007407407407406,
+          "traffic": 0.7891230847631615,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.1179098025153964,
+          "target": 47.05225493711509
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "16:30",
+        "para": 4489,
+        "toplam": 10576,
+        "revenue": 10576,
+        "goal": 13,
+        "hygiene": 41,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.19771840982368769,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 1.1407407407407406,
+          "traffic": 0.7908736392947507,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.3516143800354916,
+          "target": 41.20964049911271
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "17:00",
+        "para": 4509,
+        "toplam": 10596,
+        "revenue": 10596,
+        "goal": 13,
+        "hygiene": 52,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.19882017863875207,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.108148148148148,
+          "traffic": 0.7952807145550083,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 1.9034288627031564,
+          "target": 52.41427843242109
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "17:30",
+        "para": 2620,
+        "toplam": 12530,
+        "revenue": 12530,
+        "goal": 14,
+        "hygiene": 44,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.1987916902270046,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.14,
+          "spills": 1.2,
+          "traffic": 0.7951667609080184,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.1351667609080183,
+          "target": 46.62083097729954
+        },
+        "recoveries": 0
+      }
+    ],
+    "gaps": [
+      {
+        "from": "0:11",
+        "to": "6:38",
+        "sn": 387
+      }
+    ],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 6,
+    "trailingPurchaseGap": 34,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 1,
+      "capacity": 1,
+      "hands": 1,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 0,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 2643,
+    "finalEarned": 12553,
+    "angry": 15,
+    "served": 92,
+    "tutorialComplete": true,
+    "cleaned": 41,
+    "mopped": 28,
+    "tableCleanups": 16,
+    "longestInactivity": 53,
+    "goalIndex": 14,
+    "hygiene": 50.12313185717831,
+    "hygieneLoad": {
+      "dishes": 0,
+      "surfaces": 0,
+      "spills": 1.170731707317073,
+      "traffic": 0.7976137792570236,
+      "toilets": 0,
+      "supplies": 0,
+      "total": 1.9683454865740968,
+      "target": 50.79136283564758
+    },
+    "staffRecovery": {
+      "count": 0,
+      "last": []
+    },
+    "dirtyTables": 0,
+    "lastTarget": {
+      "x": 6.389578807285828,
+      "z": -0.18554599675514227,
+      "label": "TOZU SÜPÜR",
+      "color": 6003669
+    },
+    "lastPosition": {
+      "x": 6.231989408336419,
+      "z": -0.05512741455173893
+    },
+    "lastSteeringTarget": {
+      "x": 6.389578807285828,
+      "z": -0.18554599675514227
+    },
+    "hasVacuum": false,
+    "carried": [],
+    "lock": {
+      "take": "k_masa_3",
+      "drop": null
+    },
+    "customerStates": [
+      {
+        "state": "seated",
+        "wanted": null,
+        "table": "k_masa_3"
+      },
+      {
+        "state": "seated",
+        "wanted": "tost",
+        "table": "k_masa_3"
+      },
+      {
+        "state": "seated",
+        "wanted": "cay",
+        "table": "k_masa_2"
+      },
+      {
+        "state": "leave"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_3"
+      },
+      {
+        "state": "toCounter"
+      }
+    ],
+    "matched": true
+  },
+  {
+    "minutes": 8,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 1,
+        "id": "speed",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "capacity",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "hands",
+        "level": 1
+      }
+    ],
+    "zoneTimes": {
+      "t1": "0:01",
+      "a3": "0:01",
+      "t2": "0:01",
+      "a4": "0:01",
+      "t3": "0:01"
+    },
+    "staffTimes": {
+      "kose:waiter1": "0:01",
+      "kose:cashier1": "0:01"
+    },
+    "goalTimes": {
+      "g14": "0:01"
+    },
+    "incomeSamples": [
+      {
+        "t": "0:30",
+        "para": 2665,
+        "toplam": 12575,
+        "revenue": 12575,
+        "goal": 14,
+        "hygiene": 49,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.19992136153656184,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.2,
+          "traffic": 0.7996854461462474,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2306854461462473,
+          "target": 44.23286384634382
+        },
+        "recoveries": 0
+      }
+    ],
+    "gaps": [],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 0,
+    "trailingPurchaseGap": 51,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 1,
+      "capacity": 1,
+      "hands": 1,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 0,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 2665,
+    "finalEarned": 12575,
+    "angry": 15,
+    "served": 93,
+    "tutorialComplete": true,
+    "cleaned": 41,
+    "mopped": 29,
+    "tableCleanups": 0,
+    "longestInactivity": 27,
+    "goalIndex": 14,
+    "hygiene": 44.18112778212256,
+    "hygieneLoad": {
+      "dishes": 0.14,
+      "surfaces": 0.09100000000000001,
+      "spills": 1.2,
+      "traffic": 0.8021644712408849,
+      "toilets": 0,
+      "supplies": 0,
+      "total": 2.233164471240885,
+      "target": 44.17088821897788
+    },
+    "staffRecovery": {
+      "count": 0,
+      "last": []
+    },
+    "dirtyTables": 1,
+    "lastTarget": {
+      "x": 5.2,
+      "z": 0.6000000000000001,
+      "label": "M3'E TOST GÖTÜR",
+      "color": 14839866
+    },
+    "lastPosition": {
+      "x": 5.072124742094763,
+      "z": 0.46328752106578575
+    },
+    "lastSteeringTarget": {
+      "x": 5.2,
+      "z": 0.6000000000000001
+    },
+    "hasVacuum": false,
+    "carried": [
+      "tost"
+    ],
+    "lock": {
+      "take": null,
+      "drop": null
+    },
+    "customerStates": [
+      {
+        "state": "seated",
+        "wanted": "tost",
+        "table": "k_masa_3"
+      },
+      {
+        "state": "seated",
+        "wanted": "cay",
+        "table": "k_masa_2"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_3"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_2"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_1"
+      },
+      {
+        "state": "pickup",
+        "wanted": "latte"
+      },
+      {
+        "state": "grab"
+      }
+    ],
+    "matched": true
+  },
+  {
+    "minutes": 8,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 1,
+        "id": "speed",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "capacity",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "hands",
+        "level": 1
+      }
+    ],
+    "zoneTimes": {
+      "t1": "0:01",
+      "a3": "0:01",
+      "t2": "0:01",
+      "a4": "0:01",
+      "t3": "0:01"
+    },
+    "staffTimes": {
+      "kose:waiter1": "0:01",
+      "kose:cashier1": "0:01"
+    },
+    "goalTimes": {
+      "g14": "0:01"
+    },
+    "incomeSamples": [],
+    "gaps": [],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 0,
+    "trailingPurchaseGap": 14,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 1,
+      "capacity": 1,
+      "hands": 1,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 0,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 2687,
+    "finalEarned": 12597,
+    "angry": 16,
+    "served": 94,
+    "tutorialComplete": true,
+    "cleaned": 41,
+    "mopped": 30,
+    "tableCleanups": 0,
+    "longestInactivity": 8,
+    "goalIndex": 14,
+    "hygiene": 47.25555514468686,
+    "hygieneLoad": {
+      "dishes": 0.28,
+      "surfaces": 0.14,
+      "spills": 0.96,
+      "traffic": 0.8031293092023047,
+      "toilets": 0,
+      "supplies": 0,
+      "total": 2.1831293092023047,
+      "target": 45.42176726994238
+    },
+    "staffRecovery": {
+      "count": 0,
+      "last": []
+    },
+    "dirtyTables": 1,
+    "lastTarget": {
+      "x": -6.9,
+      "z": -8.35,
+      "label": "ÇAY AL",
+      "color": 14839866
+    },
+    "lastPosition": {
+      "x": -6.740890320324732,
+      "z": -8.304478111092193
+    },
+    "lastSteeringTarget": {
+      "x": -6.9,
+      "z": -8.35
+    },
+    "hasVacuum": false,
+    "carried": [
+      "cay"
+    ],
+    "lock": {
+      "take": null,
+      "drop": "k_semaver"
+    },
+    "customerStates": [
+      {
+        "state": "leave"
+      },
+      {
+        "state": "seated",
+        "wanted": "cay",
+        "table": "k_masa_2"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_3"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_2"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_1"
+      },
+      {
+        "state": "leave"
+      },
+      {
+        "state": "grab"
+      }
+    ],
+    "matched": true
+  },
+  {
+    "minutes": 8,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 1,
+        "id": "speed",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "capacity",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "hands",
+        "level": 1
+      }
+    ],
+    "zoneTimes": {
+      "t1": "0:01",
+      "a3": "0:01",
+      "t2": "0:01",
+      "a4": "0:01",
+      "t3": "0:01"
+    },
+    "staffTimes": {
+      "kose:waiter1": "0:01",
+      "kose:cashier1": "0:01"
+    },
+    "goalTimes": {
+      "g14": "0:01"
+    },
+    "incomeSamples": [
+      {
+        "t": "0:30",
+        "para": 2687,
+        "toplam": 12597,
+        "revenue": 12597,
+        "goal": 14,
+        "hygiene": 35,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.20109479504782257,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.2,
+          "traffic": 0.8043791801912903,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.6553791801912903,
+          "target": 33.615520495217744
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "1:00",
+        "para": 2722,
+        "toplam": 12632,
+        "revenue": 12632,
+        "goal": 14,
+        "hygiene": 40,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.20310187333383195,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.211851851851852,
+          "traffic": 0.8124074933353278,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.25525934518718,
+          "target": 43.618516370320506
+        },
+        "recoveries": 0
+      }
+    ],
+    "gaps": [],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 0,
+    "trailingPurchaseGap": 63,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 1,
+      "capacity": 1,
+      "hands": 1,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 0,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 2741,
+    "finalEarned": 12651,
+    "angry": 17,
+    "served": 101,
+    "tutorialComplete": true,
+    "cleaned": 44,
+    "mopped": 31,
+    "tableCleanups": 1,
+    "longestInactivity": 7,
+    "goalIndex": 14,
+    "hygiene": 42.75644702714814,
+    "hygieneLoad": {
+      "dishes": 0.14,
+      "surfaces": 0.09100000000000001,
+      "spills": 1.2,
+      "traffic": 0.8131756421775649,
+      "toilets": 0,
+      "supplies": 0,
+      "total": 2.2441756421775647,
+      "target": 43.89560894556088
+    },
+    "staffRecovery": {
+      "count": 0,
+      "last": []
+    },
+    "dirtyTables": 1,
+    "lastTarget": {
+      "x": 3,
+      "z": -6.1000000000000005,
+      "label": "KASA DOLU · TOPLA",
+      "color": 14839866
+    },
+    "lastPosition": {
+      "x": 4.088142736088626,
+      "z": -5.546534817335936
+    },
+    "lastSteeringTarget": {
+      "x": 3,
+      "z": -6.1000000000000005
+    },
+    "hasVacuum": false,
+    "carried": [],
+    "lock": {
+      "take": null,
+      "drop": null
+    },
+    "customerStates": [
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_2"
+      },
+      {
+        "state": "order"
+      }
+    ],
+    "matched": true
+  },
+  {
+    "minutes": 45,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 1,
+        "id": "speed",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "capacity",
+        "level": 1
+      },
+      {
+        "t": 1,
+        "id": "hands",
+        "level": 1
+      },
+      {
+        "t": 127,
+        "id": "speed",
+        "level": 2
+      },
+      {
+        "t": 127,
+        "id": "capacity",
+        "level": 2
+      }
+    ],
+    "zoneTimes": {
+      "t1": "0:01",
+      "a3": "0:01",
+      "t2": "0:01",
+      "a4": "0:01",
+      "t3": "0:01",
+      "a5": "0:05",
+      "t4": "2:11",
+      "a6": "9:53",
+      "t5": "17:08",
+      "r1": "24:08",
+      "a7": "26:50",
+      "t6": "32:54",
+      "z_muzik": "34:22",
+      "z_vitrin": "43:00"
+    },
+    "staffTimes": {
+      "kose:waiter1": "0:01",
+      "kose:cashier1": "0:01",
+      "kose:busser1": "2:05"
+    },
+    "goalTimes": {
+      "g14": "0:01",
+      "g15": "0:05",
+      "g16": "0:07",
+      "g17": "2:06",
+      "g19": "26:47",
+      "g21": "43:16"
+    },
+    "incomeSamples": [
+      {
+        "t": "0:30",
+        "para": 5999,
+        "toplam": 15301,
+        "revenue": 15301,
+        "goal": 16,
+        "hygiene": 44,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.2028530977657029,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.2,
+          "traffic": 0.8114123910628116,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2424123910628118,
+          "target": 43.93969022342971
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "1:00",
+        "para": 6021,
+        "toplam": 15323,
+        "revenue": 15323,
+        "goal": 16,
+        "hygiene": 45,
+        "dirtyTables": 1,
+        "spills": 4,
+        "heavyFloor": 0.20415531181714466,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 0.96,
+          "traffic": 0.8166212472685787,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.1966212472685784,
+          "target": 45.084468818285536
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "1:30",
+        "para": 6021,
+        "toplam": 15323,
+        "revenue": 15323,
+        "goal": 16,
+        "hygiene": 35,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.20467002928672567,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.2,
+          "traffic": 0.8186801171469027,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.6696801171469025,
+          "target": 33.25799707132744
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "2:00",
+        "para": 6021,
+        "toplam": 15323,
+        "revenue": 15323,
+        "goal": 16,
+        "hygiene": 29,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.20632125667522117,
+        "hygieneLoad": {
+          "dishes": 0.56,
+          "surfaces": 0.28,
+          "spills": 1.1824390243902438,
+          "traffic": 0.8252850267008847,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.8477240510911286,
+          "target": 28.806898722721787
+        },
+        "recoveries": 0
+      },
+      {
+        "t": "2:30",
+        "para": 0,
+        "toplam": 17924,
+        "revenue": 17924,
+        "goal": 17,
+        "hygiene": 28,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.20770982790737816,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.32543322109988804,
+          "spills": 1.4195121951219511,
+          "traffic": 0.8308393116295126,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.8557847278513515,
+          "target": 28.605381803716213
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "3:00",
+        "para": 32,
+        "toplam": 17956,
+        "revenue": 17956,
+        "goal": 17,
+        "hygiene": 50,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.20825684205107173,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.1795121951219512,
+          "traffic": 0.8330273682042869,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.012539563326238,
+          "target": 49.68651091684405
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "3:30",
+        "para": 32,
+        "toplam": 17956,
+        "revenue": 17956,
+        "goal": 17,
+        "hygiene": 42,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.20905263232896576,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.1795121951219512,
+          "traffic": 0.836210529315863,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2467227244378143,
+          "target": 43.831931889054644
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "4:00",
+        "para": 32,
+        "toplam": 17956,
+        "revenue": 17956,
+        "goal": 17,
+        "hygiene": 45,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.20996771750431248,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.1795121951219512,
+          "traffic": 0.8398708700172499,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.1103830651392013,
+          "target": 47.24042337151997
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "4:30",
+        "para": 2830,
+        "toplam": 20754,
+        "revenue": 20754,
+        "goal": 17,
+        "hygiene": 46,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.21139382581708005,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.1795121951219512,
+          "traffic": 0.8455753032683202,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2560874983902712,
+          "target": 43.59781254024322
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "5:00",
+        "para": 2830,
+        "toplam": 20754,
+        "revenue": 20754,
+        "goal": 17,
+        "hygiene": 43,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.21174953078470257,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.4195121951219511,
+          "traffic": 0.8469981231388103,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2665103182607615,
+          "target": 43.33724204348096
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "5:30",
+        "para": 2852,
+        "toplam": 20776,
+        "revenue": 20776,
+        "goal": 17,
+        "hygiene": 49,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.21206903954514983,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.1795121951219512,
+          "traffic": 0.8482761581805993,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.0277883533025505,
+          "target": 49.30529116743624
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "6:00",
+        "para": 2872,
+        "toplam": 20796,
+        "revenue": 20796,
+        "goal": 17,
+        "hygiene": 46,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.21239273843310633,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.1795121951219512,
+          "traffic": 0.8495709537324253,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.1200831488543765,
+          "target": 46.99792127864059
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "6:30",
+        "para": 6605,
+        "toplam": 24528,
+        "revenue": 24528,
+        "goal": 17,
+        "hygiene": 49,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.21610472736088718,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.1795121951219512,
+          "traffic": 0.8644189094435487,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.0439311045655,
+          "target": 48.9017223858625
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "7:00",
+        "para": 6605,
+        "toplam": 24528,
+        "revenue": 24528,
+        "goal": 17,
+        "hygiene": 37,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.21813566487612449,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.4195121951219511,
+          "traffic": 0.8725426595044979,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.5230548546264493,
+          "target": 36.92362863433877
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "7:30",
+        "para": 6628,
+        "toplam": 24551,
+        "revenue": 24551,
+        "goal": 17,
+        "hygiene": 43,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.21897146172135312,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.1795121951219512,
+          "traffic": 0.8758858468854125,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.286398042007364,
+          "target": 42.8400489498159
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "8:00",
+        "para": 6651,
+        "toplam": 24574,
+        "revenue": 24574,
+        "goal": 17,
+        "hygiene": 32,
+        "dirtyTables": 2,
+        "spills": 5,
+        "heavyFloor": 0.2198421746531082,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.1765853658536585,
+          "traffic": 0.8793686986124328,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.5669540644660915,
+          "target": 35.82614838834771
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "8:30",
+        "para": 6651,
+        "toplam": 24574,
+        "revenue": 24574,
+        "goal": 17,
+        "hygiene": 38,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.22192478410314398,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.14,
+          "spills": 1.4165853658536585,
+          "traffic": 0.8876991364125759,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.4442845022662345,
+          "target": 38.89288744334414
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "9:00",
+        "para": 6651,
+        "toplam": 24574,
+        "revenue": 24574,
+        "goal": 17,
+        "hygiene": 42,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.2228165923370004,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.4165853658536585,
+          "traffic": 0.8912663693480016,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.30785173520166,
+          "target": 42.303706619958504
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "9:30",
+        "para": 6651,
+        "toplam": 24574,
+        "revenue": 24574,
+        "goal": 17,
+        "hygiene": 42,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.22306464017032607,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.4165853658536585,
+          "traffic": 0.8922585606813043,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.308843926534963,
+          "target": 42.27890183662593
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "10:00",
+        "para": 1519,
+        "toplam": 28443,
+        "revenue": 28443,
+        "goal": 17,
+        "hygiene": 31,
+        "dirtyTables": 0,
+        "spills": 7,
+        "heavyFloor": 0.22508620733827117,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.14,
+          "spills": 1.6565853658536585,
+          "traffic": 0.9003448293530847,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.6969301952067433,
+          "target": 32.576745119831415
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "10:30",
+        "para": 1519,
+        "toplam": 28443,
+        "revenue": 28443,
+        "goal": 17,
+        "hygiene": 36,
+        "dirtyTables": 0,
+        "spills": 7,
+        "heavyFloor": 0.2259525559090529,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.6045371730825742,
+          "traffic": 0.9038102236362116,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.5083473967187855,
+          "target": 37.291315082030366
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "11:00",
+        "para": 1946,
+        "toplam": 28443,
+        "revenue": 28443,
+        "goal": 17,
+        "hygiene": 31,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.22610458542013467,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.6045371730825742,
+          "traffic": 0.9044183416805387,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.739955514763113,
+          "target": 31.50111213092217
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "11:30",
+        "para": 1969,
+        "toplam": 28466,
+        "revenue": 28466,
+        "goal": 17,
+        "hygiene": 36,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.22610458542013467,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.4165853658536585,
+          "traffic": 0.9044183416805387,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.5520037075341975,
+          "target": 36.19990731164506
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "12:00",
+        "para": 1969,
+        "toplam": 28466,
+        "revenue": 28466,
+        "goal": 17,
+        "hygiene": 33,
+        "dirtyTables": 0,
+        "spills": 7,
+        "heavyFloor": 0.22892331052790826,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.6565853658536585,
+          "traffic": 0.915693242111633,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.6632786079652915,
+          "target": 33.418034800867716
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "12:30",
+        "para": 1992,
+        "toplam": 28489,
+        "revenue": 28489,
+        "goal": 17,
+        "hygiene": 43,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.22927901551217997,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.345582655826558,
+          "traffic": 0.9171160620487199,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 2.2626987178752778,
+          "target": 43.43253205311805
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "13:00",
+        "para": 0,
+        "toplam": 28556,
+        "revenue": 28556,
+        "goal": 17,
+        "hygiene": 22,
+        "dirtyTables": 2,
+        "spills": 7,
+        "heavyFloor": 0.23297968415964565,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.5943631436314363,
+          "traffic": 0.9319187366385826,
+          "toilets": 0.060048,
+          "supplies": 0.03750000000000002,
+          "total": 3.134829880270019,
+          "target": 21.629252993249526
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "13:30",
+        "para": 3275,
+        "toplam": 31831,
+        "revenue": 31831,
+        "goal": 17,
+        "hygiene": 35,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.2343719527874083,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.3514363143631436,
+          "traffic": 0.9374878111496332,
+          "toilets": 0.060048,
+          "supplies": 0.03750000000000002,
+          "total": 2.617472125512777,
+          "target": 34.563196862180575
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "14:00",
+        "para": 3275,
+        "toplam": 31831,
+        "revenue": 31831,
+        "goal": 17,
+        "hygiene": 26,
+        "dirtyTables": 2,
+        "spills": 6,
+        "heavyFloor": 0.23448397453241593,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.3247696476964768,
+          "traffic": 0.9379358981296637,
+          "toilets": 0.060048,
+          "supplies": 0.03750000000000002,
+          "total": 3.0112535458261407,
+          "target": 24.718661354346484
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "14:30",
+        "para": 6669,
+        "toplam": 35225,
+        "revenue": 35225,
+        "goal": 17,
+        "hygiene": 31,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.23989979640181222,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.14,
+          "spills": 1.324769647696477,
+          "traffic": 0.9595991856072489,
+          "toilets": 0.120096,
+          "supplies": 0.07499999999999998,
+          "total": 2.7594648333037264,
+          "target": 31.01337916740684
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "15:00",
+        "para": 6709,
+        "toplam": 35265,
+        "revenue": 35265,
+        "goal": 17,
+        "hygiene": 35,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.24378200106826875,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.3158807588075878,
+          "traffic": 0.975128004273075,
+          "toilets": 0.180144,
+          "supplies": 0.1125,
+          "total": 2.5836527630806625,
+          "target": 35.408680922983436
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "15:30",
+        "para": 7238,
+        "toplam": 35265,
+        "revenue": 35265,
+        "goal": 17,
+        "hygiene": 32,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.2440656920070103,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.2892140921409214,
+          "traffic": 0.9762627680280412,
+          "toilets": 0.180144,
+          "supplies": 0.1125,
+          "total": 2.7891208601689623,
+          "target": 30.27197849577594
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "16:00",
+        "para": 7748,
+        "toplam": 35774,
+        "revenue": 35774,
+        "goal": 17,
+        "hygiene": 19,
+        "dirtyTables": 2,
+        "spills": 6,
+        "heavyFloor": 0.2480974218844301,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.28,
+          "spills": 1.2832881662149953,
+          "traffic": 0.9923896875377204,
+          "toilets": 0.240192,
+          "supplies": 0.15000000000000002,
+          "total": 3.3658698537527156,
+          "target": 15.853253656182108
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "16:30",
+        "para": 7748,
+        "toplam": 35774,
+        "revenue": 35774,
+        "goal": 17,
+        "hygiene": 25,
+        "dirtyTables": 2,
+        "spills": 6,
+        "heavyFloor": 0.25036889907764825,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.2832881662149953,
+          "traffic": 1.001475596310593,
+          "toilets": 0.240192,
+          "supplies": 0.15000000000000002,
+          "total": 3.1859557625255883,
+          "target": 20.351105936860293
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "17:00",
+        "para": 7748,
+        "toplam": 35774,
+        "revenue": 35774,
+        "goal": 17,
+        "hygiene": 22,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.25079661797425673,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.5232881662149953,
+          "traffic": 1.003186471897027,
+          "toilets": 0.240192,
+          "supplies": 0.15000000000000002,
+          "total": 3.147666638112022,
+          "target": 21.308334047199452
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "17:30",
+        "para": 3053,
+        "toplam": 40079,
+        "revenue": 40079,
+        "goal": 17,
+        "hygiene": 26,
+        "dirtyTables": 0,
+        "spills": 7,
+        "heavyFloor": 0.2516264802761898,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.5232881662149953,
+          "traffic": 1.0065059211047591,
+          "toilets": 0.240192,
+          "supplies": 0.15000000000000002,
+          "total": 2.9199860873197543,
+          "target": 27.000347817006144
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "18:00",
+        "para": 3073,
+        "toplam": 40099,
+        "revenue": 40099,
+        "goal": 17,
+        "hygiene": 30,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.2547376266762694,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.2832881662149953,
+          "traffic": 1.0189505067050777,
+          "toilets": 0.240192,
+          "supplies": 0.15000000000000002,
+          "total": 2.7834306729200726,
+          "target": 30.414233176998184
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "18:30",
+        "para": 3073,
+        "toplam": 40099,
+        "revenue": 40099,
+        "goal": 17,
+        "hygiene": 27,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.2568813112904878,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.14016091954022997,
+          "spills": 1.2832881662149953,
+          "traffic": 1.0275252451619512,
+          "toilets": 0.240192,
+          "supplies": 0.15000000000000002,
+          "total": 2.8411663309171766,
+          "target": 28.970841727070585
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "19:00",
+        "para": 3143,
+        "toplam": 40169,
+        "revenue": 40169,
+        "goal": 17,
+        "hygiene": 26,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.26070677561812444,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 1.1736585365853658,
+          "traffic": 1.0428271024724978,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.124981639057864,
+          "target": 21.8754590235534
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "19:30",
+        "para": 3143,
+        "toplam": 40169,
+        "revenue": 40169,
+        "goal": 17,
+        "hygiene": 20,
+        "dirtyTables": 1,
+        "spills": 6,
+        "heavyFloor": 0.2613407005604166,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.1151379310344829,
+          "spills": 1.4136585365853658,
+          "traffic": 1.0453628022416663,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.202655269861515,
+          "target": 19.933618253462125
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "20:00",
+        "para": 3163,
+        "toplam": 40189,
+        "revenue": 40189,
+        "goal": 17,
+        "hygiene": 31,
+        "dirtyTables": 0,
+        "spills": 5,
+        "heavyFloor": 0.26262749442583444,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.024137931034482887,
+          "spills": 1.1736585365853658,
+          "traffic": 1.0505099777033378,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 2.7368024453231867,
+          "target": 31.579938866920333
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "20:31",
+        "para": 3186,
+        "toplam": 40212,
+        "revenue": 40212,
+        "goal": 17,
+        "hygiene": 37,
+        "dirtyTables": 0,
+        "spills": 4,
+        "heavyFloor": 0.26262749442583444,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 0.9336585365853658,
+          "traffic": 1.0505099777033378,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 2.4726645142887036,
+          "target": 38.18338714278241
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "21:01",
+        "para": 3186,
+        "toplam": 40212,
+        "revenue": 40212,
+        "goal": 17,
+        "hygiene": 23,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.26325888896212446,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.1736585365853658,
+          "traffic": 1.0530355558484978,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.0371900924338635,
+          "target": 24.070247689153412
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "21:31",
+        "para": 3812,
+        "toplam": 40235,
+        "revenue": 40235,
+        "goal": 17,
+        "hygiene": 32,
+        "dirtyTables": 1,
+        "spills": 5,
+        "heavyFloor": 0.26526145749004226,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.1736585365853658,
+          "traffic": 1.061045829960169,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 2.954200366545535,
+          "target": 26.144990836361625
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "22:01",
+        "para": 5868,
+        "toplam": 42292,
+        "revenue": 42292,
+        "goal": 17,
+        "hygiene": 13,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.2653851175309788,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.1831974147606334,
+          "spills": 1.8936585365853658,
+          "traffic": 1.0615404701239153,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.7668924214699144,
+          "target": 5.827689463252139
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "22:31",
+        "para": 5888,
+        "toplam": 42312,
+        "revenue": 42312,
+        "goal": 17,
+        "hygiene": 5,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.2666159002575063,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.10633882890204753,
+          "spills": 1.8848780487804877,
+          "traffic": 1.0664636010300252,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.6861764787125604,
+          "target": 7.84558803218599
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "23:01",
+        "para": 8320,
+        "toplam": 44743,
+        "revenue": 44743,
+        "goal": 17,
+        "hygiene": 12,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.2692069468807124,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.8848780487804877,
+          "traffic": 1.0768277875228496,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.681201836303337,
+          "target": 7.969954092416575
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "23:31",
+        "para": 8320,
+        "toplam": 44743,
+        "revenue": 44743,
+        "goal": 17,
+        "hygiene": 6,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.26937425138048976,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.10343658810325486,
+          "spills": 1.8848780487804877,
+          "traffic": 1.077497005521959,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.6943076424057018,
+          "target": 7.642308939857456
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "24:01",
+        "para": 12523,
+        "toplam": 48947,
+        "revenue": 48947,
+        "goal": 17,
+        "hygiene": 14,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.26961793475294715,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.6448780487804877,
+          "traffic": 1.0784717390117886,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.4428457877922765,
+          "target": 13.928855305193089
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "24:31",
+        "para": 23,
+        "toplam": 48947,
+        "revenue": 48947,
+        "goal": 17,
+        "hygiene": 10,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.2702049561299417,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 1.6208780487804877,
+          "traffic": 1.0808198245197669,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.6101938733002545,
+          "target": 9.745153167493637
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "25:01",
+        "para": 23,
+        "toplam": 48947,
+        "revenue": 48947,
+        "goal": 17,
+        "hygiene": 9,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.271856184117807,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.14,
+          "spills": 1.614951219512195,
+          "traffic": 1.087424736471228,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.470871955983423,
+          "target": 13.228201100414427
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "25:31",
+        "para": 757,
+        "toplam": 48947,
+        "revenue": 48947,
+        "goal": 17,
+        "hygiene": 14,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.27576748274262575,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.614951219512195,
+          "traffic": 1.103069930970503,
+          "toilets": 0.300996,
+          "supplies": 0.18750000000000006,
+          "total": 3.437517150482698,
+          "target": 14.06207123793255
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "26:01",
+        "para": 801,
+        "toplam": 48991,
+        "revenue": 48991,
+        "goal": 17,
+        "hygiene": 14,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.2777750558749821,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.614951219512195,
+          "traffic": 1.1111002234999283,
+          "toilets": 0.362556,
+          "supplies": 0.225,
+          "total": 3.5446074430121235,
+          "target": 11.384813924696912
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "26:31",
+        "para": 801,
+        "toplam": 48991,
+        "revenue": 48991,
+        "goal": 17,
+        "hygiene": 13,
+        "dirtyTables": 0,
+        "spills": 7,
+        "heavyFloor": 0.2826490413896903,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.614951219512195,
+          "traffic": 1.1305961655587613,
+          "toilets": 0.362556,
+          "supplies": 0.225,
+          "total": 3.424103385070956,
+          "target": 14.397415373226096
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "27:01",
+        "para": 902,
+        "toplam": 50892,
+        "revenue": 50892,
+        "goal": 19,
+        "hygiene": 22,
+        "dirtyTables": 0,
+        "spills": 6,
+        "heavyFloor": 0.28514849182421265,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.401951219512195,
+          "traffic": 1.1405939672968506,
+          "toilets": 0.362556,
+          "supplies": 0.225,
+          "total": 3.130101186809046,
+          "target": 21.747470329773854
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "27:31",
+        "para": 902,
+        "toplam": 50892,
+        "revenue": 50892,
+        "goal": 19,
+        "hygiene": 10,
+        "dirtyTables": 2,
+        "spills": 7,
+        "heavyFloor": 0.2852765166423516,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.5945799457994578,
+          "traffic": 1.1411060665694064,
+          "toilets": 0.362556,
+          "supplies": 0.225,
+          "total": 3.7852420123688644,
+          "target": 5.368949690778391
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "28:01",
+        "para": 981,
+        "toplam": 50971,
+        "revenue": 50971,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 3,
+        "spills": 7,
+        "heavyFloor": 0.28733000286480104,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.32628956228956246,
+          "spills": 1.5887262872628725,
+          "traffic": 1.1493200114592041,
+          "toilets": 0.424872,
+          "supplies": 0.2625,
+          "total": 4.171707861011639,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "28:31",
+        "para": 1053,
+        "toplam": 51043,
+        "revenue": 51043,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 2,
+        "spills": 8,
+        "heavyFloor": 0.2878813817523987,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.37100000000000005,
+          "spills": 1.8287262872628725,
+          "traffic": 1.1515255270095948,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.558439814272467,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "29:01",
+        "para": 4425,
+        "toplam": 54415,
+        "revenue": 54415,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.28843203268875384,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.8287262872628725,
+          "traffic": 1.1537281307550153,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.140642418017888,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "29:31",
+        "para": 4425,
+        "toplam": 54415,
+        "revenue": 54415,
+        "goal": 19,
+        "hygiene": 3,
+        "dirtyTables": 0,
+        "spills": 8,
+        "heavyFloor": 0.2900393519290053,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.8287262872628725,
+          "traffic": 1.1601574077160213,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 3.8670716949788932,
+          "target": 3.323207625527669
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "30:01",
+        "para": 4425,
+        "toplam": 54415,
+        "revenue": 54415,
+        "goal": 19,
+        "hygiene": 5,
+        "dirtyTables": 0,
+        "spills": 8,
+        "heavyFloor": 0.2943727569518476,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.8287262872628725,
+          "traffic": 1.1774910278073905,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 3.7934053150702622,
+          "target": 5.164867123243444
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "30:31",
+        "para": 4425,
+        "toplam": 54415,
+        "revenue": 54415,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 2,
+        "spills": 8,
+        "heavyFloor": 0.29934252994819016,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.8287262872628725,
+          "traffic": 1.1973701197927606,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.275284407055633,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "31:01",
+        "para": 5241,
+        "toplam": 54415,
+        "revenue": 54415,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 2,
+        "spills": 8,
+        "heavyFloor": 0.3027606445281866,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.32200000000000006,
+          "spills": 1.8287262872628725,
+          "traffic": 1.2110425781127463,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.428956865375619,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "31:31",
+        "para": 9073,
+        "toplam": 58246,
+        "revenue": 58246,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 3,
+        "spills": 8,
+        "heavyFloor": 0.3043667719549362,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.32200000000000006,
+          "spills": 1.8287262872628725,
+          "traffic": 1.2174670878197449,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.5753813750826176,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "32:01",
+        "para": 9073,
+        "toplam": 58246,
+        "revenue": 58246,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.30473047862561603,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.8287262872628725,
+          "traffic": 1.2189219145024641,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.156836201765336,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "32:31",
+        "para": 9073,
+        "toplam": 58246,
+        "revenue": 58246,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.30610071701767216,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 1.8287262872628725,
+          "traffic": 1.2244028680706887,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.260317155333561,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "33:01",
+        "para": 254,
+        "toplam": 61428,
+        "revenue": 61428,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.30577629031166653,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.8287262872628725,
+          "traffic": 1.2231051612466661,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.070019448509538,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "33:31",
+        "para": 254,
+        "toplam": 61428,
+        "revenue": 61428,
+        "goal": 19,
+        "hygiene": 3,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.3061603647327851,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.8287262872628725,
+          "traffic": 1.2246414589311403,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.071555746194012,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "34:01",
+        "para": 254,
+        "toplam": 61428,
+        "revenue": 61428,
+        "goal": 19,
+        "hygiene": 1,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.30635240197664265,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.18200000000000002,
+          "spills": 1.6670966576332429,
+          "traffic": 1.2254096079065706,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.001694265539813,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "34:31",
+        "para": 67,
+        "toplam": 69240,
+        "revenue": 69240,
+        "goal": 19,
+        "hygiene": 12,
+        "dirtyTables": 0,
+        "spills": 7,
+        "heavyFloor": 0.3062636568401422,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.5294670280036133,
+          "traffic": 1.2250546273605687,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 3.5417096553641816,
+          "target": 11.45725861589546
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "35:01",
+        "para": 67,
+        "toplam": 69240,
+        "revenue": 69240,
+        "goal": 19,
+        "hygiene": 11,
+        "dirtyTables": 0,
+        "spills": 7,
+        "heavyFloor": 0.3064316893078111,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 1.5294670280036133,
+          "traffic": 1.2257267572312445,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 3.5423817852348574,
+          "target": 11.440455369128566
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "35:32",
+        "para": 67,
+        "toplam": 69240,
+        "revenue": 69240,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.3064316893078111,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.7694670280036133,
+          "traffic": 1.2257267572312445,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.153381785234857,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "36:02",
+        "para": 1106,
+        "toplam": 69240,
+        "revenue": 69240,
+        "goal": 19,
+        "hygiene": 2,
+        "dirtyTables": 0,
+        "spills": 8,
+        "heavyFloor": 0.3072231148418011,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.11425287356321844,
+          "spills": 1.6805781391147243,
+          "traffic": 1.2288924593672044,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 3.810911472045147,
+          "target": 4.727213198871327
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "36:32",
+        "para": 1129,
+        "toplam": 69263,
+        "revenue": 69263,
+        "goal": 19,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 8,
+        "heavyFloor": 0.3072391179482308,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.19111145942180435,
+          "spills": 1.7309485094850947,
+          "traffic": 1.228956471792923,
+          "toilets": 0.48718799999999995,
+          "supplies": 0.30000000000000004,
+          "total": 4.078204440699822,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "37:02",
+        "para": 1213,
+        "toplam": 69347,
+        "revenue": 69347,
+        "goal": 19,
+        "hygiene": 12,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.3090911114690222,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.4909485094850947,
+          "traffic": 1.2363644458760887,
+          "toilets": 0.246996,
+          "supplies": 0.30000000000000004,
+          "total": 3.5053089553611834,
+          "target": 12.367276115970416
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "37:32",
+        "para": 1385,
+        "toplam": 69519,
+        "revenue": 69519,
+        "goal": 19,
+        "hygiene": 20,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.3106114049648713,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.4909485094850947,
+          "traffic": 1.242445619859485,
+          "toilets": 0,
+          "supplies": 0.14999999999999997,
+          "total": 3.11439412934458,
+          "target": 22.140146766385506
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "38:02",
+        "para": 1408,
+        "toplam": 69542,
+        "revenue": 69542,
+        "goal": 19,
+        "hygiene": 23,
+        "dirtyTables": 1,
+        "spills": 7,
+        "heavyFloor": 0.3110114824757703,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 1.4761336946702799,
+          "traffic": 1.2440459299030813,
+          "toilets": 0,
+          "supplies": 0.14999999999999997,
+          "total": 3.101179624573361,
+          "target": 22.47050938566597
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "38:32",
+        "para": 1408,
+        "toplam": 69542,
+        "revenue": 69542,
+        "goal": 19,
+        "hygiene": 8,
+        "dirtyTables": 2,
+        "spills": 9,
+        "heavyFloor": 0.311067493331625,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.9561336946702799,
+          "traffic": 1.2442699733265,
+          "toilets": 0,
+          "supplies": 0.14999999999999997,
+          "total": 4.0014036679967795,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "39:02",
+        "para": 1408,
+        "toplam": 69542,
+        "revenue": 69542,
+        "goal": 19,
+        "hygiene": 2,
+        "dirtyTables": 1,
+        "spills": 10,
+        "heavyFloor": 0.311067493331625,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.23100000000000004,
+          "spills": 2.115169839248593,
+          "traffic": 1.2442699733265,
+          "toilets": 0,
+          "supplies": 0.14999999999999997,
+          "total": 3.880439812575093,
+          "target": 2.989004685622676
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "39:32",
+        "para": 9961,
+        "toplam": 78096,
+        "revenue": 78096,
+        "goal": 19,
+        "hygiene": 4,
+        "dirtyTables": 0,
+        "spills": 11,
+        "heavyFloor": 0.3111795150766326,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.09100000000000001,
+          "spills": 2.355169839248593,
+          "traffic": 1.2447180603065304,
+          "toilets": 0,
+          "supplies": 0.14999999999999997,
+          "total": 3.8408878995551237,
+          "target": 3.9778025111219084
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "40:02",
+        "para": 10050,
+        "toplam": 78185,
+        "revenue": 78185,
+        "goal": 19,
+        "hygiene": 10,
+        "dirtyTables": 0,
+        "spills": 11,
+        "heavyFloor": 0.3127900067145132,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 2.3551698392485934,
+          "traffic": 1.2511600268580527,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 3.606329866106646,
+          "target": 9.841753347333848
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "40:32",
+        "para": 10050,
+        "toplam": 78185,
+        "revenue": 78185,
+        "goal": 19,
+        "hygiene": 1,
+        "dirtyTables": 2,
+        "spills": 12,
+        "heavyFloor": 0.31291803156595044,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.18200000000000002,
+          "spills": 2.4852903211763038,
+          "traffic": 1.2516721262638018,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 4.198962447440106,
+          "target": 0
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "41:02",
+        "para": 10070,
+        "toplam": 78205,
+        "revenue": 78205,
+        "goal": 19,
+        "hygiene": 5,
+        "dirtyTables": 1,
+        "spills": 11,
+        "heavyFloor": 0.3129580392987263,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 2.308904779007629,
+          "traffic": 1.2518321571949051,
+          "toilets": 0,
+          "supplies": 0,
+          "total": 3.7917369362025344,
+          "target": 5.2065765949366405
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "41:32",
+        "para": 10162,
+        "toplam": 78297,
+        "revenue": 78297,
+        "goal": 19,
+        "hygiene": 8,
+        "dirtyTables": 0,
+        "spills": 11,
+        "heavyFloor": 0.3133813936012732,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 2.3059779497393365,
+          "traffic": 1.2535255744050928,
+          "toilets": 0.063828,
+          "supplies": 0.03750000000000002,
+          "total": 3.6608315241444296,
+          "target": 8.47921189638926
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "42:02",
+        "para": 10162,
+        "toplam": 78297,
+        "revenue": 78297,
+        "goal": 19,
+        "hygiene": 9,
+        "dirtyTables": 1,
+        "spills": 11,
+        "heavyFloor": 0.31374437227076307,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 2.188760244228948,
+          "traffic": 1.2549774890830523,
+          "toilets": 0.063828,
+          "supplies": 0.03750000000000002,
+          "total": 3.776065733312,
+          "target": 5.598356667199999
+        },
+        "recoveries": 1
+      },
+      {
+        "t": "42:32",
+        "para": 10162,
+        "toplam": 78297,
+        "revenue": 78297,
+        "goal": 19,
+        "hygiene": 10,
+        "dirtyTables": 0,
+        "spills": 11,
+        "heavyFloor": 0.31387239693905955,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 2.182906585692363,
+          "traffic": 1.2554895877562382,
+          "toilets": 0.063828,
+          "supplies": 0.03750000000000002,
+          "total": 3.5397241734486014,
+          "target": 11.506895663784967
+        },
+        "recoveries": 2
+      },
+      {
+        "t": "43:02",
+        "para": 2192,
+        "toplam": 82327,
+        "revenue": 82327,
+        "goal": 19,
+        "hygiene": 5,
+        "dirtyTables": 0,
+        "spills": 11,
+        "heavyFloor": 0.3149598791594877,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0.14,
+          "spills": 2.147708013626321,
+          "traffic": 1.2598395166379508,
+          "toilets": 0.063828,
+          "supplies": 0.03750000000000002,
+          "total": 3.6488755302642724,
+          "target": 8.778111743393191
+        },
+        "recoveries": 2
+      },
+      {
+        "t": "43:32",
+        "para": 11388,
+        "toplam": 82523,
+        "revenue": 82523,
+        "goal": 21,
+        "hygiene": 15,
+        "dirtyTables": 0,
+        "spills": 10,
+        "heavyFloor": 0.31603063015575217,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 2.049394760614273,
+          "traffic": 1.2641225206230087,
+          "toilets": 0,
+          "supplies": 0.07499999999999998,
+          "total": 3.3885172812372817,
+          "target": 15.287067969067959
+        },
+        "recoveries": 2
+      },
+      {
+        "t": "44:02",
+        "para": 11388,
+        "toplam": 82523,
+        "revenue": 82523,
+        "goal": 21,
+        "hygiene": 7,
+        "dirtyTables": 1,
+        "spills": 10,
+        "heavyFloor": 0.31603063015575217,
+        "hygieneLoad": {
+          "dishes": 0.28,
+          "surfaces": 0.14,
+          "spills": 2.0141282746160796,
+          "traffic": 1.2641225206230087,
+          "toilets": 0,
+          "supplies": 0.07499999999999998,
+          "total": 3.7732507952390884,
+          "target": 5.668730119022792
+        },
+        "recoveries": 2
+      },
+      {
+        "t": "44:32",
+        "para": 11388,
+        "toplam": 82523,
+        "revenue": 82523,
+        "goal": 21,
+        "hygiene": 1,
+        "dirtyTables": 2,
+        "spills": 10,
+        "heavyFloor": 0.31614628867677225,
+        "hygieneLoad": {
+          "dishes": 0.42000000000000004,
+          "surfaces": 0.23100000000000004,
+          "spills": 1.9700813008130085,
+          "traffic": 1.264585154707089,
+          "toilets": 0,
+          "supplies": 0.07499999999999998,
+          "total": 3.960666455520098,
+          "target": 0.9833386119975529
+        },
+        "recoveries": 2
+      }
+    ],
+    "gaps": [
+      {
+        "from": "2:11",
+        "to": "9:53",
+        "sn": 462
+      },
+      {
+        "from": "9:53",
+        "to": "17:08",
+        "sn": 435
+      },
+      {
+        "from": "17:08",
+        "to": "24:08",
+        "sn": 421
+      },
+      {
+        "from": "24:08",
+        "to": "26:50",
+        "sn": 161
+      },
+      {
+        "from": "26:50",
+        "to": "32:54",
+        "sn": 365
+      },
+      {
+        "from": "34:22",
+        "to": "43:00",
+        "sn": 518
+      }
+    ],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 24,
+    "trailingPurchaseGap": 120,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 2,
+      "capacity": 2,
+      "hands": 1,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 1,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 11388,
+    "finalEarned": 82523,
+    "angry": 49,
+    "served": 360,
+    "tutorialComplete": true,
+    "cleaned": 50,
+    "mopped": 59,
+    "tableCleanups": 87,
+    "longestInactivity": 32,
+    "goalIndex": 21,
+    "hygiene": 0.08987258348355921,
+    "hygieneLoad": {
+      "dishes": 0.7000000000000001,
+      "surfaces": 0.28,
+      "spills": 2.1659250225835596,
+      "traffic": 1.2647597327422422,
+      "toilets": 0,
+      "supplies": 0.07499999999999998,
+      "total": 4.485684755325802,
+      "target": 0
+    },
+    "staffRecovery": {
+      "count": 2,
+      "last": [
+        {
+          "time": 1957.366566665544,
+          "role": "busser",
+          "index": 0,
+          "reason": "reassign",
+          "from": {
+            "x": -3.5087839953331295,
+            "z": 2.8675100000000002
+          },
+          "to": {
+            "x": -7.6,
+            "z": -6.8
+          }
+        },
+        {
+          "time": 4351.566566666853,
+          "role": "busser",
+          "index": 0,
+          "reason": "reassign",
+          "from": {
+            "x": -1.8558021886726013,
+            "z": -5.200003186355872
+          },
+          "to": {
+            "x": -7.6,
+            "z": -6.8
+          }
+        }
+      ]
+    },
+    "dirtyTables": 2,
+    "lastTarget": {
+      "x": 1.8368111378974474,
+      "z": 1.1785643452715044,
+      "label": "TOZU SÜPÜR",
+      "color": 6003669
+    },
+    "lastPosition": {
+      "x": 1.6786930290255053,
+      "z": -1.1407118192876313
+    },
+    "lastSteeringTarget": {
+      "x": 1.8368111378974474,
+      "z": 1.1785643452715044
+    },
+    "hasVacuum": false,
+    "carried": [],
+    "lock": {
+      "take": null,
+      "drop": null
+    },
+    "customerStates": [
+      {
+        "state": "leave"
+      },
+      {
+        "state": "seated",
+        "wanted": null,
+        "table": "k_masa_3"
+      },
+      {
+        "state": "leave"
+      },
+      {
+        "state": "leave"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_5"
+      },
+      {
+        "state": "seated",
+        "wanted": "tost",
+        "table": "k_masa_4"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_4"
+      },
+      {
+        "state": "order"
+      },
+      {
+        "state": "toCounter"
+      }
+    ],
+    "matched": true
+  },
+  {
+    "minutes": 14,
+    "policy": "guide",
+    "simulation": "accelerated-real-actions",
+    "locationTimes": {},
+    "upgradeTimes": [
+      {
+        "t": 1,
+        "id": "speed",
+        "level": 2
+      },
+      {
+        "t": 1,
+        "id": "capacity",
+        "level": 2
+      },
+      {
+        "t": 1,
+        "id": "hands",
+        "level": 1
+      }
+    ],
+    "zoneTimes": {
+      "t1": "0:01",
+      "a3": "0:01",
+      "t2": "0:01",
+      "a4": "0:01",
+      "t3": "0:01",
+      "a5": "0:01",
+      "t4": "0:01",
+      "a6": "0:01",
+      "t5": "0:01",
+      "r1": "0:01",
+      "a7": "0:01",
+      "t6": "0:01",
+      "z_muzik": "0:01",
+      "z_vitrin": "0:01"
+    },
+    "staffTimes": {
+      "kose:waiter1": "0:01",
+      "kose:cashier1": "0:01",
+      "kose:busser1": "0:01",
+      "kose:barista1": "2:04"
+    },
+    "goalTimes": {
+      "g21": "0:01",
+      "g24": "2:05"
+    },
+    "incomeSamples": [
+      {
+        "t": "0:30",
+        "para": 17020,
+        "toplam": 88154,
+        "revenue": 88154,
+        "goal": 21,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 12,
+        "heavyFloor": 0.3162619471311957,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.15557912457912493,
+          "spills": 2.6340731707317073,
+          "traffic": 1.2650477885247828,
+          "toilets": 0,
+          "supplies": 0.07499999999999998,
+          "total": 4.269700083835615,
+          "target": 0
+        },
+        "recoveries": 2
+      },
+      {
+        "t": "1:00",
+        "para": 17112,
+        "toplam": 88246,
+        "revenue": 88246,
+        "goal": 21,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 13,
+        "heavyFloor": 0.31799755557825404,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.23100000000000004,
+          "spills": 2.8740731707317075,
+          "traffic": 1.2719902223130162,
+          "toilets": 0.06458399999999999,
+          "supplies": 0.1125,
+          "total": 4.694147393044724,
+          "target": 0
+        },
+        "recoveries": 2
+      },
+      {
+        "t": "1:30",
+        "para": 17226,
+        "toplam": 88360,
+        "revenue": 88360,
+        "goal": 21,
+        "hygiene": 0,
+        "dirtyTables": 1,
+        "spills": 13,
+        "heavyFloor": 0.31956440325676866,
+        "hygieneLoad": {
+          "dishes": 0.14,
+          "surfaces": 0.09100000000000001,
+          "spills": 2.8740731707317075,
+          "traffic": 1.2782576130270746,
+          "toilets": 0.12916799999999998,
+          "supplies": 0.15000000000000002,
+          "total": 4.662498783758783,
+          "target": 0
+        },
+        "recoveries": 2
+      },
+      {
+        "t": "2:00",
+        "para": 17311,
+        "toplam": 88445,
+        "revenue": 88445,
+        "goal": 21,
+        "hygiene": 0,
+        "dirtyTables": 0,
+        "spills": 13,
+        "heavyFloor": 0.32050276560669394,
+        "hygieneLoad": {
+          "dishes": 0,
+          "surfaces": 0,
+          "spills": 2.761480578139115,
+          "traffic": 1.2820110624267758,
+          "toilets": 0.19375199999999998,
+          "supplies": 0.18750000000000006,
+          "total": 4.42474364056589,
+          "target": 0
+        },
+        "recoveries": 2
+      }
+    ],
+    "gaps": [],
+    "inactivitySamples": [],
+    "done": true,
+    "wallSeconds": 2,
+    "trailingPurchaseGap": 5,
+    "activeLocation": "kose",
+    "playerLevels": {
+      "speed": 2,
+      "capacity": 2,
+      "hands": 1,
+      "charm": 0,
+      "vault": 0
+    },
+    "staffLevels": {
+      "waiter": 1,
+      "cashier": 0,
+      "barista": 0,
+      "busser": 0
+    },
+    "finalMoney": 18924,
+    "finalEarned": 93209,
+    "angry": 52,
+    "served": 371,
+    "tutorialComplete": true,
+    "cleaned": 50,
+    "mopped": 61,
+    "tableCleanups": 6,
+    "longestInactivity": 14,
+    "goalIndex": 24,
+    "hygiene": 1.2963753056926567e-21,
+    "hygieneLoad": {
+      "dishes": 0,
+      "surfaces": 0,
+      "spills": 2.7466657633243003,
+      "traffic": 1.2874521132851287,
+      "toilets": 0.19375199999999998,
+      "supplies": 0.18750000000000006,
+      "total": 4.415369876609429,
+      "target": 0
+    },
+    "staffRecovery": {
+      "count": 2,
+      "last": [
+        {
+          "time": 1957.366566665544,
+          "role": "busser",
+          "index": 0,
+          "reason": "reassign",
+          "from": {
+            "x": -3.5087839953331295,
+            "z": 2.8675100000000002
+          },
+          "to": {
+            "x": -7.6,
+            "z": -6.8
+          }
+        },
+        {
+          "time": 4351.566566666853,
+          "role": "busser",
+          "index": 0,
+          "reason": "reassign",
+          "from": {
+            "x": -1.8558021886726013,
+            "z": -5.200003186355872
+          },
+          "to": {
+            "x": -7.6,
+            "z": -6.8
+          }
+        }
+      ]
+    },
+    "dirtyTables": 0,
+    "lastTarget": {
+      "x": 4.949216229468584,
+      "z": 1.2663603320717813,
+      "label": "LEKEYİ SİL",
+      "color": 6003669
+    },
+    "lastPosition": {
+      "x": 10.020827564646234,
+      "z": 13.455850377147195
+    },
+    "lastSteeringTarget": {
+      "x": 12.7,
+      "z": 13.8
+    },
+    "hasVacuum": false,
+    "carried": [],
+    "lock": {
+      "take": null,
+      "drop": null
+    },
+    "customerStates": [
+      {
+        "state": "seated",
+        "wanted": null,
+        "table": "k_masa_3"
+      },
+      {
+        "state": "leave"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_3"
+      },
+      {
+        "state": "seated",
+        "wanted": "latte",
+        "table": "k_masa_3"
+      },
+      {
+        "state": "order"
+      },
+      {
+        "state": "toTable",
+        "wanted": "tost",
+        "table": "k_masa_8"
+      },
+      {
+        "state": "toTable",
+        "wanted": "latte",
+        "table": "k_masa_7"
+      },
+      {
+        "state": "grab"
+      }
+    ],
+    "matched": true
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "locale": "tr-TR",
+  "brand": "Kafe Caddesi",
+  "title": "Kafe Caddesi: İşletme Oyunu",
+  "short": "Kahve hazırla, masalara servis yap ve kendi kafe işletmeni büyüt",
+  "full": "Kafe Caddesi, masalara servis yapıp kazancınla işletmeni büyüttüğün hareketli bir kafe oyunu. Tepsini al, siparişleri karşıla ve küçük kafene yeni alanlar kazandır.\n\nKahve ve çay hazırla, tost gibi yiyecekleri doğru müşteriye götür. Paket servis raflarını dolu tut, masalardaki siparişleri takip et ve biriken kazancını kasadan topla. Dokunup sürükleyerek hareket et; ürün alma ve servis işlemleri ilgili noktaya yaklaştığında gerçekleşir.\n\nTemiz bir kafe için bulaşıkları kaldır, masaları sil ve elektrikli süpürgenle zemini temizle. Servis, üretim ve bakım arasında kendi iş sıralamanı kur.\n\nTezgâhtar, kasiyer, komi ve barista işe alarak ekibini geliştir. Personelin belirli işlerde yardımcı olur; masalara servis yapmak ve kazancı toplamak senin elindedir. Kazandıklarını makinelere, taşıma kapasitesine ve yeni alanlara yatır.\n\nYeni masalar ve odalar aç, ilerledikçe Sahil şubesine uzan. Dekor ve üniforma seçenekleriyle kendi tarzını belirle. Günlük hedefler ve festival görevleriyle işletmene yeni amaçlar ekle.\n\nIdle arcade akışını işletme geliştirmeyle birleştiren bu oyunda işin başındasın. Sen yokken makinelerde stok birikebilir; para aktif oynanışla kazanılır.\n\nTürkçe ve İngilizce dil seçenekleriyle oyna.",
+  "lengths": {
+    "title": 27,
+    "short": 64,
+    "full": 1219
+  },
+  "alternateTitle": "Kafe Caddesi: Kafe Oyunu",
+  "assetAlt": {
+    "icon": "Kahve makinesi, servis tepsisi ve fincanın stilize çizimi.",
+    "feature": "Kafe Caddesi logosu; çay, kahve ve tost üretim tezgâhının stilize kapak çizimi.",
+    "screenshots": [
+      "Tepsideki sipariş masadaki müşterilere götürülüyor.",
+      "Çay ve kahve istasyonlarından tepsiye ürün alınıyor.",
+      "Elektrikli süpürgeyle müşterilerin çevresindeki zemin temizleniyor.",
+      "Servis tezgâhında biriken oyun parası toplanıyor.",
+      "Personel panelinde tezgâhtar, kasiyer ve komi için işe alma ve seviye seçenekleri.",
+      "Açılan salon odasında masalar ve yeni masa satın alma alanı."
+    ]
+  }
+}

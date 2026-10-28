@@ -1,0 +1,1897 @@
+{
+  "frame": 556,
+  "time": 18.50000000000023,
+  "phase": 7,
+  "phaseAt": 15.283333333333672,
+  "done": true,
+  "task": "leave-workspace",
+  "stats": {
+    "sold": 3,
+    "orders": 2,
+    "served": 3,
+    "dashers": 0,
+    "angry": 0,
+    "stationUpgrades": 0,
+    "cleaned": 2,
+    "tablesCleaned": 1,
+    "mopped": 0,
+    "refills": 0,
+    "produced": {},
+    "sale": {
+      "cay": 3
+    }
+  },
+  "collected": 123.99999999999999,
+  "money": 57.99999999999993,
+  "initialMoney": 300,
+  "dirty": {
+    "soil": 0,
+    "dishes": 0
+  },
+  "events": [
+    {
+      "time": 0,
+      "kind": "cut",
+      "data": {
+        "phase": 0
+      }
+    },
+    {
+      "time": 0,
+      "kind": "task",
+      "data": {
+        "key": "clear-dishes",
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 0,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 0.5333,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.45
+      }
+    },
+    {
+      "time": 0.95,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.45
+      }
+    },
+    {
+      "time": 0.9667,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 1.3333,
+      "kind": "cut",
+      "data": {
+        "phase": 8
+      }
+    },
+    {
+      "time": 1.3333,
+      "kind": "task",
+      "data": {
+        "key": "dispose-dishes",
+        "x": -6.9,
+        "z": 4.8
+      }
+    },
+    {
+      "time": 1.3333,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 1.7833,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 1.8833,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 2.3,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 2.3167,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 2.4,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "cut",
+      "data": {
+        "phase": 1
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "task",
+      "data": {
+        "key": "clean",
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 2.6833,
+      "kind": "action",
+      "data": {
+        "kind": "wipe"
+      }
+    },
+    {
+      "time": 2.8,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 3,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 3.2833,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 3.55,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 3.5833,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 3.7667,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 3.9667,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 4.0333,
+      "kind": "sfx",
+      "data": {
+        "id": "repair",
+        "vol": 0.2
+      }
+    },
+    {
+      "time": 4.0667,
+      "kind": "cleaned",
+      "data": {
+        "id": "k_masa_2"
+      }
+    },
+    {
+      "time": 4.0667,
+      "kind": "sfx",
+      "data": {
+        "id": "upgrade",
+        "vol": 0.35
+      }
+    },
+    {
+      "time": 4.0833,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 4.2,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 4.45,
+      "kind": "cut",
+      "data": {
+        "phase": 2
+      }
+    },
+    {
+      "time": 4.45,
+      "kind": "task",
+      "data": {
+        "key": "prepare",
+        "x": -6.9,
+        "z": -8.35
+      }
+    },
+    {
+      "time": 4.45,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 4.5,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 4.8,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 4.95,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 5.2333,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 5.2333,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 5.6,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 5.65,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 5.65,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 5.85,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 6,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 6.0833,
+      "kind": "picked",
+      "data": {
+        "item": "cay",
+        "x": -6.9,
+        "z": -10.5
+      }
+    },
+    {
+      "time": 6.0833,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 6.1,
+      "kind": "task",
+      "data": {
+        "key": "carry",
+        "x": -6.9,
+        "z": -8.35
+      }
+    },
+    {
+      "time": 6.1,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 6.4667,
+      "kind": "cut",
+      "data": {
+        "phase": 3
+      }
+    },
+    {
+      "time": 6.4667,
+      "kind": "task",
+      "data": {
+        "key": "serve",
+        "x": -5.2,
+        "z": 0.6000000000000001
+      }
+    },
+    {
+      "time": 6.4667,
+      "kind": "action",
+      "data": {
+        "kind": "reach"
+      }
+    },
+    {
+      "time": 6.5167,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 7.05,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 7.2,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 7.3833,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 7.3833,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 7.8,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 7.8,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 8.2333,
+      "kind": "served",
+      "data": {
+        "item": "cay",
+        "x": -5.2,
+        "z": 2.2
+      }
+    },
+    {
+      "time": 8.2333,
+      "kind": "sfx",
+      "data": {
+        "id": "drop",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 8.25,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 8.4,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 8.4,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 8.85,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 8.9,
+      "kind": "cut",
+      "data": {
+        "phase": 4
+      }
+    },
+    {
+      "time": 8.9,
+      "kind": "task",
+      "data": {
+        "key": "collect",
+        "x": 3,
+        "z": -6.1000000000000005
+      }
+    },
+    {
+      "time": 8.9,
+      "kind": "action",
+      "data": {
+        "kind": "cash"
+      }
+    },
+    {
+      "time": 8.95,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 9,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 9.6,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 9.6,
+      "kind": "collected",
+      "data": {
+        "amount": 41.333333333333336
+      }
+    },
+    {
+      "time": 9.6,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.7667,
+      "kind": "collected",
+      "data": {
+        "amount": 41.33333333333333
+      }
+    },
+    {
+      "time": 9.7667,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.95,
+      "kind": "collected",
+      "data": {
+        "amount": 41.33333333333333
+      }
+    },
+    {
+      "time": 9.95,
+      "kind": "sfx",
+      "data": {
+        "id": "coin",
+        "vol": 0.5
+      }
+    },
+    {
+      "time": 9.9667,
+      "kind": "action",
+      "data": {
+        "kind": ""
+      }
+    },
+    {
+      "time": 10.3167,
+      "kind": "cut",
+      "data": {
+        "phase": 5
+      }
+    },
+    {
+      "time": 10.3167,
+      "kind": "task",
+      "data": {
+        "key": "hire",
+        "x": -8.1,
+        "z": -4.8
+      }
+    },
+    {
+      "time": 10.35,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 10.65,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 11.2,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 12,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 12,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 12.45,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 12.6,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 12.65,
+      "kind": "hired",
+      "data": {
+        "role": "waiter",
+        "count": 1,
+        "location": "kose",
+        "totalCost": 400,
+        "method": "pad"
+      }
+    },
+    {
+      "time": 12.65,
+      "kind": "sfx",
+      "data": {
+        "id": "hire"
+      }
+    },
+    {
+      "time": 13.1167,
+      "kind": "cut",
+      "data": {
+        "phase": 6
+      }
+    },
+    {
+      "time": 13.1167,
+      "kind": "task",
+      "data": {
+        "key": "leave-workspace",
+        "x": -6.2,
+        "z": -7.1
+      }
+    },
+    {
+      "time": 13.1667,
+      "kind": "sfx",
+      "data": {
+        "id": "step",
+        "vol": 0.28
+      }
+    },
+    {
+      "time": 13.2667,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.22
+      }
+    },
+    {
+      "time": 14,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 14.0167,
+      "kind": "sfx",
+      "data": {
+        "id": "pickup",
+        "vol": 0.22
+      }
+    },
+    {
+      "time": 14.25,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 14.4,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 14.7667,
+      "kind": "stocked",
+      "data": {
+        "item": "cay",
+        "x": -6.45,
+        "z": -4.4
+      }
+    },
+    {
+      "time": 14.7667,
+      "kind": "sfx",
+      "data": {
+        "id": "stock",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 15,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    },
+    {
+      "time": 15.2833,
+      "kind": "cut",
+      "data": {
+        "phase": 7
+      }
+    },
+    {
+      "time": 15.2833,
+      "kind": "task",
+      "data": {
+        "key": "leave-workspace",
+        "x": -6.2,
+        "z": -7.1
+      }
+    },
+    {
+      "time": 15.5167,
+      "kind": "stocked",
+      "data": {
+        "item": "cay",
+        "x": -6.45,
+        "z": -4.4
+      }
+    },
+    {
+      "time": 15.5167,
+      "kind": "sfx",
+      "data": {
+        "id": "stock",
+        "vol": 0.55
+      }
+    },
+    {
+      "time": 16.05,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "tost",
+        "stationId": "k_tost"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "pecete",
+        "stationId": "k_pecete"
+      }
+    },
+    {
+      "time": 16.8,
+      "kind": "produced",
+      "data": {
+        "item": "kagit",
+        "stationId": "k_kagit"
+      }
+    },
+    {
+      "time": 17.85,
+      "kind": "produced",
+      "data": {
+        "item": "cay",
+        "stationId": "k_semaver"
+      }
+    },
+    {
+      "time": 18,
+      "kind": "produced",
+      "data": {
+        "item": "latte",
+        "stationId": "k_sutbar"
+      }
+    }
+  ],
+  "layout": [
+    {
+      "id": "k_semaver",
+      "x": -6.9,
+      "z": -10.5,
+      "rot": 0,
+      "kind": "machine"
+    },
+    {
+      "id": "k_raf_cay",
+      "x": -6.45,
+      "z": -4.4,
+      "rot": 0,
+      "kind": "pickup"
+    },
+    {
+      "id": "k_tezgah_1",
+      "x": 3,
+      "z": -4.4,
+      "rot": 0,
+      "kind": "counter"
+    },
+    {
+      "id": "k_masa_1",
+      "x": -5.2,
+      "z": 2.2,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_supurge",
+      "x": -7.4,
+      "z": -1.5,
+      "rot": 90,
+      "kind": "vacuum"
+    },
+    {
+      "id": "k_kova_1",
+      "x": -8.5,
+      "z": 4.8,
+      "rot": 90,
+      "kind": "bin"
+    },
+    {
+      "id": "k_masa_2",
+      "x": 0,
+      "z": 2.2,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_masa_3",
+      "x": 5.2,
+      "z": 2.2,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_masa_4",
+      "x": -5.2,
+      "z": 6,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_masa_5",
+      "x": 0,
+      "z": 6,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_masa_6",
+      "x": 5.2,
+      "z": 6,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_sutbar",
+      "x": -3.45,
+      "z": -10.5,
+      "rot": 0,
+      "kind": "machine"
+    },
+    {
+      "id": "k_raf_latte",
+      "x": -4.85,
+      "z": -4.4,
+      "rot": 0,
+      "kind": "pickup"
+    },
+    {
+      "id": "k_tost",
+      "x": 0,
+      "z": -10.5,
+      "rot": 0,
+      "kind": "machine"
+    },
+    {
+      "id": "k_raf_tost",
+      "x": -3.25,
+      "z": -4.4,
+      "rot": 0,
+      "kind": "pickup"
+    },
+    {
+      "id": "k_tezgah_2",
+      "x": 5.65,
+      "z": -4.4,
+      "rot": 0,
+      "kind": "counter"
+    },
+    {
+      "id": "k_kova_2",
+      "x": 8.5,
+      "z": 4.8,
+      "rot": -90,
+      "kind": "bin"
+    },
+    {
+      "id": "k_wc_1",
+      "x": 10.6,
+      "z": -15.8,
+      "rot": 0,
+      "kind": "toilet"
+    },
+    {
+      "id": "k_wc_2",
+      "x": 13.4,
+      "z": -15.8,
+      "rot": 0,
+      "kind": "toilet"
+    },
+    {
+      "id": "k_pecete",
+      "x": 11.4,
+      "z": -10.82,
+      "rot": 180,
+      "kind": "supply"
+    },
+    {
+      "id": "k_kagit",
+      "x": 14.7,
+      "z": -10.82,
+      "rot": 180,
+      "kind": "supply"
+    },
+    {
+      "id": "k_masa_7",
+      "x": 15,
+      "z": 15.8,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_masa_8",
+      "x": 15,
+      "z": 12.1,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_masa_9",
+      "x": 11.4,
+      "z": 15.8,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_waffle",
+      "x": 3.26,
+      "z": -10.5,
+      "rot": 0,
+      "kind": "machine"
+    },
+    {
+      "id": "k_raf_waffle",
+      "x": -1.65,
+      "z": -4.4,
+      "rot": 0,
+      "kind": "pickup"
+    },
+    {
+      "id": "k_frappe",
+      "x": 6.49,
+      "z": -10.5,
+      "rot": 0,
+      "kind": "machine"
+    },
+    {
+      "id": "k_raf_frappe",
+      "x": -0.05,
+      "z": -4.4,
+      "rot": 0,
+      "kind": "pickup"
+    },
+    {
+      "id": "k_vip_1",
+      "x": -14.9,
+      "z": 15.8,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_vip_2",
+      "x": -14.9,
+      "z": 12.2,
+      "rot": 0,
+      "kind": "table"
+    },
+    {
+      "id": "k_vip_3",
+      "x": -11.6,
+      "z": 15.8,
+      "rot": 0,
+      "kind": "table"
+    }
+  ],
+  "layoutUnchanged": true,
+  "layoutProblems": [],
+  "player": {
+    "x": -6.154368220066051,
+    "z": -7.151875019718852,
+    "held": [],
+    "model": "PlayerS01"
+  },
+  "staff": [
+    {
+      "role": "waiter",
+      "x": -6.630899151189901,
+      "z": -6.5495150752536,
+      "job": "rest",
+      "held": 0
+    }
+  ],
+  "resolution": [
+    1080,
+    1920
+  ],
+  "storage": "memory-only",
+  "concept": false,
+  "source": "src/sim/World.ts + src/world/Scene3D.ts",
+  "storageUnchanged": true,
+  "storageCalls": [],
+  "errors": [],
+  "externalRequests": [],
+  "framingFailures": [],
+  "samples": [
+    {
+      "frame": 0,
+      "time": 0.03333333333333333,
+      "phase": 0,
+      "phaseAt": 0,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 12,
+      "time": 0.4333333333333333,
+      "phase": 0,
+      "phaseAt": 0,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 24,
+      "time": 0.8333333333333343,
+      "phase": 0,
+      "phaseAt": 0,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [
+          "bulasik"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 36,
+      "time": 1.2333333333333338,
+      "phase": 0,
+      "phaseAt": 0,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [
+          "bulasik",
+          "bulasik"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 48,
+      "time": 1.6333333333333324,
+      "phase": 8,
+      "phaseAt": 1.3333333333333335,
+      "player": {
+        "x": -6.9,
+        "z": 4.8,
+        "held": [
+          "bulasik",
+          "bulasik"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 60,
+      "time": 2.033333333333331,
+      "phase": 8,
+      "phaseAt": 1.3333333333333335,
+      "player": {
+        "x": -6.9,
+        "z": 4.8,
+        "held": [
+          "bulasik"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 72,
+      "time": 2.4333333333333296,
+      "phase": 8,
+      "phaseAt": 1.3333333333333335,
+      "player": {
+        "x": -6.9,
+        "z": 4.8,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 84,
+      "time": 2.833333333333328,
+      "phase": 1,
+      "phaseAt": 2.6833333333333287,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 96,
+      "time": 3.2333333333333267,
+      "phase": 1,
+      "phaseAt": 2.6833333333333287,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 108,
+      "time": 3.6333333333333253,
+      "phase": 1,
+      "phaseAt": 2.6833333333333287,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 120,
+      "time": 4.033333333333324,
+      "phase": 1,
+      "phaseAt": 2.6833333333333287,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 132,
+      "time": 4.433333333333323,
+      "phase": 1,
+      "phaseAt": 2.6833333333333287,
+      "player": {
+        "x": 1.9594348786357652e-16,
+        "z": 0.6000000000000001,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 144,
+      "time": 4.8333333333333215,
+      "phase": 2,
+      "phaseAt": 4.4499999999999895,
+      "player": {
+        "x": -6.977691944149879,
+        "z": -8.38884597207494,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 156,
+      "time": 5.23333333333332,
+      "phase": 2,
+      "phaseAt": 4.4499999999999895,
+      "player": {
+        "x": -6.9814329225043865,
+        "z": -8.39027746558498,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 168,
+      "time": 5.633333333333319,
+      "phase": 2,
+      "phaseAt": 4.4499999999999895,
+      "player": {
+        "x": -6.9814329225043865,
+        "z": -8.39027746558498,
+        "held": [
+          "cay"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 180,
+      "time": 6.033333333333317,
+      "phase": 2,
+      "phaseAt": 4.4499999999999895,
+      "player": {
+        "x": -6.9814329225043865,
+        "z": -8.39027746558498,
+        "held": [
+          "cay",
+          "cay"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 192,
+      "time": 6.433333333333316,
+      "phase": 2,
+      "phaseAt": 4.4499999999999895,
+      "player": {
+        "x": -6.9814329225043865,
+        "z": -8.39027746558498,
+        "held": [
+          "cay",
+          "cay",
+          "cay"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 204,
+      "time": 6.833333333333314,
+      "phase": 3,
+      "phaseAt": 6.466666666666649,
+      "player": {
+        "x": -5.25611344598146,
+        "z": 0.5846963329141477,
+        "held": [
+          "cay",
+          "cay",
+          "cay"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 216,
+      "time": 7.233333333333313,
+      "phase": 3,
+      "phaseAt": 6.466666666666649,
+      "player": {
+        "x": -5.303685417132042,
+        "z": 0.5726362705701433,
+        "held": [
+          "cay",
+          "cay",
+          "cay"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 228,
+      "time": 7.6333333333333115,
+      "phase": 3,
+      "phaseAt": 6.466666666666649,
+      "player": {
+        "x": -5.303685417132042,
+        "z": 0.5726362705701433,
+        "held": [
+          "cay",
+          "cay"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 240,
+      "time": 8.033333333333312,
+      "phase": 3,
+      "phaseAt": 6.466666666666649,
+      "player": {
+        "x": -5.303685417132042,
+        "z": 0.5726362705701433,
+        "held": [
+          "cay"
+        ],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 252,
+      "time": 8.433333333333332,
+      "phase": 3,
+      "phaseAt": 6.466666666666649,
+      "player": {
+        "x": -5.303685417132042,
+        "z": 0.5726362705701433,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 264,
+      "time": 8.833333333333352,
+      "phase": 3,
+      "phaseAt": 6.466666666666649,
+      "player": {
+        "x": -5.303685417132042,
+        "z": 0.5726362705701433,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 276,
+      "time": 9.233333333333372,
+      "phase": 4,
+      "phaseAt": 8.900000000000022,
+      "player": {
+        "x": 3.0525550366782976,
+        "z": -6.093430620415213,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 288,
+      "time": 9.633333333333391,
+      "phase": 4,
+      "phaseAt": 8.900000000000022,
+      "player": {
+        "x": 3.072226820130218,
+        "z": -6.091887825334709,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 300,
+      "time": 10.033333333333411,
+      "phase": 4,
+      "phaseAt": 8.900000000000022,
+      "player": {
+        "x": 3.072226820130218,
+        "z": -6.091887825334709,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 312,
+      "time": 10.433333333333431,
+      "phase": 5,
+      "phaseAt": 10.316666666666759,
+      "player": {
+        "x": -7.713703486116066,
+        "z": -4.332405028618975,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 324,
+      "time": 10.833333333333451,
+      "phase": 5,
+      "phaseAt": 10.316666666666759,
+      "player": {
+        "x": -8.164042293073525,
+        "z": -4.8776381598948495,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 336,
+      "time": 11.233333333333471,
+      "phase": 5,
+      "phaseAt": 10.316666666666759,
+      "player": {
+        "x": -8.164042293073525,
+        "z": -4.8776381598948495,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 348,
+      "time": 11.633333333333491,
+      "phase": 5,
+      "phaseAt": 10.316666666666759,
+      "player": {
+        "x": -8.164042293073525,
+        "z": -4.8776381598948495,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 360,
+      "time": 12.03333333333351,
+      "phase": 5,
+      "phaseAt": 10.316666666666759,
+      "player": {
+        "x": -8.164042293073525,
+        "z": -4.8776381598948495,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 372,
+      "time": 12.43333333333353,
+      "phase": 5,
+      "phaseAt": 10.316666666666759,
+      "player": {
+        "x": -8.164042293073525,
+        "z": -4.8776381598948495,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": []
+    },
+    {
+      "frame": 384,
+      "time": 12.83333333333355,
+      "phase": 5,
+      "phaseAt": 10.316666666666759,
+      "player": {
+        "x": -8.164042293073525,
+        "z": -4.8776381598948495,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -7.6,
+          "z": -6.8,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 396,
+      "time": 13.23333333333357,
+      "phase": 6,
+      "phaseAt": 13.116666666666898,
+      "player": {
+        "x": -7.963691872823937,
+        "z": -5.1043395553698625,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -7.374897271425743,
+          "z": -7.298441756128714,
+          "job": "fetch",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 408,
+      "time": 13.63333333333359,
+      "phase": 6,
+      "phaseAt": 13.116666666666898,
+      "player": {
+        "x": -6.752289952827742,
+        "z": -6.475070424824147,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -7.104861248823754,
+          "z": -7.896378663318832,
+          "job": "fetch",
+          "held": 1
+        }
+      ]
+    },
+    {
+      "frame": 420,
+      "time": 14.03333333333361,
+      "phase": 6,
+      "phaseAt": 13.116666666666898,
+      "player": {
+        "x": -6.1303821004440024,
+        "z": -7.178774354252529,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -7.104861248823754,
+          "z": -7.896378663318832,
+          "job": "deliver",
+          "held": 2
+        }
+      ]
+    },
+    {
+      "frame": 432,
+      "time": 14.43333333333363,
+      "phase": 6,
+      "phaseAt": 13.116666666666898,
+      "player": {
+        "x": -6.129938335418789,
+        "z": -7.179647347461505,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.82455383875828,
+          "z": -7.092910373682005,
+          "job": "deliver",
+          "held": 2
+        }
+      ]
+    },
+    {
+      "frame": 444,
+      "time": 14.83333333333365,
+      "phase": 6,
+      "phaseAt": 13.116666666666898,
+      "player": {
+        "x": -6.129938335418789,
+        "z": -7.179647347461505,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "deliver",
+          "held": 1
+        }
+      ]
+    },
+    {
+      "frame": 456,
+      "time": 15.23333333333367,
+      "phase": 6,
+      "phaseAt": 13.116666666666898,
+      "player": {
+        "x": -6.129938335418789,
+        "z": -7.179647347461505,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "deliver",
+          "held": 1
+        }
+      ]
+    },
+    {
+      "frame": 468,
+      "time": 15.63333333333369,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 480,
+      "time": 16.033333333333704,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 492,
+      "time": 16.43333333333368,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 504,
+      "time": 16.83333333333366,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 516,
+      "time": 17.233333333333636,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 528,
+      "time": 17.633333333333614,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 540,
+      "time": 18.03333333333359,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    },
+    {
+      "frame": 552,
+      "time": 18.433333333333568,
+      "phase": 7,
+      "phaseAt": 15.283333333333672,
+      "player": {
+        "x": -6.154368220066051,
+        "z": -7.151875019718852,
+        "held": [],
+        "model": "PlayerS01"
+      },
+      "staff": [
+        {
+          "role": "waiter",
+          "x": -6.630899151189901,
+          "z": -6.5495150752536,
+          "job": "rest",
+          "held": 0
+        }
+      ]
+    }
+  ]
+}

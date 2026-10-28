@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Kafe Caddesi · Bir fincanla başlar</title>
+  <style>
+    @font-face{font-family:Paytone;src:url('/campaign-ua/source/fonts/paytoneone-PaytoneOne-Regular.ttf')}
+    @font-face{font-family:Barlow;src:url('/campaign-ua/source/fonts/barlowcondensed-BarlowCondensed-Bold.ttf');font-weight:700}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#082d32;overflow:hidden}
+    #film{display:block;height:100vh;max-width:100vw;object-fit:contain;margin:auto}
+    #stage{position:fixed;left:-20000px;top:0;width:1080px;height:1920px}
+    #loading{position:fixed;inset:0;display:grid;place-items:center;color:#fff3d7;font:700 24px Barlow,sans-serif}
+  </style>
+</head>
+<body><canvas id="stage" width="1080" height="1920"></canvas><canvas id="film" width="1080" height="1920"></canvas><div id="loading">Film hazırlanıyor…</div><script type="module" src="/src/promo-film/main.ts"></script></body>
+</html>

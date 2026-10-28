@@ -1,0 +1,141 @@
+{
+  "engine": "Vosk Turkish small 0.3; independent unrestricted recognition, no supplied transcript grammar",
+  "results": [
+    {
+      "file": "01-hook-master.wav",
+      "recognition": "şu masaya bak",
+      "words": [
+        {
+          "conf": 0.883561,
+          "end": 0.18,
+          "start": 0.09,
+          "word": "şu"
+        },
+        {
+          "conf": 1.0,
+          "end": 0.6,
+          "start": 0.182723,
+          "word": "masaya"
+        },
+        {
+          "conf": 0.981396,
+          "end": 0.9,
+          "start": 0.6,
+          "word": "bak"
+        }
+      ],
+      "seconds": 1.011375,
+      "peak_dbfs": -3.9548339469746345,
+      "rms_dbfs": -18.680613604219943
+    },
+    {
+      "file": "02-start-master.wav",
+      "recognition": "küçük bir başlangıç",
+      "words": [
+        {
+          "conf": 0.952335,
+          "end": 0.27,
+          "start": 0.03,
+          "word": "küçük"
+        },
+        {
+          "conf": 1.0,
+          "end": 0.42,
+          "start": 0.27,
+          "word": "bir"
+        },
+        {
+          "conf": 1.0,
+          "end": 1.11,
+          "start": 0.42,
+          "word": "başlangıç"
+        }
+      ],
+      "seconds": 1.357,
+      "peak_dbfs": -2.057100076813763,
+      "rms_dbfs": -18.93635820930963
+    },
+    {
+      "file": "03-service-master.wav",
+      "recognition": "bir adım daha",
+      "words": [
+        {
+          "conf": 0.996744,
+          "end": 0.24,
+          "start": 0.06,
+          "word": "bir"
+        },
+        {
+          "conf": 1.0,
+          "end": 0.48,
+          "start": 0.24,
+          "word": "adım"
+        },
+        {
+          "conf": 1.0,
+          "end": 0.75,
+          "start": 0.48,
+          "word": "daha"
+        }
+      ],
+      "seconds": 1.0086875,
+      "peak_dbfs": -5.133380568353466,
+      "rms_dbfs": -18.383076971037546
+    },
+    {
+      "file": "04-team-master.wav",
+      "recognition": "birlikte daha fazlası",
+      "words": [
+        {
+          "conf": 0.99427,
+          "end": 0.45,
+          "start": 0.06,
+          "word": "birlikte"
+        },
+        {
+          "conf": 1.0,
+          "end": 0.66,
+          "start": 0.450172,
+          "word": "daha"
+        },
+        {
+          "conf": 1.0,
+          "end": 1.23,
+          "start": 0.69,
+          "word": "fazlası"
+        }
+      ],
+      "seconds": 1.5095,
+      "peak_dbfs": -1.8575301732716705,
+      "rms_dbfs": -17.499234764162694
+    },
+    {
+      "file": "05-brand-master.wav",
+      "recognition": "ya sıra sende",
+      "words": [
+        {
+          "conf": 0.804761,
+          "end": 0.54,
+          "start": 0.297082,
+          "word": "ya"
+        },
+        {
+          "conf": 1.0,
+          "end": 1.08,
+          "start": 0.72,
+          "word": "sıra"
+        },
+        {
+          "conf": 1.0,
+          "end": 1.5,
+          "start": 1.08,
+          "word": "sende"
+        }
+      ],
+      "seconds": 1.7333125,
+      "peak_dbfs": -3.6533643019228332,
+      "rms_dbfs": -18.388181350517854
+    }
+  ],
+  "limitation": "ASR is not human listening or professional voice-artist certification; coined brand may be out of vocabulary."
+}

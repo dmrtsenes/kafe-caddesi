@@ -1,0 +1,89 @@
+workflows:
+  ios-app-store:
+    name: Kafe Caddesi — iOS App Store Release
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: Codemagic_AppStoreConnect
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.fincansokagi.game
+      vars:
+        XCODE_PROJECT: "ios/App/App.xcodeproj"
+        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.fincansokagi.game"
+        APP_STORE_APPLE_ID: "6827967983"
+        VITE_IOS_APP_STORE_URL: "https://apps.apple.com/app/id6827967983"
+        VITE_ADMOB_MODE: "production"
+        # Not: İlk App Store onayı öncesi aşağıdaki 4 değişkeni boş bırakabilirsiniz.
+        # Onaydan sonra Codemagic Environment Variables ekranından eklediğinizde
+        # kod değişikliği gerekmeden canlı iOS reklamları ve mağaza puanlama butonu aktif olur:
+        # IOS_ADMOB_APP_ID: ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY
+        # VITE_IOS_ADMOB_REWARDED_ID: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
+        # VITE_IOS_ADMOB_INTERSTITIAL_ID: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
+        # VITE_IOS_APP_STORE_URL: https://apps.apple.com/app/idXXXXXXXXXX
+      node: 22
+      xcode: latest
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+    scripts:
+      - name: Node bağımlılıklarını kur
+        script: |
+          npm ci
+
+      - name: iOS AdMob App ID yapılandır (varsa release.xcconfig içine yaz)
+        script: |
+          if [ -n "${IOS_ADMOB_APP_ID:-}" ]; then
+            echo "Canlı iOS AdMob App ID uygulanıyor: $IOS_ADMOB_APP_ID"
+            printf "ADMOB_APP_ID = %s\n" "$IOS_ADMOB_APP_ID" > ios/release.xcconfig
+          else
+            echo "IOS_ADMOB_APP_ID tanımlı değil; başlatma çökmesini önleyen güvenli yedek kimlik korunuyor (reklamsız inceleme modu)."
+          fi
+
+      - name: Web paketini derle ve Capacitor iOS ile eşitle
+        script: |
+          npm run build
+          npx cap sync ios
+
+      - name: Xcode sürüm ve derleme numarasını (Build Number) otomatik artır
+        script: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          cd ios/App
+          agvtool new-marketing-version "$PACKAGE_VERSION"
+          LATEST_BUILD=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo 0)
+          if ! [[ "$LATEST_BUILD" =~ ^[0-9]+$ ]]; then
+            LATEST_BUILD=0
+          fi
+          NEXT_BUILD=$((LATEST_BUILD + 1))
+          if [ "$NEXT_BUILD" -le "$BUILD_NUMBER" ]; then
+            NEXT_BUILD=$((BUILD_NUMBER + 10))
+          fi
+          echo "Uygulanan Marketing Version: $PACKAGE_VERSION, Build Number: $NEXT_BUILD"
+          agvtool new-version -all "$NEXT_BUILD"
+
+      - name: Xcode imzalama profillerini uygula
+        script: |
+          xcode-project use-profiles --project "$XCODE_PROJECT"
+
+      - name: iOS IPA paketini derle (Archive & Export)
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false

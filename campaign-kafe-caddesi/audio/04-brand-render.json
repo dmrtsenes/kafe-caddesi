@@ -1,0 +1,12 @@
+{
+  "name": "brand-tr-c",
+  "text": "Kafe Caddesi, şimdi sıra sende.",
+  "seed": 126,
+  "exaggeration": 0.25,
+  "cfg_weight": 0.5,
+  "seconds": 2.3108333333333335,
+  "transcript": "Kafe caddesi. Şimdi sıra sende.",
+  "meanWordProbability": 0.7563880388935407,
+  "id": "04-brand",
+  "voice": "Chatterbox V3 conditioned with synthesized Piper stock Turkish accent reference; no real-person sample"
+}

@@ -1,0 +1,56 @@
+{
+  "actualPdfPages": 10,
+  "pages": [
+    {
+      "page": 1,
+      "textCharacters": 2334,
+      "externalLinks": 3
+    },
+    {
+      "page": 2,
+      "textCharacters": 2421,
+      "externalLinks": 0
+    },
+    {
+      "page": 3,
+      "textCharacters": 3039,
+      "externalLinks": 10
+    },
+    {
+      "page": 4,
+      "textCharacters": 2715,
+      "externalLinks": 9
+    },
+    {
+      "page": 5,
+      "textCharacters": 2454,
+      "externalLinks": 2
+    },
+    {
+      "page": 6,
+      "textCharacters": 2778,
+      "externalLinks": 2
+    },
+    {
+      "page": 7,
+      "textCharacters": 2604,
+      "externalLinks": 2
+    },
+    {
+      "page": 8,
+      "textCharacters": 2815,
+      "externalLinks": 1
+    },
+    {
+      "page": 9,
+      "textCharacters": 1930,
+      "externalLinks": 16
+    },
+    {
+      "page": 10,
+      "textCharacters": 2110,
+      "externalLinks": 11
+    }
+  ],
+  "turkishTextExtracted": true
+}

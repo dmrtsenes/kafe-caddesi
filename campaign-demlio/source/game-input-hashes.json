@@ -1,0 +1,1086 @@
+[
+  {
+    "path": "src/audio/AudioManager.ts",
+    "sha256": "22274b3de5d4e9a3510f60f75224bf8fa6025a0c5e7955a12b593572ac37a9a6"
+  },
+  {
+    "path": "src/audio/Synth.ts",
+    "sha256": "82106932e6a30501d267b4b6f0ad1e3e31dca97f1b8f67b19fc0816ea44ac7c2"
+  },
+  {
+    "path": "src/audio/VacuumSound.ts",
+    "sha256": "120f0717ca78430a65c37ac2f2e1d4ab0f620a9b2c309bd4811f0bfaf60faa0a"
+  },
+  {
+    "path": "src/chars/AnchorMatrices.ts",
+    "sha256": "9fff8de113c08c5ae8ab128a9845732eb5927e65d5f32ee0dd3d0aad9d692948"
+  },
+  {
+    "path": "src/chars/Appearance.ts",
+    "sha256": "678e2d31bbde5cd67077f13c188ea1251b6c7aa2af7bb51005eb086a7addbea9"
+  },
+  {
+    "path": "src/chars/CharacterAnimator.ts",
+    "sha256": "7bcea554ef5833c65d643fb0914744bf655e9db07e7dd1ddf73921f4e983f7d5"
+  },
+  {
+    "path": "src/chars/CharacterMaterials.ts",
+    "sha256": "f1dc48411e62a8727366f927876e695cb2bf01455b1faa616c2e6889fb1b4f72"
+  },
+  {
+    "path": "src/chars/CharacterRig.ts",
+    "sha256": "58a427c09ca193e39732e6199fd461cf48e85d96f0749adf92d393aa7a3b95dc"
+  },
+  {
+    "path": "src/chars/CharacterSkin.ts",
+    "sha256": "20c7a482cd7253554832eefad4ba8caa88ca3e0a21a6409ab801741c64aad239"
+  },
+  {
+    "path": "src/chars/CharacterSystem.test.ts",
+    "sha256": "32c7a82de28e30139f977eedbff7bc4aad21de88235b4d4c94a10358dd2a63f0"
+  },
+  {
+    "path": "src/chars/CleanItCharacters.ts",
+    "sha256": "ae386755920ea454ecf7792decf155b8563ff8e05cf13d0d80043372a64914e7"
+  },
+  {
+    "path": "src/chars/CleanItCustomers.ts",
+    "sha256": "3aa676da099da96a7c7fd274b74b0b7ecca3681f55126f28908e313311937e0b"
+  },
+  {
+    "path": "src/chars/CompactSkinGeometry.test.ts",
+    "sha256": "881d1c1ffcf6ae444f77676e495df6c537085573cc5a9c81ea4c9b335694274c"
+  },
+  {
+    "path": "src/chars/CompactSkinGeometry.ts",
+    "sha256": "3ad7f5e8d8bc1fd5c17c925af968ee5eaabaa2a5b97e90c8ba3d07422eb10460"
+  },
+  {
+    "path": "src/chars/index.ts",
+    "sha256": "0012fe3eaae69c264bbb2601627b5661bbdd5a31c96ecef13bee5f821d213bb1"
+  },
+  {
+    "path": "src/chars/Optimizations.test.ts",
+    "sha256": "45af83e09802785201591cc86f68e67b355eb2aa299b2abc1a73842907f369c3"
+  },
+  {
+    "path": "src/chars/OriginalCharacters.ts",
+    "sha256": "ce8b4730c9e8ddd6c1b54c7cdd0942aef41a74f3df124b563c7880a937087ea6"
+  },
+  {
+    "path": "src/chars/PackCharacters.ts",
+    "sha256": "93d16ca8ee1a532bacd6b172844e0b401b3f238692e00e8e0151317bca3d24ce"
+  },
+  {
+    "path": "src/chars/PaletteGeometry.test.ts",
+    "sha256": "007fd48b193335c488a03257eb6e8c0ea17ba91b1ec806a18da32a6c66a20a55"
+  },
+  {
+    "path": "src/chars/PaletteGeometry.ts",
+    "sha256": "544a4093ce8b35c44b332783bffce74f10f0be6f57e416eef78428bc9506f467"
+  },
+  {
+    "path": "src/chars/PaletteMaterial.ts",
+    "sha256": "c1f215ac6905047123bebe196f845770566a67b8a7ffb6e678399ec3cfaad9ec"
+  },
+  {
+    "path": "src/chars/PushArms.ts",
+    "sha256": "fb2a14875a8562ed2bbbaf54b2a70eacca3fa0816f9e8ad2f6b4a567d9a039df"
+  },
+  {
+    "path": "src/chars/RunArms.ts",
+    "sha256": "e43d865a8642172674be85caceea9d7bc14cc770c168fbb4999b09daa6a2304f"
+  },
+  {
+    "path": "src/chars/ServiceArms.ts",
+    "sha256": "908201538c259a2935ab1ab9d70ec4a1d58533419917eb67140d352950f3636e"
+  },
+  {
+    "path": "src/chars/SignatureWardrobe.ts",
+    "sha256": "56172ee40a764db17e5d340c18fb4730d3a70a0be37c2926a08ee9705581559b"
+  },
+  {
+    "path": "src/chars/SkinBatch.ts",
+    "sha256": "a7d06f99d0fd364558029bcbab9a706a183c16b49c9434679f364ddfeb4c08cc"
+  },
+  {
+    "path": "src/chars/types.ts",
+    "sha256": "f4c54fe2d223ee7ac41d0f3c84f1d028f3e3578dc881d9818673ab0cf2e0025f"
+  },
+  {
+    "path": "src/chars/Workwear.test.ts",
+    "sha256": "501b4df2065a6b56376a6873b48169ae7601bf439b9ab487511c128a356241d7"
+  },
+  {
+    "path": "src/chars/Workwear.ts",
+    "sha256": "359fb5e5094e8c3d9d385e5694ba841f52a1b7027250b47dae72e1e640402174"
+  },
+  {
+    "path": "src/core/AdMobProvider.ts",
+    "sha256": "417095d787601e834d50983ce4b318fccaa327bf29c03f22269c3aa5ed35a449"
+  },
+  {
+    "path": "src/core/Ads.ts",
+    "sha256": "1b77e1e1bb7791bb6c85d3a82de1ec5d85945f03f93bbd2a83a3392b3cf01c87"
+  },
+  {
+    "path": "src/core/CanvasCompat.ts",
+    "sha256": "d3a1f696a2baccbe97b90cc24b465992306936f59b3bae37664b025958430047"
+  },
+  {
+    "path": "src/core/CrashReporter.ts",
+    "sha256": "53e7141ad156cf2e8889f4ac0b51be093fb09a6797e339f33eb00e3d84ef5744"
+  },
+  {
+    "path": "src/core/DevAdProvider.ts",
+    "sha256": "42c0fec7629f39c6ba08cbddca66dc48ef032d8b438593a25fd0a838658ab602"
+  },
+  {
+    "path": "src/core/EventBus.ts",
+    "sha256": "3675aa948eaad6e18cfd4c656be452d8d92008406c6ca14256bb472a9b72adf7"
+  },
+  {
+    "path": "src/core/FrameClock.test.ts",
+    "sha256": "a78b7b5e55dd963941ca89c593cc73039667c8495f25e5bdc9d98bb5d61d122c"
+  },
+  {
+    "path": "src/core/FrameClock.ts",
+    "sha256": "82be24839387a9fa6f044681af6c888ea513c0147bc3ba7c14a320871b2d7ac4"
+  },
+  {
+    "path": "src/core/framePolicy.test.ts",
+    "sha256": "0477c10bfa0718602f1cd24b3ec7d8f0a8138ffb594a72b2ddf84171dde3efe0"
+  },
+  {
+    "path": "src/core/framePolicy.ts",
+    "sha256": "38a79899677b9343ea6111b8f98cd9a17c028f8a5d8723fc187a848d87b4d18e"
+  },
+  {
+    "path": "src/core/Game.ts",
+    "sha256": "8624178667b25dd6fb8235c3ee8ad092126484c6ec3242630255604e4eae4421"
+  },
+  {
+    "path": "src/core/I18n.test.ts",
+    "sha256": "0bf07d592f1237310ae03a721b51d94baad85137d9e478eadd3b6eb39b9b108f"
+  },
+  {
+    "path": "src/core/I18n.ts",
+    "sha256": "57b504197924d09b6b17b83dde3914f85496cdd2336808403848a84a59a0f206"
+  },
+  {
+    "path": "src/core/MathUtils.ts",
+    "sha256": "eb0940b288146ed49b8d0f93b2e436c0ff88fbbd34120c31741a5e032f0002a1"
+  },
+  {
+    "path": "src/core/Native.test.ts",
+    "sha256": "88cfc53480e96122cdf03b9027ce849a42ba29b7b78c091e5e901aa661b1150c"
+  },
+  {
+    "path": "src/core/Native.ts",
+    "sha256": "90a3a854d53765c7541215482eb37173a7f9c9c851a79bdf2b7bfd05497a5753"
+  },
+  {
+    "path": "src/core/PerfHud.ts",
+    "sha256": "6c6fdf89db5e91701ef2bf6135bffd6381a62a8a0b3de954698757cc8a7990da"
+  },
+  {
+    "path": "src/core/PurchaseMetrics.ts",
+    "sha256": "24c206795a324c55dad09903d1cc3c9b792e1fd7366f843cba60b0749f9992b4"
+  },
+  {
+    "path": "src/core/Quality.test.ts",
+    "sha256": "feb0132f22f9c79c505522e9b770126a08d5e7b735db9a087b0dab3800285548"
+  },
+  {
+    "path": "src/core/Quality.ts",
+    "sha256": "4250d40e02586c32cfd3d13801a363394a24a44e0df99f5ead14c4961693927d"
+  },
+  {
+    "path": "src/core/RenderBudget.test.ts",
+    "sha256": "b80f73b081dd13cca737fbabcfcca2a82683dccc3dd97019224a31d1cb591b23"
+  },
+  {
+    "path": "src/core/RenderBudget.ts",
+    "sha256": "56939b752a6e6cd88f844fa1825fd088c3e75ce9324155b9190d079c308b5a03"
+  },
+  {
+    "path": "src/core/Rng.ts",
+    "sha256": "6f2b09246cb0112c5a60c7151a8eb0f79f5f27c998e04439967a6e10bfb95366"
+  },
+  {
+    "path": "src/core/SaveManager.test.ts",
+    "sha256": "56a0634d22d7a976d3a03334ac660feba3ceebe2486cd47ff41781121cb48c68"
+  },
+  {
+    "path": "src/core/SaveManager.ts",
+    "sha256": "209a38a1213cf1e3cd38befe57b1eab3d9cd318f6a86260c5a72df58edda61f7"
+  },
+  {
+    "path": "src/core/SaveValidation.ts",
+    "sha256": "a5680e3099bf9993604188100642f720cb5c50610c3362a3d28e19ddd12b1561"
+  },
+  {
+    "path": "src/core/Settings.test.ts",
+    "sha256": "dc5fbda5f27417d6957d1406dbc6fa484afa1e5d8e836db55e8e7cd497c85f52"
+  },
+  {
+    "path": "src/core/Settings.ts",
+    "sha256": "62e35ced0cc1f206fdfa5bc0f4abbc010446ff4fbe3dfb398dcde8e55c5fd1b9"
+  },
+  {
+    "path": "src/core/Telemetry.test.ts",
+    "sha256": "e0a67627f1e04199875124f77ca77bf254575ff8addccf039f6eec80c6b1a878"
+  },
+  {
+    "path": "src/core/Telemetry.ts",
+    "sha256": "cdca1cf796cc707b9fd8c8f7dee155cacc5dce7e3f4b5b176dc9d76e305ddc94"
+  },
+  {
+    "path": "src/core/thermal.test.ts",
+    "sha256": "d5297f39928f76a949adbbd09bf7885c0374195182b161a1f929739f0b34edb9"
+  },
+  {
+    "path": "src/core/thermal.ts",
+    "sha256": "9c052c07269158e4fc3a6d6bd551fec0e34bcf644469ed3608575f4b4c273550"
+  },
+  {
+    "path": "src/core/version.ts",
+    "sha256": "e8865c3a38f80e869fca1d93c819960478c29b20042dae86f21eef973e16259c"
+  },
+  {
+    "path": "src/core/VisibilityGate.test.ts",
+    "sha256": "b0e354185cd6a504b39031f7a60e11f0afdeac92fb3ca4dcafa4b3b8fdc5a4d3"
+  },
+  {
+    "path": "src/core/VisibilityGate.ts",
+    "sha256": "45c501a6600aad05f73c9c613ad459b9bc6ed60c96f1f5eb7d885812f65ce0d3"
+  },
+  {
+    "path": "src/data/balance.ts",
+    "sha256": "feb026688957e214f368b4d375095b33ddeaea9d950450ebb29b466fc58d7fef"
+  },
+  {
+    "path": "src/data/cafePresentation.ts",
+    "sha256": "8caabd4878fcfa9b245b0eaf2ee01d97fb2e09722cb4802be3dd2ace18208379"
+  },
+  {
+    "path": "src/data/cosmetics.ts",
+    "sha256": "b52043259d3f3ff8a46dbe678aaf2b423e2e0a127a6eec51b7809a0166cafa94"
+  },
+  {
+    "path": "src/data/customerFeedback.ts",
+    "sha256": "42e31326d152de931c62c0ddb64015944e0fe0374562701e3a4be3448df82f6b"
+  },
+  {
+    "path": "src/data/customers.ts",
+    "sha256": "699c37646a4f9fc6f78f4284c02eb60050be6cd674756defb7b3b308238a4ac5"
+  },
+  {
+    "path": "src/data/economy.test.ts",
+    "sha256": "926307a7c5cdd560d2e3bc3c4d7dce4355d7684594d7196fd6679ab1b11f756b"
+  },
+  {
+    "path": "src/data/economy.ts",
+    "sha256": "8f051ad8d14a7295a2e50d75a9fc941627b3e60a65375c82a3faaa17d6c606ba"
+  },
+  {
+    "path": "src/data/goals.ts",
+    "sha256": "0c4495c0a85c49991a6df9e867196f5d39198de64e6ad1e5456313b8d4a3d926"
+  },
+  {
+    "path": "src/data/items.ts",
+    "sha256": "9d708cb7dae137c7d441d7d07990bd427f8536c5999e8b628e100fa975f8e911"
+  },
+  {
+    "path": "src/data/layouts.ts",
+    "sha256": "ca5c42b41143597d794cc6aa5c15baa3842c07c0a9b74286f1b3382a31025ef3"
+  },
+  {
+    "path": "src/data/prestige.ts",
+    "sha256": "6bacd9197f96c555b7af86f7c4361c4da5f2ff4da9394a39eecf0df3875c4738"
+  },
+  {
+    "path": "src/data/restrooms.ts",
+    "sha256": "0623250b61e26576f5039a1598875b5b371d3ed85f76f923de0d4259145cafea"
+  },
+  {
+    "path": "src/data/seating.ts",
+    "sha256": "3cdb6d542716317f6f7afd18665b0219d4e15f3daa6c5004ce47edb2c059102b"
+  },
+  {
+    "path": "src/data/sideActivities.ts",
+    "sha256": "307374dd01e4257d26ebe759dbf3c1f42770e1acb55eec7bc2cde2d9b0429c88"
+  },
+  {
+    "path": "src/data/sideGardenLayout.ts",
+    "sha256": "8b7bc90c320e2693c139057ffb160bbd7bc88644423b15ed72069328c0eda34e"
+  },
+  {
+    "path": "src/data/staff.ts",
+    "sha256": "78fcf38775831ec5fd7629396f1ad3e7c0b77b33f95633abcb3cf88386cb023e"
+  },
+  {
+    "path": "src/data/stations.ts",
+    "sha256": "d2b26c73a1fa47c478dd932fd183306ee56b4ad384ec535c717f72dc6f9e0995"
+  },
+  {
+    "path": "src/data/upgrades.ts",
+    "sha256": "99273b04ee5874464aa3be6516584a7a2cf1f1a2fc90df024107e134cb25d3f0"
+  },
+  {
+    "path": "src/entities/Actor.ts",
+    "sha256": "3767e3063d981905dd31f06567088dac757ca1e1595abbde045228c0e4b1cb1c"
+  },
+  {
+    "path": "src/entities/CarryStack.ts",
+    "sha256": "fe4299b8601417e20a783fe829cc216074ce9a0df593e1cae87088f2b19f80ea"
+  },
+  {
+    "path": "src/entities/Customer.ts",
+    "sha256": "fe8b55f6f08419d548683041424c25eacff248e905c54a7b6523317947a23bf9"
+  },
+  {
+    "path": "src/entities/Player.ts",
+    "sha256": "5e0255ead1a882190b8504a561cffab045acff24d3e6e2cc65f9c9d839a8e66d"
+  },
+  {
+    "path": "src/entities/Staff.ts",
+    "sha256": "c50d511a0200307e8be7b722dfab9a06bd50936bd194f93931035fec0a73b100"
+  },
+  {
+    "path": "src/i18n/en.json",
+    "sha256": "462dea650476d0a61dc73a827521e3a43efea4f783b5e84e1f31e277c3454b19"
+  },
+  {
+    "path": "src/input/InputManager.ts",
+    "sha256": "d3e0ab7a9281af2579e83925c4cca8869f9f575440ea3dda38ede6582bd97516"
+  },
+  {
+    "path": "src/main.ts",
+    "sha256": "c9864c3881439721d140f1dfb2dab874b8627696fa3449e183d15a571823da5c"
+  },
+  {
+    "path": "src/promo/ConceptCafe.ts",
+    "sha256": "80d7094c4c7c0e27b3d3d52b7f94bd20884012fc65e54291dea638bfb8e58bb1"
+  },
+  {
+    "path": "src/promo/FlagshipCafe.ts",
+    "sha256": "f679102e4813f64f906ea89e0165e284ff9d0951aad5f15a27f91c0ce8e200ec"
+  },
+  {
+    "path": "src/promo/FlagshipTitles.ts",
+    "sha256": "9bb0458567a4e0499ca146f357aaf4048257453f1f6683d921a4b9fc86904556"
+  },
+  {
+    "path": "src/promo/main.ts",
+    "sha256": "2feec726eeeed618de16773bdb74c585ba45cebee97cec776f48ebb8643a8434"
+  },
+  {
+    "path": "src/promo/PremiumCafe.ts",
+    "sha256": "cb52bae49344a9aed6097543ce1cb1a14bf1a471aee8fddbf1becc3b8f3c38b4"
+  },
+  {
+    "path": "src/promo/PremiumTitles.ts",
+    "sha256": "05172ffbb4482db9d345221f8f41b7e5bb0508966a4ddc077b0f2064846f10a3"
+  },
+  {
+    "path": "src/promo/TrafficAudit.ts",
+    "sha256": "8830f28131248b986ff7d11dd3c1faf03050a848ca4b7777e80d39b4f23aced5"
+  },
+  {
+    "path": "src/promo/UtopiaCafe.ts",
+    "sha256": "3c9b76e3fc967d4f0ab28e26d65ba0c3c7f9018ef4fc5397736945bc3497ad45"
+  },
+  {
+    "path": "src/promo-campaign/main.ts",
+    "sha256": "a4cac3e73a9e57777f7e12aaa0a6e7cf250984bca64e21acad46b15c0b4b2e21"
+  },
+  {
+    "path": "src/promo-campaign/titles.ts",
+    "sha256": "733bd820d69d19a4bf05cbade7a7f8a6238de12279e2c21427893ab5af3a7dc2"
+  },
+  {
+    "path": "src/promo-gameplay/main.ts",
+    "sha256": "0fd405881af485d304be104a9fd2dc3bd00239aebff28581799684c48eebb04a"
+  },
+  {
+    "path": "src/promo-gameplay/titles.ts",
+    "sha256": "69cb61fbdeb05250d1ba0ab84536a193ce68f748e4cdd1f4e71ebf825a82ca6e"
+  },
+  {
+    "path": "src/sim/ArrivalPacing.test.ts",
+    "sha256": "8df5084e421b7cb5de091507eb5d1806d3b9ebc66bc964d2c8041bb987b4ec00"
+  },
+  {
+    "path": "src/sim/ArrivalPacing.ts",
+    "sha256": "005923ccdc5e1df9c8c4085ba6ac00c0347531dbfead7063d2e3ac3450438c85"
+  },
+  {
+    "path": "src/sim/Collision.ts",
+    "sha256": "9b183c3055c3125a2fd3831e3c09f71dbd83304885b0b6c7998b10dc5508c647"
+  },
+  {
+    "path": "src/sim/CrowdSeparation.test.ts",
+    "sha256": "ed540961a6558ec4b6799163fa93a579247e487c0c87b248d51e18bb3077257d"
+  },
+  {
+    "path": "src/sim/CrowdSeparation.ts",
+    "sha256": "690e18fee4de992b346103d071f06ae0aa39a89d6efc2069f741d720dd198d8a"
+  },
+  {
+    "path": "src/sim/customerArrival.test.ts",
+    "sha256": "8bad715092b42fccf3d25303e8f91db1353e6842016b28121e42c27754c3214a"
+  },
+  {
+    "path": "src/sim/customerArrival.ts",
+    "sha256": "11213229a97068e106f4042d3cdf9cc06ed12aeb51d05ffed1b3e95c3397bc25"
+  },
+  {
+    "path": "src/sim/Daily.test.ts",
+    "sha256": "a74d7d3e9547083c9671c7c2f665449a44c734b4ee937acc50b2995e7f949671"
+  },
+  {
+    "path": "src/sim/Daily.ts",
+    "sha256": "e7f575989f98b270f824b5a4488b275b5ad0655d3ae3cfb18a2e8e3a00253496"
+  },
+  {
+    "path": "src/sim/Events.ts",
+    "sha256": "aa84b50a377148cb819cf3d438cd874a839a516e184fa3e59925f8adb17f3be9"
+  },
+  {
+    "path": "src/sim/Festival.test.ts",
+    "sha256": "9817add5cd4354a320410458f9919eb4241e0f4dfc4b4b59a7b777d89d7db8df"
+  },
+  {
+    "path": "src/sim/Festival.ts",
+    "sha256": "0be4d3bbcc36540678e8abdedc9431a88b13d435a3b56adc38788651b186ea90"
+  },
+  {
+    "path": "src/sim/GameState.test.ts",
+    "sha256": "b862f6925edd14dd773251457368ec39429f7ffaa25ec08794ef8883dfa44c51"
+  },
+  {
+    "path": "src/sim/GameState.ts",
+    "sha256": "dd7461bc356e986de6c522c0204a181742d0942da1180d4869e52be7c2222758"
+  },
+  {
+    "path": "src/sim/Goals.ts",
+    "sha256": "dc780900f9d68d60ac63c4eb335487831e157f43eea274eac591f85f446651c9"
+  },
+  {
+    "path": "src/sim/Grime.ts",
+    "sha256": "abd9e97b17ad3227c959a45f7b8d4c13f72226b9d4d3bc302f48a809a1c3eb6f"
+  },
+  {
+    "path": "src/sim/HandActionClock.ts",
+    "sha256": "2d5258678f5878d6aa414c3d3c5097d4a1938257266fa7dfe95cee444caa329e"
+  },
+  {
+    "path": "src/sim/Mechanics.test.ts",
+    "sha256": "be33cc7aaf7a3b926a3fc31cfaab7fc382abd128fa944e770f4ca1944542e0bc"
+  },
+  {
+    "path": "src/sim/Navigation.test.ts",
+    "sha256": "b192dc480a66a278443f5861a240c9144bcc1642272aaa9aee39a2af5dd562f9"
+  },
+  {
+    "path": "src/sim/Navigation.ts",
+    "sha256": "199be4675b6dd6fcb2d392e521b86c171bb6abdc30e98eb5015eae0087054ee6"
+  },
+  {
+    "path": "src/sim/Offline.ts",
+    "sha256": "b6c6c23c9786996cc9c5bea01c6aacc25e2c2a88324277b318dcab1b2c007fba"
+  },
+  {
+    "path": "src/sim/Orders.ts",
+    "sha256": "6d2034416a2cfd07c7e4caae8d757d1125ff1d3594e9e3e9dd0d8644ef4a4d50"
+  },
+  {
+    "path": "src/sim/Progression.test.ts",
+    "sha256": "10b4951ad5f0b616236129aba4c40a005c1ed1a2b377a867743fe7ef80b3f710"
+  },
+  {
+    "path": "src/sim/RobotVacuum.ts",
+    "sha256": "14547eb9be403e44f3f607a91eea69736004e334d9efe0590d8f90473d4816f4"
+  },
+  {
+    "path": "src/sim/SideActivities.test.ts",
+    "sha256": "70c418ae9eada7b729eae94b3185b906e0679884f0d798681023a49f5403b15b"
+  },
+  {
+    "path": "src/sim/SideActivities.ts",
+    "sha256": "8c03ab449481b3ae5902b58eae392ee534480ab6205793a6a34b9b158a128578"
+  },
+  {
+    "path": "src/sim/Spills.ts",
+    "sha256": "1ad8fe031aab81a6e44fabc49ba99d9653e2617672b1fd486aeefa3dae5de83f"
+  },
+  {
+    "path": "src/sim/Station.test.ts",
+    "sha256": "22bffe3d84820d909cfb3007824d7d6ee323dca95f8793aa79c7ef84bb1d5c96"
+  },
+  {
+    "path": "src/sim/Station.ts",
+    "sha256": "46a2704474e2a7e8818894f9763ae12134c7bab9e14a4b981ad8a05dfe212c24"
+  },
+  {
+    "path": "src/sim/Tutorial.test.ts",
+    "sha256": "a9d178eab80504cefabc73cecc4629416fd1dde300901b2e106677283527ac92"
+  },
+  {
+    "path": "src/sim/Tutorial.ts",
+    "sha256": "dd3e5eb84eb765f269c4ff0a6fa961a0b4591f62701ec1263700684f8c7b38d6"
+  },
+  {
+    "path": "src/sim/World.ts",
+    "sha256": "0b10fe6a4f1bea30b96672098a4110d16758c95329fb690f164239c86bd2c424"
+  },
+  {
+    "path": "src/style.css",
+    "sha256": "7f692bff77c4abb03d942e3b25ec0e67a54696e4236a60bf6b5a949e8ba6ec33"
+  },
+  {
+    "path": "src/ui/api.ts",
+    "sha256": "62d178598e6a96e44038fa195a0504713ce2e638df3cbb51cee34fcfadc9d821"
+  },
+  {
+    "path": "src/ui/CoinFlight.ts",
+    "sha256": "10e52730bae17511d3d43d252c3e01ff5d83ff42e15df81ab63dbbaa3118c9a2"
+  },
+  {
+    "path": "src/ui/FloatingText.ts",
+    "sha256": "072ca16a83ca45fb7b05e102e67ff74f53ccac017a45ac287ae121f77c29cab8"
+  },
+  {
+    "path": "src/ui/HUD.ts",
+    "sha256": "31ea86a713236cf9fea258fa2ee9c653dcd423d396850df12d3e523a980fc275"
+  },
+  {
+    "path": "src/ui/Icons.ts",
+    "sha256": "9ac2dec030077c2fd7b6668c9c61964fb772586823bff7d67190e4630c8f966f"
+  },
+  {
+    "path": "src/ui/ModalFocus.ts",
+    "sha256": "e1d2f6c2a342432519d9a3f73d02b5ffe9a77528dc90841484d2a7ae7b04043c"
+  },
+  {
+    "path": "src/ui/Panels.ts",
+    "sha256": "4583f6c94a2c36b2051e4324311ea9119166163ba060f6256d830980f0c23991"
+  },
+  {
+    "path": "src/ui/Toast.ts",
+    "sha256": "4ab6386550d45bbbaa4edf0b6ec979a36a43550820288d7cec3ee2ef1c42dd43"
+  },
+  {
+    "path": "src/ui/Tutorial.ts",
+    "sha256": "5a136d6fa89e7a6b44e68e1a165d94709bb875fd2b317d3da98153b4d8d51411"
+  },
+  {
+    "path": "src/ui/ui.css",
+    "sha256": "b52ffaa8aa58480727991b2d6f9d79cc92c390b3bd239fd4456638cfb381c691"
+  },
+  {
+    "path": "src/ui/UIRoot.ts",
+    "sha256": "2362be215761571960080a832c38cffebbf000a083aae1cd7e8d6d9d92f6329c"
+  },
+  {
+    "path": "src/ui/UpgradeAdvice.test.ts",
+    "sha256": "bbe91d5c4ab369d522a696c64a8549ac723e97a87801c6d5c1a33bb53f6dfe81"
+  },
+  {
+    "path": "src/ui/UpgradeAdvice.ts",
+    "sha256": "47651bf214dc4399f0376c3a3d4fea35a3763e8d9b46a1cc244cf75e3cf48453"
+  },
+  {
+    "path": "src/world/ArmRing.ts",
+    "sha256": "187db101240f447c8f83e6548fbd5a01487520c2577b5c49f06df9ae05193915"
+  },
+  {
+    "path": "src/world/BatchMaterial.test.ts",
+    "sha256": "63bcc696774e6f4804592804964e34fbea47a06f803f6eabc367c5ebb66137c6"
+  },
+  {
+    "path": "src/world/BatchMaterial.ts",
+    "sha256": "39417dd8c3fd2ed2d3bf33edb210b180efc07cd8bfc9928d020df4f4cec37df2"
+  },
+  {
+    "path": "src/world/CafeMaterials.ts",
+    "sha256": "0618824b51e3f36d103a77c901e0f7493974a71fc83ee999ed225f3c1e868aed"
+  },
+  {
+    "path": "src/world/CameraFraming.test.ts",
+    "sha256": "5110e0f345881ade97ad7a96506a545a0682e1c6624b46ce42eb60fe3e4c8a82"
+  },
+  {
+    "path": "src/world/CameraFraming.ts",
+    "sha256": "239b8560952b7b9d53cf779fa3ae22955adf684ebd9b0c34c95e70a447383f1f"
+  },
+  {
+    "path": "src/world/ContactShadows.ts",
+    "sha256": "a894eccd38b72de51a4c53f884c77f89e2261242d722742ae1a35b85309fd360"
+  },
+  {
+    "path": "src/world/Decor.ts",
+    "sha256": "851bb19750703c964149548f1a848e8e0a63d05e4f6fefb41574309fb077a533"
+  },
+  {
+    "path": "src/world/DisplayView.ts",
+    "sha256": "d5d7ba50d853617158bf82e67b9cb00c0b8937638cac6358d8a300fc9ee005c7"
+  },
+  {
+    "path": "src/world/EdgeSmoothing.ts",
+    "sha256": "e191eb2139d89f420c0f5dea6c907a8402022889efbfaa4d20c0bdfef34f4d7b"
+  },
+  {
+    "path": "src/world/Environment.ts",
+    "sha256": "5e4c2e609029f0af3be9cafc47c066da4d50cbb1da677ffb476a3b72c00e20e4"
+  },
+  {
+    "path": "src/world/FloorMop.ts",
+    "sha256": "4e51bbde47403b7143f9d7acad11d46ea2b39a7583158acc7066966190e3732c"
+  },
+  {
+    "path": "src/world/GrimePixels.test.ts",
+    "sha256": "5695d7adbfbe6474397fbda7492e2356bc6bc831b0b5aa2e43adb321dae239d4"
+  },
+  {
+    "path": "src/world/GrimePixels.ts",
+    "sha256": "c3df014a17f89430445aa84fa7d559a48502a5564f8caff5311a0b21ee910fc4"
+  },
+  {
+    "path": "src/world/GrimeView.ts",
+    "sha256": "52faf08e6651910fc91fc320fbf67728e0e37673cb4d136be6da68ed5ce68473"
+  },
+  {
+    "path": "src/world/GroundShadow.ts",
+    "sha256": "07dcaf90eddc85fee3aa76d7dc8c1d5a51ff5efccc6b42a5c60f07d8d1383783"
+  },
+  {
+    "path": "src/world/GuideMarker.ts",
+    "sha256": "7498bb50a1a1953063240aa277e487871179b7abf00d955e297ae4b5dc1c3fe0"
+  },
+  {
+    "path": "src/world/layers.ts",
+    "sha256": "81096e314b0f2a019d588992558038d6446de1df14b2e34ff2f116dd55cb2d00"
+  },
+  {
+    "path": "src/world/liveCount.test.ts",
+    "sha256": "df7793aa19549b6ea2e0c89e24c88b543f9d38998e9c3927c0432aade3a624cf"
+  },
+  {
+    "path": "src/world/liveCount.ts",
+    "sha256": "9b6178f9182e6ea5d6fbe324fc8220b83b907fad97fb003a62fc50fa62b11345"
+  },
+  {
+    "path": "src/world/LocalMatrixCache.test.ts",
+    "sha256": "59cbaf58696f213fa7efabb66887552211dc02191ec9bbd92922575fb422c183"
+  },
+  {
+    "path": "src/world/LocalMatrixCache.ts",
+    "sha256": "464b9b7b721cdebf6ead265ff8d8a2ccde3e1e8d3799328082d4ab20a8ba21c1"
+  },
+  {
+    "path": "src/world/Materials.ts",
+    "sha256": "2bcbe1e2cbe0eae617bdb7986e3281476bbbcea7b5f97bd0d8d1a1fdfbd675a3"
+  },
+  {
+    "path": "src/world/packs/CafeFurniture.ts",
+    "sha256": "a59478cf25e845f2d17de53a7d570875c3a7d5da170cccfb46499e5bdc5228b3"
+  },
+  {
+    "path": "src/world/packs/catalog.ts",
+    "sha256": "6594b7018fada04e152d9b96befe7a73f5f9bd41f78dca4d9adae0dad35fe8c2"
+  },
+  {
+    "path": "src/world/packs/fit.test.ts",
+    "sha256": "19a65d4540882d22177f460b34c186a32757bf8b43af52030d22e4c97b70287f"
+  },
+  {
+    "path": "src/world/packs/fit.ts",
+    "sha256": "2362317cf1fb1088eab3f679d7f870169cb22408bf0a7e7b0ef3db28c4eb0763"
+  },
+  {
+    "path": "src/world/packs/library.ts",
+    "sha256": "66575b517074ca3b0f0c17c95d439dec59e37daaa6f3348b9367ce56155e1af1"
+  },
+  {
+    "path": "src/world/packs/manifest.json",
+    "sha256": "59afafe7bef51f1b3dfbe379e41e040ebb4880b2ce1d241cc934c41c6c149b69"
+  },
+  {
+    "path": "src/world/PickupView.ts",
+    "sha256": "d9b86d231866a093500bef280743d968db805a3aae924e4008efbacfa93a6419"
+  },
+  {
+    "path": "src/world/PremiumArchitecture.ts",
+    "sha256": "8564936478940a2d3f570536e36cdecb24ded7a45e2586941a210533b0cd4a0a"
+  },
+  {
+    "path": "src/world/PremiumDesign.ts",
+    "sha256": "ac736f3615476e88855ab32d48cb76c26c097500ddaa76f620a1f25f9441524c"
+  },
+  {
+    "path": "src/world/ProductMesh.ts",
+    "sha256": "3ea50f53acedd632e42e916acd3139d6b08fdcddc78c777a9d44ce3bae9e5435"
+  },
+  {
+    "path": "src/world/RenderMembership.test.ts",
+    "sha256": "2572dc68ae3cb5bf373d6584c73055741a4d3657fe049825e2c2738386f33b5a"
+  },
+  {
+    "path": "src/world/RenderMembership.ts",
+    "sha256": "f0614551bee757e84fe66e0534a69ee9d89228f9265efb1706768d997f98903f"
+  },
+  {
+    "path": "src/world/Scene3D.ts",
+    "sha256": "cba994d758a85c56b128af60c377fbfbfcd858717c7e101d8803ddd76471ed2b"
+  },
+  {
+    "path": "src/world/SettledVisual.test.ts",
+    "sha256": "9328c9a931ad1babc3ba74746d4cdfae6d46b1954a5d68f0a4d255ac9470c8b8"
+  },
+  {
+    "path": "src/world/SettledVisual.ts",
+    "sha256": "87c59e87d1259c27690d5165c17b19d45a6de0e6a29a944e5081283f57e3018e"
+  },
+  {
+    "path": "src/world/SideActivityView.ts",
+    "sha256": "8e3f60e6f8032a618a9b89a431c0f910b08c59c1ad87ea467a36b077a65503a2"
+  },
+  {
+    "path": "src/world/SideGardens.ts",
+    "sha256": "5b8cf678a932fd3631e081a0ae48597d53cf7a1ea169c6e34050e29d13eef525"
+  },
+  {
+    "path": "src/world/SpillView.ts",
+    "sha256": "68fae0e3c5c095202e9b430f6f16b32feaf7d929e9471dd19e42357d79775669"
+  },
+  {
+    "path": "src/world/StaffHirePad.ts",
+    "sha256": "f892cc8a6955b5d5ef7f1a1d1d2649436139afbb1bdeb976095d549d082e2bca"
+  },
+  {
+    "path": "src/world/StaffStatusView.ts",
+    "sha256": "d3493a9f2f769fdfb4d9de8df4a1d9664790df0fd1af07ea39cf2eec36c2a7d4"
+  },
+  {
+    "path": "src/world/staticBake.test.ts",
+    "sha256": "6eec653eb32c68604023e1409254d029a943d96de80d71e8dc112260cbc79c45"
+  },
+  {
+    "path": "src/world/staticBake.ts",
+    "sha256": "3d5b74291ee28a4b2478a7b545505d90fa24c1959cecb27c9aeb2d151dff27bd"
+  },
+  {
+    "path": "src/world/staticBatch.test.ts",
+    "sha256": "ac41af6d38b05763a5d410f3aa8ea878ce5f7935330b6eaffca20487d19171c9"
+  },
+  {
+    "path": "src/world/staticBatch.ts",
+    "sha256": "01e053e7b74b4f00ed99975852c34e16ac08ce9202a959482b5a4e77d8ee4a16"
+  },
+  {
+    "path": "src/world/StaticSceneCache.ts",
+    "sha256": "66a80c85e79209fe4c5d9716d4f5c5b30f00653ff2f424cb9fbba4cc2e275e2c"
+  },
+  {
+    "path": "src/world/StaticTransformRoot.ts",
+    "sha256": "6c22ee831ddbb15777a5653b680f36534f70889b7a5d56d3b6e3594437810ce9"
+  },
+  {
+    "path": "src/world/StationView.ts",
+    "sha256": "8df60b9b2199bcc73fac81cf75b5d793725ee215cb3b52cb2ecd7d32ba2aba9b"
+  },
+  {
+    "path": "src/world/SurfaceLabel.test.ts",
+    "sha256": "d5f357a8fd46ff24d7f8dd70397a82bb8d75732b0f7279ab55162901545be64d"
+  },
+  {
+    "path": "src/world/SurfaceLabel.ts",
+    "sha256": "e2353e3adc29698c643c07eb77d490d51670ed95d52e1a15c1b1221b7797e434"
+  },
+  {
+    "path": "src/world/VacuumAsset.test.ts",
+    "sha256": "58963958f1f3def1fff11048fe74a6d0df89287d9a77931914c461c7cfac10d5"
+  },
+  {
+    "path": "src/world/VacuumAsset.ts",
+    "sha256": "b012c6f33dfece288002a6e509ba4c34d9eb3dfe5b9232b8bd7d3c05b6946897"
+  },
+  {
+    "path": "src/world/VFX.ts",
+    "sha256": "b0024297503bf726c217862fe124b3a42d7b0968fbd246658e815971da87f3f6"
+  },
+  {
+    "path": "src/world/viewCull.test.ts",
+    "sha256": "9d59d7b812a0644add623e9619eeb13fbf4c9e2131311827b6c8b73c02543855"
+  },
+  {
+    "path": "src/world/viewCull.ts",
+    "sha256": "f01bc772a4e62508e8e7969d177b7f9386bb7a2937f7923c91fc9d4218de3b10"
+  },
+  {
+    "path": "src/world/ViewOcclusion.test.ts",
+    "sha256": "6a975775c0e483f39e856b3e7abb3edb0fc69d48269c82a109ebb98e6f512036"
+  },
+  {
+    "path": "src/world/ViewOcclusion.ts",
+    "sha256": "a49efe1602f7e5a77fdcfdde9895765ba2f67f2800155b54cdd800cf15b2ff43"
+  },
+  {
+    "path": "src/world/VisibilityRoot.test.ts",
+    "sha256": "408b0e4ac4ebb9b6580c46825e70b32ac9dcf65ec56edc81a46dc48c05661130"
+  },
+  {
+    "path": "src/world/VisibilityRoot.ts",
+    "sha256": "f2dcb56bfd8c8a89706f34e0191302b32e74c8a55be4b15cfbe9f0aeda412bfc"
+  },
+  {
+    "path": "src/world/ZonePurchasePad.ts",
+    "sha256": "94bf4c0732eaec1ca5199b813470d74bfcb148493f7f36bd9aa43ffcaf4bd02b"
+  },
+  {
+    "path": "public/packs/cafe-vacuum/ATTRIBUTION.txt",
+    "sha256": "dfcca9ada3857225adccc0bf30acfe510c5c7c419710ebba27c0490bce5dadff"
+  },
+  {
+    "path": "public/packs/cafe-vacuum/vacuum-cleaner.glb",
+    "sha256": "4d398fe7525b4a3df08ebf37ffd458143b966a0501fd433d41c7bb4fc483bbcb"
+  },
+  {
+    "path": "public/packs/current-cast/ColorPalette01.png",
+    "sha256": "8f058df9105bcfddf79bac8ba4c702c2c1cf331450c8d9d19544c6b352d5c4d7"
+  },
+  {
+    "path": "public/packs/current-cast/CustomerMan.glb",
+    "sha256": "3c7d9684fd5189e7063d22f0144fcd3aab4d1e9f4298f79b68c5095198b8083e"
+  },
+  {
+    "path": "public/packs/current-cast/CustomerWoman.glb",
+    "sha256": "6bd8a29f55615658b2df2eb1cdbc027f47e07787c8ce459707a6c8bd35b78959"
+  },
+  {
+    "path": "public/packs/current-cast/manifest.json",
+    "sha256": "2a380d32cff6932be848fa5f001bd94583fa6fd3b6eb2746d2a9005770203299"
+  },
+  {
+    "path": "public/packs/current-cast/PlayerS01.fbx",
+    "sha256": "9b533143d3e4244b7d9fb6582e905280964a5371c793b1c47d28c779ef507fd4"
+  },
+  {
+    "path": "public/packs/kenney/benchCushion.glb",
+    "sha256": "5186ad938f8b9eff255361fd1fdc48a81f08c318161cde27c93753ab95a2d354"
+  },
+  {
+    "path": "public/packs/kenney/chairCushion.glb",
+    "sha256": "33544228984857f2cb502b58452fed72157335f9b1caf29e96da5c9094c53fdc"
+  },
+  {
+    "path": "public/packs/kenney/chairModernCushion.glb",
+    "sha256": "245132697e633e907e2b48c86d56f6c8543604a3440a055d1c71c06ce11d2858"
+  },
+  {
+    "path": "public/packs/kenney/chairModernFrameCushion.glb",
+    "sha256": "fd3351b077cafbd54224e20fa7a3a1b4a4304019cf44c25a6e7709ad71b852b8"
+  },
+  {
+    "path": "public/packs/kenney/cup-coffee.glb",
+    "sha256": "d74652ad1821bc5dedf1b2e1deb4e0ca0c498aa73880e7df5b91e5e729af6f81"
+  },
+  {
+    "path": "public/packs/kenney/cup-tea.glb",
+    "sha256": "c2d60aeca48197b75ddb9f1ba145bd5e9c9e66e720b8ab67947f0b2a49ee1edd"
+  },
+  {
+    "path": "public/packs/kenney/frappe.glb",
+    "sha256": "4e5aafa4bff86fff9e4b5e5ef747cc93edfaa7d50c02f33e3b45480e68017d1b"
+  },
+  {
+    "path": "public/packs/kenney/ice-cream-cne.glb",
+    "sha256": "13500e2c169ecf113ff525a9d414bbf034e2103962da9b8195128ff960194b6c"
+  },
+  {
+    "path": "public/packs/kenney/kitchenBar.glb",
+    "sha256": "792c3d31e60c8a8d8c7a28cf7d1efe004c5a601adc1b163a8799dde32c1b559d"
+  },
+  {
+    "path": "public/packs/kenney/kitchenBlender.glb",
+    "sha256": "f471defb5b2b1cf3b949a1a8aaef0a8b727afe662b0815068cf4e963325a3c1f"
+  },
+  {
+    "path": "public/packs/kenney/kitchenCabinet.glb",
+    "sha256": "7238c57778935ae25db5e57e9f7af3ba7068c71b005ff7cfbff3b6f3b1a13200"
+  },
+  {
+    "path": "public/packs/kenney/kitchenCoffeeMachine.glb",
+    "sha256": "063f582c6fa0f00a9f24e3393dac2295491c4becdaf5513c893ab1a2826b6ec3"
+  },
+  {
+    "path": "public/packs/kenney/kitchenFridgeSmall.glb",
+    "sha256": "35dab7f63711623be321bfd82072f4ab29fe8006aac9371c6e6b78df2e02f5ed"
+  },
+  {
+    "path": "public/packs/kenney/kitchenStove.glb",
+    "sha256": "3239edb36295dfca9530a9b9a6ad0aff98ce62e7cf8d13ca2a5a1a6b2a904656"
+  },
+  {
+    "path": "public/packs/kenney/kitchenStoveElectric.glb",
+    "sha256": "cf646b960d7dfed1fac27898ff6de1f0671cfa33beecbed06ead7d0684517392"
+  },
+  {
+    "path": "public/packs/kenney/LICENSE.txt",
+    "sha256": "bc0de1a0742cb490f9ed4bae0bd284286ebb27e23149b9917c7d8c0d590b8b29"
+  },
+  {
+    "path": "public/packs/kenney/loungeChair.glb",
+    "sha256": "ddfe6bc4b3451bca61666d7b614552d6ed2a03d82fc76244b72ae3155874dc6c"
+  },
+  {
+    "path": "public/packs/kenney/loungeDesignChair.glb",
+    "sha256": "f0766a7d5698974b711adac18a2108f0e74e3a036fa4e4e0ccf91195b0ee5abf"
+  },
+  {
+    "path": "public/packs/kenney/loungeSofa.glb",
+    "sha256": "1886b811c0d3ad0d8525a4fd43adf4112c497c8e0ed906f06877ca3517f4c7dd"
+  },
+  {
+    "path": "public/packs/kenney/mug.glb",
+    "sha256": "5215ef74dbbc3a1c0ecf8d0937adde745bbcbd65d8facd228d9f3371991da435"
+  },
+  {
+    "path": "public/packs/kenney/plantSmall1.glb",
+    "sha256": "2b9c022feb47be857b2c4fdc29f36522766ba9b70c578c31d7c05d71b4377d15"
+  },
+  {
+    "path": "public/packs/kenney/plate.glb",
+    "sha256": "4c1de567b854264b2a9407ec221d33dfd13c7fc18563ea1f33cb8abe3a3d11be"
+  },
+  {
+    "path": "public/packs/kenney/pottedPlant.glb",
+    "sha256": "5b760eda2766f75fda36b2c5df652a1662f82981ef64cd8fa7fe7bcd386b3a15"
+  },
+  {
+    "path": "public/packs/kenney/sandwich.glb",
+    "sha256": "eba221f9fc24bdaad73467e58ce9c09ec4134baeec01f178e7bb3e87ce3b941e"
+  },
+  {
+    "path": "public/packs/kenney/soda-glass.glb",
+    "sha256": "2dc3d8f401d0df4ce0693af5528157e8c263f0e7707e362bb35d23e404ce7dba"
+  },
+  {
+    "path": "public/packs/kenney/sundae.glb",
+    "sha256": "3c2aee04e5a74225a4566dca7cfa80b97ef87673d3fdcd40703d06de80b68797"
+  },
+  {
+    "path": "public/packs/kenney/table.glb",
+    "sha256": "ff1a94498d023957f4bc3ff6f55a7a82977d336dbf01a573b3364f03afe5ff61"
+  },
+  {
+    "path": "public/packs/kenney/tableCross.glb",
+    "sha256": "f0d83392aff5df82f6c9585cadff694643dbd30a4ff2b8bb01a00a7a161338a3"
+  },
+  {
+    "path": "public/packs/kenney/tableCrossCloth.glb",
+    "sha256": "3c16b86cdf9a9a82b80b97611030a1da2ed2e9e977ac76457e09a1547b0cebbc"
+  },
+  {
+    "path": "public/packs/kenney/tableRound.glb",
+    "sha256": "f8daea9124a542a00b7bdacfddac82dc468573d43e44d7b54dd6316e9695754b"
+  },
+  {
+    "path": "public/packs/kenney/Textures/colormap.png",
+    "sha256": "75baf74d9483a0fc56ac21ceba346fbe16fc24a2a1bf0524c53e6bbe802e1153"
+  },
+  {
+    "path": "public/packs/kenney/toaster.glb",
+    "sha256": "38c1fb7b122be9997758c8ee855d87f28014cf282f24d66d39f4e8d8b236d2af"
+  },
+  {
+    "path": "public/packs/kenney/toilet.glb",
+    "sha256": "16165cfd03c56c2cb443b800570810a22ef770f65e7a468f6761d9dc14eaaeae"
+  },
+  {
+    "path": "public/packs/kenney/trashcan.glb",
+    "sha256": "e0ccc1fe50cbd05386477fdff527171d1cf7c0de2ba7ff3233f8d9561feb2561"
+  },
+  {
+    "path": "public/packs/kenney/waffle.glb",
+    "sha256": "0d59883f629013b3e4c89dc4818755b4aaa968beaa8c8ec2a2e2bcbf9f52585b"
+  },
+  {
+    "path": "public/packs/KENNEY-FOOD-LICENSE.txt",
+    "sha256": "32a081c2035dd4db47d850c83244da048165f0e53d71c076b76c1afc0590bc7f"
+  },
+  {
+    "path": "public/packs/KENNEY-FURNITURE-LICENSE.txt",
+    "sha256": "bc0de1a0742cb490f9ed4bae0bd284286ebb27e23149b9917c7d8c0d590b8b29"
+  },
+  {
+    "path": "public/packs/quaternius/animations/library.glb",
+    "sha256": "59308f63a2d34783af44d28cd0accdcb1619516a8fb0e45e992472b075f235ea"
+  },
+  {
+    "path": "public/packs/quaternius/characters/female-casual.glb",
+    "sha256": "24d4b180af3d0e3c5d7c25f9ae76ad3623bcc396c25646b8f9eb4019254b425d"
+  },
+  {
+    "path": "public/packs/quaternius/characters/female-formal.glb",
+    "sha256": "6444c7027d0dc118c95044d0358db2d590fe4b081fbdbb34fe19e4ed52f13a21"
+  },
+  {
+    "path": "public/packs/quaternius/characters/female-suit.glb",
+    "sha256": "c01422300bf925ded5881474f3bb95fe3a82ebc1e6e7f99ba3cfa622d32e1265"
+  },
+  {
+    "path": "public/packs/quaternius/characters/female-worker.glb",
+    "sha256": "273931e8076b7dc57068902f357a8a386dfe2691c8097d99026b0cf5ef47f797"
+  },
+  {
+    "path": "public/packs/quaternius/characters/male-casual.glb",
+    "sha256": "fc5a9b8f298def6e269e99a922b88f48068154937b835ae9b2fb164f48a6af2c"
+  },
+  {
+    "path": "public/packs/quaternius/characters/male-hoodie.glb",
+    "sha256": "6040379c8754c92f596d5205a6c8eb975b52c9dcd02146b02141954a6b749062"
+  },
+  {
+    "path": "public/packs/quaternius/characters/male-suit.glb",
+    "sha256": "348bcfec43ccdbb60ab1bf3d0bf7311cd7ea968d4d6f0a8b0e0f62ef932460f4"
+  },
+  {
+    "path": "public/packs/quaternius/manifest.json",
+    "sha256": "2246ad23515d948c8e62aaf188d46fbd31b00bc7b66280c6355e44c9e527f32a"
+  },
+  {
+    "path": "public/packs/quaternius/QUATERNIUS-ANIMATIONS-LICENSE.txt",
+    "sha256": "f4e7f373b9b996950337e8d41a4a2939c2d90b7725e9baf3d5084a22717ad328"
+  },
+  {
+    "path": "public/packs/quaternius/QUATERNIUS-MEN-LICENSE.txt",
+    "sha256": "e8dbf915a2b82229913e301a0787696611241bdefec4832bc084f54161db1efe"
+  },
+  {
+    "path": "public/packs/quaternius/QUATERNIUS-WOMEN-LICENSE.txt",
+    "sha256": "e8dbf915a2b82229913e301a0787696611241bdefec4832bc084f54161db1efe"
+  },
+  {
+    "path": "public/packs/quaternius/README.md",
+    "sha256": "81319c39797e0a9ab170116026a81d123cf791e40cbd5c61811101ddc2ee54fb"
+  },
+  {
+    "path": "package.json",
+    "sha256": "33f9b2a282a6dcbb38bade906748f8da70d76d14b60b851171dff2a129a16283"
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "eb6f427c5424811686d674bc628cef47e0793bcd59d6a5f021f6eff41e5a2a8b"
+  },
+  {
+    "path": "capacitor.config.ts",
+    "sha256": "927c3411e44ffb9d5ba68061a151950b3c679b8bee8baf25181dea9ef9ee968b"
+  },
+  {
+    "path": "android/app/build.gradle",
+    "sha256": "316855940bc7669d3dfebcda4f72d998a88d01d3fdb2e96a3dbd1869ebfc39ce"
+  }
+]

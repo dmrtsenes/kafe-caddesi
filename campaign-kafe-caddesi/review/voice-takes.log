@@ -1,0 +1,117 @@
+C:\Users\Enes\Desktop\oyun\.tools\voice-studio\Lib\site-packages\diffusers\models\lora.py:393: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+WARNING:chatterbox.models.tokenizers.tokenizer:Could not load Cangjie mapping: An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on.
+C:\Users\Enes\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 1/1000 [00:00<02:26,  6.80it/s]
+Sampling:   1%|          | 6/1000 [00:00<00:36, 27.60it/s]
+Sampling:   1%|          | 11/1000 [00:00<00:27, 36.07it/s]
+Sampling:   2%|▏         | 16/1000 [00:00<00:24, 40.67it/s]
+Sampling:   2%|▏         | 21/1000 [00:00<00:22, 43.35it/s]
+Sampling:   3%|▎         | 26/1000 [00:00<00:21, 44.67it/s]
+Sampling:   3%|▎         | 31/1000 [00:00<00:21, 45.83it/s]
+Sampling:   4%|▎         | 36/1000 [00:00<00:21, 45.83it/s]
+Sampling:   4%|▍         | 41/1000 [00:00<00:20, 46.44it/s]
+Sampling:   4%|▍         | 45/1000 [00:01<00:22, 42.03it/s]
+{"name": "hook-a", "text": "Her şey bir çayla başlar.", "seed": 101, "exaggeration": 0.25, "cfg_weight": 0.3, "seconds": 1.135, "transcript": "Her şey bir çayla başlar.", "meanWordProbability": 0.8697693288326264}
+C:\Users\Enes\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:21, 47.06it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:20, 47.40it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:20, 48.18it/s]
+Sampling:   2%|▏         | 21/1000 [00:00<00:19, 49.07it/s]
+Sampling:   3%|▎         | 26/1000 [00:00<00:19, 49.26it/s]
+Sampling:   3%|▎         | 31/1000 [00:00<00:19, 49.40it/s]
+Sampling:   4%|▎         | 36/1000 [00:00<00:19, 49.38it/s]
+Sampling:   4%|▍         | 41/1000 [00:00<00:19, 49.48it/s]
+Sampling:   5%|▍         | 46/1000 [00:00<00:19, 49.44it/s]
+Sampling:   5%|▍         | 49/1000 [00:00<00:19, 49.04it/s]
+{"name": "hook-b", "text": "Bir çayla başlar.", "seed": 102, "exaggeration": 0.3, "cfg_weight": 0.3, "seconds": 1.00675, "transcript": "bir çayla başlar.", "meanWordProbability": 0.8014571004443698}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 4/1000 [00:00<00:28, 35.14it/s]
+Sampling:   1%|          | 8/1000 [00:00<00:27, 35.58it/s]
+Sampling:   1%|          | 12/1000 [00:00<00:26, 37.43it/s]
+Sampling:   2%|▏         | 17/1000 [00:00<00:23, 41.27it/s]
+Sampling:   2%|▏         | 22/1000 [00:00<00:22, 43.56it/s]
+Sampling:   3%|▎         | 27/1000 [00:00<00:21, 45.22it/s]
+Sampling:   3%|▎         | 32/1000 [00:00<00:21, 45.89it/s]
+Sampling:   4%|▎         | 37/1000 [00:00<00:20, 46.43it/s]
+Sampling:   4%|▍         | 42/1000 [00:00<00:20, 46.53it/s]
+Sampling:   5%|▍         | 47/1000 [00:01<00:20, 46.64it/s]
+Sampling:   5%|▌         | 52/1000 [00:01<00:20, 46.89it/s]
+Sampling:   6%|▌         | 56/1000 [00:01<00:21, 44.75it/s]
+{"name": "hook-c", "text": "Her şey bir çayla başlar.", "seed": 103, "exaggeration": 0.2, "cfg_weight": 0.0, "seconds": 1.5371666666666666, "transcript": "Her şey bir çayla başlar.", "meanWordProbability": 0.8696688036123913}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:22, 44.12it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:22, 44.79it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:21, 45.44it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:21, 46.38it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:20, 46.77it/s]
+Sampling:   3%|▎         | 30/1000 [00:00<00:20, 47.09it/s]
+Sampling:   4%|▎         | 35/1000 [00:00<00:20, 47.10it/s]
+Sampling:   4%|▍         | 39/1000 [00:00<00:20, 46.49it/s]
+{"name": "hook-d", "text": "Bir çayla başlar.", "seed": 104, "exaggeration": 0.3, "cfg_weight": 0.5, "seconds": 0.8784583333333333, "transcript": "bir çayla başlar.", "meanWordProbability": 0.810385031832589}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:22, 44.22it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:21, 46.18it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:20, 47.25it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:20, 47.44it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:20, 48.25it/s]
+Sampling:   3%|▎         | 30/1000 [00:00<00:20, 47.62it/s]
+Sampling:   4%|▎         | 36/1000 [00:00<00:19, 48.61it/s]
+Sampling:   4%|▍         | 41/1000 [00:00<00:19, 48.70it/s]
+Sampling:   5%|▍         | 47/1000 [00:00<00:19, 49.08it/s]
+Sampling:   5%|▌         | 52/1000 [00:01<00:19, 48.38it/s]
+Sampling:   6%|▌         | 57/1000 [00:01<00:19, 48.69it/s]
+Sampling:   6%|▌         | 62/1000 [00:01<00:19, 48.66it/s]
+Sampling:   7%|▋         | 67/1000 [00:01<00:19, 48.73it/s]
+Sampling:   7%|▋         | 67/1000 [00:01<00:19, 48.21it/s]
+{"name": "brand-a", "text": "Kafe Caddesi. Sıra sende.", "seed": 111, "exaggeration": 0.25, "cfg_weight": 0.3, "seconds": 2.0045, "transcript": "Kahve jattisi. Sıra sende.", "meanWordProbability": 0.7274476625025272}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:22, 44.98it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:21, 46.15it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:20, 47.15it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:20, 47.40it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:20, 47.43it/s]
+Sampling:   3%|▎         | 30/1000 [00:00<00:20, 47.74it/s]
+Sampling:   4%|▎         | 35/1000 [00:00<00:20, 47.88it/s]
+Sampling:   4%|▍         | 40/1000 [00:00<00:19, 48.11it/s]
+Sampling:   4%|▍         | 45/1000 [00:00<00:19, 48.15it/s]
+Sampling:   5%|▌         | 50/1000 [00:01<00:19, 47.87it/s]
+Sampling:   5%|▌         | 53/1000 [00:01<00:19, 47.49it/s]
+{"name": "brand-b", "text": "Kafe caddesi, sıra sende.", "seed": 112, "exaggeration": 0.3, "cfg_weight": 0.0, "seconds": 1.51625, "transcript": "Kafe jattesi sığra sandı.", "meanWordProbability": 0.4937173016369343}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:21, 45.94it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:21, 46.98it/s]
+Sampling:   2%|▏         | 15/1000 [00:00<00:21, 46.78it/s]
+Sampling:   2%|▏         | 20/1000 [00:00<00:20, 46.93it/s]
+Sampling:   2%|▎         | 25/1000 [00:00<00:20, 46.88it/s]
+Sampling:   3%|▎         | 30/1000 [00:00<00:20, 46.94it/s]
+Sampling:   4%|▎         | 35/1000 [00:00<00:20, 47.09it/s]
+Sampling:   4%|▍         | 40/1000 [00:00<00:20, 47.13it/s]
+Sampling:   4%|▍         | 45/1000 [00:00<00:20, 46.95it/s]
+Sampling:   5%|▌         | 50/1000 [00:01<00:20, 46.31it/s]
+Sampling:   5%|▌         | 54/1000 [00:01<00:20, 46.59it/s]
+{"name": "brand-c", "text": "Kafe Caddesi. Sıra sende.", "seed": 113, "exaggeration": 0.2, "cfg_weight": 0.5, "seconds": 1.5087916666666668, "transcript": "Kahve jottiesi. Sırasandı?", "meanWordProbability": 0.5207652054727078}
+
+Sampling:   0%|          | 0/1000 [00:00<?, ?it/s]
+Sampling:   0%|          | 5/1000 [00:00<00:21, 46.05it/s]
+Sampling:   1%|          | 10/1000 [00:00<00:21, 46.38it/s]
+Sampling:   2%|▏         | 16/1000 [00:00<00:20, 48.41it/s]
+Sampling:   2%|▏         | 22/1000 [00:00<00:19, 49.60it/s]
+Sampling:   3%|▎         | 28/1000 [00:00<00:19, 50.29it/s]
+Sampling:   3%|▎         | 34/1000 [00:00<00:19, 50.58it/s]
+Sampling:   4%|▍         | 40/1000 [00:00<00:18, 50.60it/s]
+Sampling:   5%|▍         | 46/1000 [00:00<00:18, 50.92it/s]
+Sampling:   5%|▌         | 52/1000 [00:01<00:18, 50.62it/s]
+Sampling:   5%|▌         | 52/1000 [00:01<00:18, 49.96it/s]
+{"name": "brand-d", "text": "Kafe Caddesi, sıra sende.", "seed": 114, "exaggeration": 0.3, "cfg_weight": 0.2, "seconds": 1.5660833333333333, "transcript": "Kafejattisi Sresende.", "meanWordProbability": 0.47024634132782617}

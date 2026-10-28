@@ -1,0 +1,12 @@
+{
+  "name": "grow-tr",
+  "text": "Kazancınla ekibini kur.",
+  "seed": 123,
+  "exaggeration": 0.3,
+  "cfg_weight": 0.5,
+  "seconds": 1.2245,
+  "transcript": "Kazancınla ekibini kur.",
+  "meanWordProbability": 0.8905070390966204,
+  "id": "03-grow",
+  "voice": "Chatterbox V3 conditioned with synthesized Piper stock Turkish accent reference; no real-person sample"
+}
