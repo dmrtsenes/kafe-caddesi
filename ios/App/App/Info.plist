@@ -75,8 +75,6 @@
 	<true/>
 	<key>GADApplicationIdentifier</key>
 	<string>$(ADMOB_APP_ID)</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Kafe Caddesi, size daha uygun ödüllü reklamlar sunmak ve reklam performansını ölçmek için bu tanımlayıcıyı kullanır.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

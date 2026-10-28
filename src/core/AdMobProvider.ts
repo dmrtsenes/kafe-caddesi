@@ -498,6 +498,13 @@ export async function initAds(): Promise<void> {
   // Durum satırı daha ilk saniyeden anlamlı olsun ('başlatılıyor…').
   setAdStatusSource(adStatus);
 
+  // Üretim derlemesinde henüz canlı reklam birimleri girilmemişse (ör. ilk App Store
+  // incelemesi), ATT kontrolünden sonra SDK ve UMP başlatılmaz; oyun %100 reklamsız çalışır.
+  if (PRODUCTION_ADS && !REWARDED_ID && !INTERSTITIAL_ID) {
+    evre = 'riza_bekliyor';
+    return;
+  }
+
   // iOS App Store Guideline 5.1.2(i): Info.plist içinde NSUserTrackingUsageDescription
   // tanımlıysa, sahne aktif olduktan sonra sistem ATT izni (ATTrackingManager)
   // istenmelidir. 1.5 sn gecikme açılış ekranının kapanmasını garantiler.
@@ -511,13 +518,6 @@ export async function initAds(): Promise<void> {
     } catch (err) {
       console.warn('[Reklam] iOS ATT izni sorgulanamadı:', err);
     }
-  }
-
-  // Üretim derlemesinde henüz canlı reklam birimleri girilmemişse (ör. ilk App Store
-  // incelemesi), ATT kontrolünden sonra SDK ve UMP başlatılmaz; oyun %100 reklamsız çalışır.
-  if (PRODUCTION_ADS && !REWARDED_ID && !INTERSTITIAL_ID) {
-    evre = 'riza_bekliyor';
-    return;
   }
 
   setPrivacyOptionsHandler(async () => {
