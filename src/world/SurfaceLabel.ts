@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { QUALITY } from '../core/Quality';
 import { plane } from './Materials';
 import { LABEL_RENDER_ORDER, LAYER_SURFACE_LABEL } from './layers';
 
@@ -75,10 +76,13 @@ export function drawSurfaceText(ctx: CanvasRenderingContext2D, value: string,
  * transforms. Oversampling and anisotropic mipmaps preserve the angled lettering. */
 export function createSurfaceLabel(width: number, height: number, floor = true): SurfaceLabel {
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
+  const scale = QUALITY.tier === 'high' ? 1 : 0.5;
+  const baseW = 1024;
+  const baseH = floor ? Math.round(baseW * height / width) : 384;
+  canvas.width = Math.round(baseW * scale);
   // Match the physical footprint: square pad captions must not stretch a wide
   // texture into tall, distorted letters. Keep the existing stock fascia ratio.
-  canvas.height = floor ? Math.round(1024 * height / width) : 384;
+  canvas.height = Math.round(baseH * scale);
   const ctx = canvas.getContext('2d');
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -113,8 +117,10 @@ export function createSurfaceLabel(width: number, height: number, floor = true):
   let title = '', price = '', active = false, dirty = true, cooldown = 0;
   const paint = () => {
     if (!ctx) return;
-    const h = canvas.height;
-    ctx.clearRect(0, 0, 1024, h);
+    ctx.save();
+    if (scale !== 1) ctx.scale(scale, scale);
+    const h = baseH;
+    ctx.clearRect(0, 0, baseW, h);
     if (floor) {
       // Only paint the glyphs. The actual room floor remains visible between
       // letters and rows; a narrow ink edge keeps white paint legible on tiles.
@@ -128,6 +134,7 @@ export function createSurfaceLabel(width: number, height: number, floor = true):
       ctx.fillStyle = /^0\s*\//.test(title) ? '#91452e' : '#233d33';
       drawSurfaceText(ctx, title, 512, h / 2, 934, 278, 290, 1.45);
     }
+    ctx.restore();
     texture.needsUpdate = true; dirty = false; cooldown = .1;
   };
   return {

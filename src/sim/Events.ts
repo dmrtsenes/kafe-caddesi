@@ -82,6 +82,14 @@ export class EventManager {
     return this.active.has(id);
   }
 
+  hasUrgentCrisis(): boolean {
+    return this.active.has('dasher') || this.active.has('breakdown') || this.active.has('influencer');
+  }
+
+  activeEventRemaining(id: ChaosEventId): number {
+    return Math.max(0, this.active.get(id)?.remaining ?? 0);
+  }
+
   update(dt: number, world: World, player: Player | null, vfx: VFXSystem | null): void {
     this.elapsed += dt;
     this.mods.spawnMult = 1;
@@ -95,14 +103,18 @@ export class EventManager {
       world.root.add(this.crateRoot);
     }
 
-    // Aktif olayları ilerlet
-    for (const [id, ev] of [...this.active]) {
+    // Aktif olayları ilerlet (sıfır GC tahsisi)
+    ENDED_SCRATCH.length = 0;
+    for (const [id, ev] of this.active) {
       ev.remaining -= dt;
       if (id === 'rush') {
         this.mods.spawnMult = BALANCE.events.rushSpawnMult;
         this.mods.valueMult = BALANCE.events.rushValueMult;
       }
-      if (ev.remaining <= 0) this.endEvent(id, world);
+      if (ev.remaining <= 0) ENDED_SCRATCH.push(id);
+    }
+    for (let i = 0; i < ENDED_SCRATCH.length; i++) {
+      this.endEvent(ENDED_SCRATCH[i], world);
     }
 
     this.updateDelivery(dt, player, vfx);
@@ -112,7 +124,8 @@ export class EventManager {
 
     if (this.elapsed < BALANCE.events.warmup) return;
 
-    for (const id of ['rush', 'dasher', 'delivery', 'breakdown', 'influencer', 'investor'] as ChaosEventId[]) {
+    for (let i = 0; i < EVENT_ORDER.length; i++) {
+      const id = EVENT_ORDER[i];
       if (this.active.has(id)) continue;
       this.timers[id] -= dt;
       if (this.timers[id] > 0) continue;
@@ -262,6 +275,7 @@ export class EventManager {
   private spawnCrates(world: World, vfx: VFXSystem | null): void {
     this.clearCrates();
     const door = world.loc.door;
+    const b = world.loc.bounds;
     const n = BALANCE.events.deliveryCrates;
     const displays = world.openMachines();
     const income = Math.max(200, world.estimateIncomePerSecond() * 26);
@@ -272,8 +286,12 @@ export class EventManager {
       const mesh = createCrateMesh(item);
       const a = (i / n) * Math.PI * 2;
       const rad = 1.5 + (i % 2) * 0.9;
-      const x = door.x - 2.2 + Math.cos(a) * rad;
-      const z = door.z - 2.6 + Math.sin(a) * rad * 0.6;
+      let x = Math.max(b.x0 + 1.2, Math.min(b.x1 - 1.2, door.x - 2.2 + Math.cos(a) * rad));
+      let z = Math.max(b.z0 + 1.2, Math.min(b.z1 - 1.2, door.z - 2.6 + Math.sin(a) * rad * 0.6));
+      if (!world.isWalkable(x, z, 0.45)) {
+        x = Math.max(b.x0 + 1.2, Math.min(b.x1 - 1.2, door.x + Math.cos(a) * 1.1));
+        z = Math.max(b.z0 + 1.2, Math.min(b.z1 - 1.2, door.z - 1.8));
+      }
       mesh.position.set(x, 0, z);
       mesh.rotation.y = this.rng.range(0, Math.PI * 2);
       this.crateRoot.add(mesh);
@@ -368,6 +386,13 @@ export class EventManager {
     this.breakdownShield = Math.max(this.breakdownShield, seconds);
   }
 
+  /** Arka planda geçen gerçek duvar saati süresini arıza kalkanından düşer. */
+  decayBreakdownShield(elapsedSeconds: number): void {
+    if (elapsedSeconds > 0 && this.breakdownShield > 0) {
+      this.breakdownShield = Math.max(0, this.breakdownShield - elapsedSeconds);
+    }
+  }
+
   get breakdownShieldLeft(): number {
     return Math.max(0, this.breakdownShield);
   }
@@ -385,7 +410,7 @@ export class EventManager {
   activeBanners(): { id: string; remaining: number; duration: number }[] {
     BANNER_SCRATCH.length = 0;
     for (const ev of this.active.values()) {
-      BANNER_SCRATCH.push({ id: ev.id, remaining: ev.remaining, duration: ev.duration });
+      BANNER_SCRATCH.push(ev);
     }
     return BANNER_SCRATCH;
   }
@@ -413,4 +438,6 @@ export class EventManager {
   }
 }
 
+const EVENT_ORDER: readonly ChaosEventId[] = ['rush', 'dasher', 'delivery', 'breakdown', 'influencer', 'investor'];
+const ENDED_SCRATCH: ChaosEventId[] = [];
 const BANNER_SCRATCH: { id: string; remaining: number; duration: number }[] = [];

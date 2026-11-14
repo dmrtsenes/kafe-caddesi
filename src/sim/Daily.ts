@@ -238,6 +238,38 @@ export interface DailyRollResult {
   streakBroken: boolean;
 }
 
+interface StreakRecoveryEntry {
+  lostStreak: number;
+  dayKey: string;
+}
+
+const STREAK_RECOVERY = new WeakMap<GameState, StreakRecoveryEntry>();
+/** En fazla 2 kaçırılan güne kadar (gap <= 3) ödüllü reklamla seri kurtarılabilir. */
+export const STREAK_FREEZE_MAX_GAP_DAYS = 3;
+
+export function canRecoverStreak(state: GameState): boolean {
+  const entry = STREAK_RECOVERY.get(state);
+  return !!entry && entry.dayKey === state.dailyDay && entry.lostStreak >= 1;
+}
+
+export function lostStreakDays(state: GameState): number {
+  const entry = STREAK_RECOVERY.get(state);
+  if (!entry || entry.dayKey !== state.dailyDay) return 0;
+  return entry.lostStreak;
+}
+
+export function recoverStreak(state: GameState): boolean {
+  const entry = STREAK_RECOVERY.get(state);
+  if (!entry || entry.dayKey !== state.dailyDay || entry.lostStreak < 1) return false;
+  state.dailyStreak = Math.min(entry.lostStreak + 1, LADDER_MINUTES.length - 1);
+  STREAK_RECOVERY.delete(state);
+  return true;
+}
+
+export function dismissStreakRecovery(state: GameState): void {
+  STREAK_RECOVERY.delete(state);
+}
+
 /**
  * Günü ilerletir. Oyun açılışında ve gece yarısını geçen oturumlarda
  * çağrılır; aynı gün içinde tekrar çağrılması zararsızdır.
@@ -265,11 +297,21 @@ export function rollDay(state: GameState, now = new Date()): DailyRollResult {
     return { newDay: false, streakBroken: false };
   }
   const broken = !firstEver && gap > 1;
+  const previousStreak = state.dailyStreak;
 
   state.dailyDay = key;
-  if (firstEver || broken) state.dailyStreak = 0;
-  // LADDER_MINUTES ile aynı uzunluk (7): merdivenin son basamağı bu index.
-  else state.dailyStreak = Math.min(state.dailyStreak + 1, LADDER_MINUTES.length - 1);
+  if (firstEver || broken) {
+    if (broken && previousStreak >= 1 && gap <= STREAK_FREEZE_MAX_GAP_DAYS) {
+      STREAK_RECOVERY.set(state, { lostStreak: previousStreak, dayKey: key });
+    } else {
+      STREAK_RECOVERY.delete(state);
+    }
+    state.dailyStreak = 0;
+  } else {
+    STREAK_RECOVERY.delete(state);
+    // LADDER_MINUTES ile aynı uzunluk (7): merdivenin son basamağı bu index.
+    state.dailyStreak = Math.min(state.dailyStreak + 1, LADDER_MINUTES.length - 1);
+  }
   state.dailyClaimed = false;
   state.dailyMissionDone = [false, false, false];
   /**

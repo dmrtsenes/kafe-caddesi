@@ -36,8 +36,7 @@ export function renderPixelRatio(
     (settings.tier ? TIER_PIXEL_BUDGET[settings.tier] : TIER_PIXEL_BUDGET.high);
   const budget = Math.max(1, baseBudget * PIXEL_BUDGET_SCALE[scaleIdx]);
   const budgetCap = Math.sqrt(budget / area);
-  const minPr = Math.min(dpr, 1.0);
-  return Math.max(minPr, Math.min(dpr, Math.max(0.1, settings.dprCap), budgetCap));
+  return Math.max(0.1, Math.min(dpr, Math.max(0.1, settings.dprCap), budgetCap));
 }
 /** Avoid an extra skipped vsync when a 60/90/120 Hz clock jitters slightly. */
 export function stableRefreshRate(measured: number): number {

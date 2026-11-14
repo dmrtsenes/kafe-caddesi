@@ -128,14 +128,17 @@ export function onHeatChange(fn: HeatListener): () => void {
 export function composeQuality(tier: QualityTier, heat: number): TierSettings {
   const out = { ...TIER_SETTINGS[tier] };
   const level = Number.isFinite(heat) ? Math.max(0,Math.min(5,Math.floor(heat))) : 0;
-  // Preserve label sharpness under light/moderate pressure. Image reductions
-  // begin at severe pressure; the automatic frame budget responds first.
-  const scale = [1,1,1,.85,.7,.6][level];
+  // Step down 3D resolution progressively from heat 1 while preserving HTML HUD sharpness and 60 FPS through heat 2.
+  const scale = [1, 0.92, 0.84, 0.76, 0.68, 0.62][level];
   out.dprCap *= Math.sqrt(scale);
   out.pixelBudget = Math.floor(out.pixelBudget * scale);
-  if(level>=1 && out.shadowMapSize>0)out.shadowMapSize=Math.min(out.shadowMapSize,1024);
-  if(level>=3 && out.shadowMapSize>0)out.shadowMapSize=Math.min(out.shadowMapSize,512);
-  if(level>=4)out.shadows=false;
+  if (level >= 2) {
+    const visScale = [1, 1, 0.9, 0.82, 0.74, 0.66][level];
+    out.customerVisualCap = Math.max(8, Math.round(out.customerVisualCap * visScale));
+  }
+  if (level >= 1 && out.shadowMapSize > 0) out.shadowMapSize = Math.min(out.shadowMapSize, 1024);
+  if (level >= 3 && out.shadowMapSize > 0) out.shadowMapSize = Math.min(out.shadowMapSize, 512);
+  if (level >= 4) out.shadows = false;
   return out;
 }
 
@@ -242,8 +245,13 @@ export function charLod(): boolean {
 
 let cachedTier: QualityTier | null = null;
 
-const LOW_GPU = /Mali-4|Mali-T|Mali-G31|Mali-G51|Mali-G52|Mali-G57|Adreno (?:\(TM\) )?(?:3|4|504|505|506|610|612|616)\b|PowerVR/i;
+const LOW_GPU = /Mali-4|Mali-T|Mali-G31|Mali-G51|Mali-G52|Mali-G57|Adreno (?:\(TM\) )?(?:3|4|504|505|506|610|612|613|615|616|618|619)\b|PowerVR|\bIMG\s+GE8\d{3}\b/i;
 const CAPABLE_GPU = /apple gpu|apple m[1-9]|adreno \(tm\) [678]\d\d|adreno [678]\d\d|mali-g[789]\d/i;
+
+/** Düşük bütçeli mobil GPU dizgilerini birim test edilebilir şekilde sınıflandırır. */
+export function isLowEndGpuString(renderer: string): boolean {
+  return Boolean(renderer) && LOW_GPU.test(renderer);
+}
 
 /**
  * Cihaz sınıfı tahmini. Kesin değil ama ilk kademeyi seçmeye yeter;

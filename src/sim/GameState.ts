@@ -48,6 +48,8 @@ export interface GameStateSave {
   revenueEarned?: number;
   reputation: number;
   upgrades: Partial<Record<PlayerUpgradeId, number>>;
+  /** Legacy pre-v7 upgrade map kept for save migration compatibility. */
+  playerUpgrades?: Partial<Record<'speed' | 'carry' | 'hands' | 'tip' | 'vault' | 'magnet', number>>;
   staffCount: Partial<Record<StaffRole, number>>;
   staffLevel: Partial<Record<StaffRole, number>>;
   /** v9: her şubenin kendi kadrosu. Eski iki alan aktif şube yedeğidir. */
@@ -366,11 +368,12 @@ export class GameState {
   /* ---------------- para ---------------- */
 
   canAfford(v: number): boolean {
-    return this.money >= v;
+    return Number.isFinite(v) && v >= 0 && this.money >= v;
   }
 
   spend(v: number): boolean {
-    if (this.money < v) return false;
+    if (!Number.isFinite(v) || v < 0 || this.money < v) return false;
+    if (v === 0) return true;
     this.money -= v;
     bus.emit('money:spend', { amount: v });
     bus.emit('money:changed', { total: this.money });
@@ -379,7 +382,7 @@ export class GameState {
 
   /** Satıştan/ödülden gelen para. `x/z` verilirse dünyada uçan yazı gösterilir. */
   earn(v: number, x?: number, z?: number, y?: number): void {
-    if (v <= 0) return;
+    if (!Number.isFinite(v) || v <= 0) return;
     this.money += v;
     this.totalEarned += v;
     this.revenueEarned += v;
@@ -389,7 +392,7 @@ export class GameState {
 
   /** Hedef/günlük/reklam hediyesi işletme geliri ve prestiji şişirmez. */
   grant(v: number, x?: number, z?: number, y?: number): void {
-    if (v <= 0) return;
+    if (!Number.isFinite(v) || v <= 0) return;
     this.money += v;
     if (x !== undefined && z !== undefined) bus.emit('money:earn', { amount: v, x, z, y });
     bus.emit('money:changed', { total: this.money });
@@ -408,6 +411,7 @@ export class GameState {
   }
 
   addReputation(v: number): void {
+    if (!Number.isFinite(v)) return;
     const r = BALANCE.reputation;
     const next = clamp(this.reputation + v, r.min, r.max);
     if (next !== this.reputation) {
@@ -445,7 +449,8 @@ export class GameState {
    * kalıcı yükseltmeler ve günlük seri KORUNUR.
    */
   prestigeReset(gained: number): void {
-    this.prestigePoints += gained;
+    const pts = Number.isFinite(gained) ? Math.max(0, Math.floor(gained)) : 0;
+    this.prestigePoints += pts;
     this.prestigeCount++;
     this.money = this.prestigeStartMoney;
     this.totalEarned = 0;
@@ -757,8 +762,17 @@ export class GameState {
     this.totalEarned = num(s.totalEarned, 0);
     this.revenueEarned = num(s.revenueEarned, this.totalEarned);
     this.reputation = clamp(num(s.reputation, BALANCE.reputation.start), BALANCE.reputation.min, BALANCE.reputation.max);
+    const legacyUp = s.playerUpgrades && typeof s.playerUpgrades === 'object' ? s.playerUpgrades : undefined;
+    const legacyUpgradeMap: Record<PlayerUpgradeId, number | undefined> = {
+      speed: legacyUp?.speed,
+      capacity: legacyUp?.carry,
+      hands: legacyUp?.hands,
+      charm: legacyUp?.tip,
+      vault: legacyUp?.vault,
+    };
     for (const k of Object.keys(this.upgrades) as PlayerUpgradeId[]) {
-      this.upgrades[k] = Math.max(0, Math.floor(num(s.upgrades?.[k], 0)));
+      const raw = s.upgrades?.[k] ?? legacyUpgradeMap[k];
+      this.upgrades[k] = Math.min(PLAYER_UPGRADE_MAP[k].maxLevel, Math.max(0, Math.floor(num(raw, 0))));
     }
     this.unlockedZones = new Set(Array.isArray(s.zones) ? s.zones : ['kose:a1']);
     this.unlockedZones.add('kose:a1');
@@ -828,7 +842,10 @@ export class GameState {
     this.dailyStreak = Math.max(0, Math.floor(num(s.dailyStreak, 0)));
     this.dailyClaimed = s.dailyClaimed === true;
     this.vacuumHinted = s.vacuumHinted === true;
-    const anyUpgrade = Object.values(this.upgrades).some((lvl) => lvl > 0) || Math.floor(num(s.stats?.stationUpgrades, 0)) > 0;
+    const anyLegacyUpgrade = legacyUp ? Object.values(legacyUp).some((lvl) => num(lvl, 0) > 0) : false;
+    const anyUpgrade = Object.values(this.upgrades).some((lvl) => lvl > 0)
+      || anyLegacyUpgrade
+      || Math.floor(num(s.stats?.stationUpgrades, 0)) > 0;
     const anyStaff = Object.values(this.staffByLocation).some((row) => Object.values(row).some((n) => n > 0));
     this.upgradeOnboarded = s.upgradeOnboarded === true || anyUpgrade;
     this.staffOnboarded = s.staffOnboarded === true || anyStaff;

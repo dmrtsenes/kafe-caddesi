@@ -118,25 +118,24 @@ export function createPremiumBackbar() {
     block(root, 0.19, 2.65, 1.75, P.dark, x, 1.32, -10.55, 0.03);
   block(root, 19.25, 0.22, 1.85, P.ink, 0, 2.54, -10.55, 0.045);
   strip(root, 18.6, 0.08, 0, 2.41, -9.72);
-  for (let n = 0; n < 3; n++) {
-    const x = (n - 1) * 3.9;
-    block(root, 3.1, 0.06, 0.68, P.wood, x, 2.02, -11.08, 0.02);
-    strip(root, 2.95, 0.05, x, 1.97, -11.02);
+  for (const x of [-5.8, 5.8]) {
+    block(root, 2.35, 0.06, 0.98, P.wood, x, 2.02, -10.86, 0.02);
+    strip(root, 2.2, 0.05, x, 1.97, -10.56);
   }
-  for (const x of [-7.7, 0, 7.7]) {
-    if (x !== 0) block(root, 2.0, 0.065, 0.72, P.wood, x, 2.02, -11.08, 0.02);
+  for (const x of [-7.7, 7.7]) {
+    block(root, 2.0, 0.065, 0.98, P.wood, x, 2.02, -10.86, 0.02);
     for (let n = 0; n < 5; n++) {
       const jar = cylinder(
         root,
-        0.09,
+        0.084,
         0.28,
         n % 2 ? P.cream : P.terra,
         x - 0.64 + n * 0.32,
         2.19,
-        -11.05,
+        -10.84,
       );
       jar.scale.set(1 / 0.925, 1, 1 / 0.23);
-      const lid = cylinder(root, 0.094, 0.024, P.dark, x - 0.64 + n * 0.32, 2.34, -11.05);
+      const lid = cylinder(root, 0.088, 0.026, P.gold, x - 0.64 + n * 0.32, 2.343, -10.84, 0.55);
       lid.scale.set(1 / 0.925, 1, 1 / 0.23);
     }
   }

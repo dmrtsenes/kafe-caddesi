@@ -1,18 +1,18 @@
 # Gizlilik politikası — yayınlanmaya hazır kaynak metin
 
-Bu dosya yerel taslaktır. Mevcut canlı sayfa bu dosya değiştirilince kendiliğinden güncellenmez. HTML sürümüyle aynı içerikten üretilmiştir.
+Bu dosya yerel taslaktır. Mevcut canlı sayfa bu dosya değiştirilince kendiliğinden güncellenmez. HTML sürümüyle (`docs/gizlilik-politikasi.html`) aynı içerikten üretilmiştir.
 
 # Kafe Caddesi — Gizlilik Politikası
 
-Güncelleme: 5 Eylül 2026 · 1.2.0 · com.fincansokagi.game
+Güncelleme: 14 Kasım 2026 · 1.1.0 · com.fincansokagi.game
 
 ## Özet
 
-Kafe Caddesi hesap açmanızı istemez. İlerlemeniz ve ayarlarınız cihazda tutulur. Oynanış ve hata kayıtları da varsayılan olarak cihazda saklanır; bu kayıtlar paylaşım açık değilken geliştiriciye gönderilmez. Mobil sürüm reklamlar için Google AdMob kullanır: isteğe bağlı ödüllü reklamlar ve oyunun doğal aralarında gösterilen geçiş (tam ekran) reklamları.
+Kafe Caddesi hesap açmanızı istemez. İlerlemeniz ve ayarlarınız cihazda tutulur. Mobil sürüm reklamlar için Google AdMob (isteğe bağlı ödüllü reklamlar ve oyunun doğal aralarında gösterilen geçiş reklamları) ve gizlilik tercihlerine uygun ürün analitiği için Google Analytics for Firebase kullanır.
 
 ## Kimiz
 
-Uygulama Zenith Lab adı altında yayınlanır. İletişim: beytugrul571@gmail.com.
+Kafe Caddesi, bağımsız geliştirici **Enes Demirtaş** tarafından geliştirilip yayınlanır (Google Play üzerindeki stüdyo marka adı: **Zenith Lab**; Apple App Store geliştirici hesabı: **Enes Demirtaş**). İletişim: dmrtsenes35@gmail.com.
 
 ## Oyun kaydı ve yedekler
 
@@ -20,11 +20,11 @@ Para, açılan bölgeler, personel, yükseltmeler ve tercihler yerel depolamada 
 
 ## Oynanış ölçümleri ve hata kayıtları
 
-Oyun; oturum, başlangıç adımları, servis, kasa toplama, temizlik, geliştirme, reklam sonucu ve performans olaylarını kaydeder. Oynanış raporu rastgele kurulum ve oturum kimlikleri, zamanlar, sürüm, dil ve oyun içi sayısal bilgiler içerir. İsim, e-posta, reklam kimliği veya kesin konum alanları bulunmaz. En son 384 olay, 90 etkin gün ve ilk başarı işaretleri cihazda tutulur. Hata kayıtları en fazla sekiz kayıtla sınırlıdır; hata mesajı, teknik çağrı izi, zaman ve tarayıcı bilgisi içerebilir.
+Oyun; oturum, başlangıç adımları, servis, kasa toplama, temizlik, geliştirme, reklam sonucu ve performans olaylarını kaydeder. Yerel oynanış raporu rastgele kurulum ve oturum kimlikleri, zamanlar, sürüm, dil ve oyun içi sayısal bilgiler içerir; isim, e-posta veya kesin konum alanları bulunmaz. En son 384 olay, 90 etkin gün ve ilk başarı işaretleri cihazda tutulur. Hata kayıtları en fazla sekiz kayıtla sınırlıdır; hata mesajı, teknik çağrı izi, zaman ve uygulama çalışma ortamı bilgisi içerebilir.
 
-## Paylaşım ve kontrol
+## Analitik ve paylaşım kontrolü
 
-Bu sürümün varsayılan paketinde geliştiriciye ait bir rapor alıcısı tanımlanmamıştır. Sunucusu tanımlanmış bir test sürümünde paylaşım seçeneği sunulursa, yalnız siz Ayarlar üzerinden açtıktan sonra yeni olaylar gönderilir; önceki oynanış olayları geriye dönük yüklenmez. Paylaşımı kapatmak yeni aktarımı durdurur. Ağ hizmetini sağlayan sunucu bağlantının IP adresini görebilir. Raporu indirmek cihazınıza bir dosya kaydeder; dosyayı kiminle paylaşacağınızı siz seçersiniz.
+Uygulama, gerekli gizlilik ve rıza kurallarına (AB/İngiltere/İsviçre için UMP) uygun olarak oyun dengesi, günlük/haftalık etkinlik, oturum süresi, ilerleme adımları ve toplu reklam geliri ölçümleri için Google Analytics for Firebase hizmetini kullanabilir. Bu aktarım isim, e-posta veya kesin konum içermez; ağ bağlantısı nedeniyle sunucu IP adresini ve rastgele uygulama örneği/oturum tanımlayıcılarını işleyebilir. Reklam kişiselleştirme ve ölçüm tercihleri Ayarlar → Reklam Tercihleri üzerinden yönetilebilir. Firebase Gizlilik Bilgisi: https://firebase.google.com/support/privacy · Google Gizlilik Politikası: https://policies.google.com/privacy . Ayarlar üzerinden yerel raporu cihazınıza dosya olarak indirebilir veya silebilirsiniz.
 
 ## Reklamlar
 
@@ -40,11 +40,11 @@ Ayarlar → İlerlemeyi Sil iki oyun kayıt yuvasını kaldırır; dil ve ses te
 
 ## İzinler
 
-Uygulama internet/ağ, reklam kimliği, titreşim ve isteğe bağlı hatırlatma bildirimleri için platform izinlerini kullanabilir. Bildirim tercihi reddedilince oynanış devam eder. Kamera, mikrofon, kişiler ve kesin konum izni istenmez.
+Uygulama internet/ağ, reklam kimliği (iOS’ta ATT izni kullanıcı tercihine bağlıdır), titreşim ve isteğe bağlı hatırlatma bildirimleri için platform izinlerini kullanabilir. Bildirim veya takip izni reddedilince oynanış devam eder. Kamera, mikrofon, kişiler ve kesin konum izni istenmez.
 
 ## Güvenlik ve değişiklikler
 
-Oyun raporları için uzaktaki alıcı adresi HTTPS olmalıdır; şifresiz bağlantı yalnız yerel geliştirme sırasında cihazın kendi adresine kabul edilir. Bu metin kullanılan hizmet veya veri akışı değiştiğinde güncellenir. Gizlilik soruları ve silme talepleri: beytugrul571@gmail.com.
+Oyun raporları için uzaktaki alıcı adresi HTTPS olmalıdır; şifresiz bağlantı yalnız yerel geliştirme sırasında cihazın kendi adresine kabul edilir. Bu metin kullanılan hizmet veya veri akışı değiştiğinde güncellenir. Gizlilik soruları ve silme talepleri: dmrtsenes35@gmail.com.
 
 ## Çocukların gizliliği
 
@@ -52,15 +52,15 @@ Oyun 13 yaş altındaki çocuklara yönelik olarak tasarlanmamıştır. Çocuğu
 
 # Kafe Caddesi — Privacy Policy
 
-Updated September 5, 2026 · 1.2.0
+Updated November 14, 2026 · 1.1.0 · com.fincansokagi.game
 
 ## Summary
 
-Kafe Caddesi does not require an account. Progress, preferences, gameplay metrics and error reports are stored on your device by default. Gameplay and error reports are not sent to the developer while sharing is disabled. The mobile app uses Google AdMob for ads: optional rewarded ads and interstitial (full-screen) ads shown at natural breaks in play.
+Kafe Caddesi does not require an account. Progress and preferences are stored locally on your device. The mobile app uses Google AdMob for ads (optional rewarded ads and natural-break interstitial ads) and Google Analytics for Firebase for privacy-compliant product and engagement analytics.
 
 ## Who we are
 
-The app is published under the name Zenith Lab. Contact: beytugrul571@gmail.com.
+Kafe Caddesi is developed and published directly by independent developer **Enes Demirtaş** (published under the studio label **Zenith Lab** on Google Play and under **Enes Demirtaş** on the Apple App Store). Contact: dmrtsenes35@gmail.com.
 
 ## Progress and backups
 
@@ -68,11 +68,11 @@ Currency, unlocked areas, staff, upgrades and preferences are stored locally. Th
 
 ## Gameplay and error reports
 
-The game records sessions, onboarding steps, service, cash collection, cleaning, upgrades, ad outcomes and performance. Reports contain random installation/session identifiers, timestamps, app version, language and gameplay values. Gameplay events have no name, email, advertising identifier or precise location fields. The device keeps the latest 384 events, 90 active days and milestone flags. Up to eight error reports may contain an error message, technical stack trace, timestamp and browser information.
+The game records sessions, onboarding steps, service, cash collection, cleaning, upgrades, ad outcomes and performance. Local reports contain random installation/session identifiers, timestamps, app version, language and gameplay values, with no name, email or precise location fields. The device keeps the latest 384 events, 90 active days and milestone flags. Up to eight error reports may contain an error message, technical stack trace, timestamp and runtime information.
 
-## Sharing controls
+## Analytics and sharing controls
 
-No developer-operated report receiver is configured in this version’s default package. A test version with a configured receiver may offer sharing in Settings. Only events recorded after you enable sharing are uploaded; earlier gameplay events are not backfilled. Disabling sharing stops new transfers. A receiving network service can see the connection’s IP address. Downloading a report saves a local file; you choose whether and with whom to share it.
+In accordance with applicable privacy consent rules (UMP in EEA/UK/Switzerland), the app may use Google Analytics for Firebase to measure active user counts, session duration, game balance, progression milestones and aggregated ad revenue events. These events do not include your name, email or precise location; Google may process the connection IP address and pseudonymous app-instance/session identifiers. You can manage ad and measurement preferences via Settings → Ad Privacy Choices, and export or delete your local report file in Settings. Firebase Privacy Information: https://firebase.google.com/support/privacy · Google Privacy Policy: https://policies.google.com/privacy .
 
 ## Ads
 
@@ -88,11 +88,11 @@ Delete progress removes both game-save slots while preserving language and sound
 
 ## Permissions
 
-The app may use platform permissions for networking, advertising identifiers, vibration and optional reminder notifications. Declining notifications does not prevent play. No camera, microphone, contacts or precise-location permission is requested.
+The app may use platform permissions for networking, advertising identifiers (optional ATT prompt on iOS), vibration and optional reminder notifications. Declining tracking or notifications does not prevent play. No camera, microphone, contacts or precise-location permission is requested.
 
 ## Security and changes
 
-Remote game-report receivers must use HTTPS. Plain HTTP is accepted only for development on the device’s own loopback address. This text is updated when services or data flows change. Privacy questions and deletion requests: beytugrul571@gmail.com.
+Remote game-report receivers must use HTTPS. Plain HTTP is accepted only for development on the device’s own loopback address. This text is updated when services or data flows change. Privacy questions and deletion requests: dmrtsenes35@gmail.com.
 
 ## Children’s privacy
 

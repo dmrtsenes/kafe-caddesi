@@ -1,6 +1,13 @@
 import type { ItemId } from '../data/items';
 import type { CustomerAngerReason } from '../data/customerFeedback';
 
+export type AdRevenueFormat =
+  | 'rewarded'
+  | 'interstitial'
+  | 'banner'
+  | 'app_open'
+  | 'rewarded_interstitial';
+
 /** Oyun genelinde yayınlanan olaylar. UI ve ses bunları dinler. */
 export interface GameEvents {
   'render:structure': Record<string, never>;
@@ -67,7 +74,7 @@ export interface GameEvents {
     currency: string;
     precision: number;
     adUnit: string;
-    format: 'rewarded' | 'interstitial';
+    format: AdRevenueFormat;
   };
 }
 

@@ -35,6 +35,7 @@ const YERLESIM_ADI: Record<AdPlacement, string> = {
   investor: tr("Zengin Yatırımcı"),
   comeback_sale: tr("Dönüş Satışı"),
   free_upgrade: tr("Ücretsiz Yükseltme"),
+  streak_freeze: 'Seri Kurtarma',
 };
 
 let acik = false;

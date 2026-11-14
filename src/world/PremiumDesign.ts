@@ -136,17 +136,28 @@ function label(
   const k = c.getContext("2d")!;
   k.fillStyle = "#" + bg.toString(16).padStart(6, "0");
   k.fillRect(0, 0, c.width, c.height);
+  const pad = Math.max(3, Math.round(c.height * 0.07));
+  k.strokeStyle = "rgba(227,166,77,0.72)";
+  k.lineWidth = Math.max(2, Math.round(c.height * 0.045));
+  k.strokeRect(pad, pad, c.width - pad * 2, c.height - pad * 2);
   k.fillStyle = "#" + fg.toString(16).padStart(6, "0");
   k.textAlign = "center";
   k.textBaseline = "middle";
-  k.font = `800 ${c.height * 0.53}px 'Segoe UI',sans-serif`;
-  k.fillText(text, c.width / 2, c.height * 0.53, c.width * 0.9);
+  k.font = `800 ${Math.round(c.height * 0.5)}px 'Segoe UI',system-ui,sans-serif`;
+  k.fillText(text, c.width / 2, c.height * 0.52, c.width * 0.86);
   const tex = new T.CanvasTexture(c);
   tex.colorSpace = T.SRGBColorSpace;
   tex.anisotropy = 8;
   const m = new T.Mesh(
     geometry,
-    new T.MeshBasicMaterial({ map: tex, side: T.DoubleSide }),
+    new T.MeshBasicMaterial({
+      map: tex,
+      side: T.DoubleSide,
+      toneMapped: false,
+      polygonOffset: true,
+      polygonOffsetFactor: -1,
+      polygonOffsetUnits: -1,
+    }),
   );
   m.position.set(x, y, z);
   labels.set(key, m.material);
@@ -354,30 +365,36 @@ export function addPremiumCounter(body: T.Group) {
     pos.rotation.x = -0.15;
     const screen = label(
       body,
-      "KAFE",
+      tr("KAFE"),
       0.51,
       0.28,
       -0.55,
       1.53,
-      -0.008,
+      -0.014,
       P.green,
       P.cream,
     );
     screen.rotation.x = -0.15;
     block(body, 0.28, 0.07, 0.44, P.dark, 0.04, 1.055, 0.12, 0.025);
-    piece(body, cyl(0.14, 0.14, 0.24, 16), P.gold, 0.88, 1.16, 0.05, 0.3);
-    label(body, tr("KASA"), 1.6, 0.26, 0, 0.56, 0.568, P.green, P.cream);
+    block(body, 0.16, 0.024, 0.22, P.green, 0.04, 1.096, 0.14, 0.012);
+    piece(body, cyl(0.14, 0.14, 0.24, 16), P.gold, 0.88, 1.16, 0.05, 0.45);
+    piece(body, sph(0.036, 8, 6), P.gold, 0.44, 1.045, 0.24, 0.7);
+    label(body, tr("KASA"), 1.6, 0.26, 0, 0.52, 0.594, P.green, P.cream);
 }
 export function addPremiumMachine(body: T.Group, id: ItemId) {
     addPremiumPedestal(body, 1.72, 0.95);
     if (id === "cay") {
+      piece(body, cyl(0.38, 0.4, 0.035, 20), P.dark, 0, 1.028, 0.06, 0.3);
       piece(body, cyl(0.32, 0.35, 0.64, 24), P.gold, 0, 1.39, 0, 0.65);
       piece(body, cyl(0.34, 0.31, 0.08, 24), P.dark, 0, 1.75, 0);
-      piece(body, cyl(0.07, 0.1, 0.17, 12), P.gold, 0, 1.88, 0, 0.65);
+      piece(body, cyl(0.19, 0.21, 0.22, 16), 0xc85d32, 0, 1.88, 0, 0.35);
+      piece(body, cyl(0.065, 0.09, 0.09, 12), P.gold, 0, 2.02, 0, 0.7);
       block(body, 0.11, 0.12, 0.23, P.dark, 0, 1.2, 0.37, 0.02);
+      addProduct(body, "cay", 0.48, 1.02, 0.24, 0.85);
     } else if (id === "latte") {
       block(body, 1.25, 0.64, 0.66, P.ink, 0, 1.38, -0.04, 0.08);
       block(body, 1.06, 0.33, 0.025, P.gold, 0, 1.42, 0.31, 0.03);
+      piece(body, cyl(0.065, 0.065, 0.03, 14), P.cream, 0, 1.5, 0.32);
       for (const x of [-0.32, 0.32]) {
         piece(body, cyl(0.07, 0.07, 0.15, 10), P.dark, x, 1.13, 0.29);
         addProduct(body, "latte", x, 1.01, 0.3, 0.8);
@@ -406,9 +423,50 @@ export function addPremiumMachine(body: T.Group, id: ItemId) {
         piece(body, cyl(0.15, 0.12, 0.45, 16), 0xe1c896, x, 1.46, 0);
         piece(body, cyl(0.17, 0.17, 0.065, 16), P.dark, x, 1.71, 0);
       }
+      addProduct(body, "frappe", 0, 1.02, 0.26, 0.78);
+    } else if (id === "smoothie") {
+      block(body, 1.28, 0.032, 0.34, P.dark, 0, 1.026, 0.22, 0.015);
+      const tanks: [number, number][] = [[-0.36, 0xff7f9c], [0.36, 0xffb347]];
+      for (const [x, juice] of tanks) {
+        block(body, 0.4, 0.18, 0.4, P.green, x, 1.11, -0.02, 0.055);
+        piece(body, cyl(0.165, 0.15, 0.44, 18), juice, x, 1.43, -0.02);
+        piece(body, cyl(0.175, 0.175, 0.055, 18), P.gold, x, 1.68, -0.02, 0.65);
+        piece(body, sph(0.038, 8, 6), P.gold, x, 1.735, -0.02, 0.7);
+        block(body, 0.065, 0.08, 0.14, P.dark, x, 1.22, 0.21, 0.02);
+      }
+      piece(body, cyl(0.15, 0.11, 0.09, 14), P.cream, 0, 1.06, -0.06);
+      piece(body, sph(0.055, 8, 6), 0xff6b8b, -0.04, 1.12, -0.05);
+      piece(body, sph(0.052, 8, 6), 0xffb347, 0.05, 1.12, -0.07);
+      addProduct(body, "smoothie", 0, 1.02, 0.24, 0.8);
+    } else if (id === "dondurma") {
+      block(body, 1.26, 0.52, 0.6, P.cream, 0, 1.28, -0.04, 0.07);
+      block(body, 1.14, 0.28, 0.03, 0xff9db5, 0, 1.28, 0.27, 0.02);
+      block(body, 1.3, 0.08, 0.66, P.gold, 0, 1.57, -0.04, 0.03);
+      for (const [x, flavor] of [[-0.36, 0xfff3d9], [0, 0xff8fa8], [0.36, 0x9be7c4]] as const) {
+        piece(body, cyl(0.13, 0.12, 0.05, 14), P.dark, x, 1.62, -0.05, 0.4);
+        piece(body, sph(0.11, 10, 8), flavor, x, 1.66, -0.05);
+      }
+      for (const x of [-0.26, 0.26]) {
+        block(body, 0.11, 0.16, 0.16, P.dark, x, 1.38, 0.31, 0.025);
+        piece(body, cyl(0.022, 0.022, 0.16, 8), P.gold, x, 1.49, 0.35, 0.7);
+      }
+      addProduct(body, "dondurma", 0.52, 1.02, 0.24, 0.82);
+    } else if (id === "milkshake") {
+      block(body, 1.24, 0.035, 0.36, P.dark, 0, 1.028, 0.18, 0.015);
+      for (const x of [-0.35, 0.35]) {
+        block(body, 0.34, 0.08, 0.38, P.dark, x, 1.06, -0.04, 0.03);
+        block(body, 0.12, 0.54, 0.14, P.dark, x, 1.35, -0.14, 0.03);
+        piece(body, cyl(0.13, 0.11, 0.26, 16), 0xd8567a, x, 1.64, -0.05, 0.25);
+        piece(body, cyl(0.105, 0.08, 0.28, 14), 0xd9dfe4, x, 1.24, 0.04, 0.75);
+      }
+      for (const [x, syrup] of [[-0.07, 0x6b3e26], [0.07, 0xe25b7d]] as const) {
+        piece(body, cyl(0.055, 0.055, 0.22, 12), syrup, x, 1.13, -0.14);
+        piece(body, cyl(0.018, 0.018, 0.08, 8), P.gold, x, 1.27, -0.14, 0.7);
+      }
+      addProduct(body, "milkshake", 0, 1.02, 0.24, 0.8);
     }
 
-  label(body, ITEMS[id].name.toLocaleUpperCase(localeTag()), 1.4, .24, 0, .51, .49, P.green, P.cream);
+  label(body, ITEMS[id].name.toLocaleUpperCase(localeTag()), 1.4, .24, 0, .51, .519, P.green, P.cream);
   body.userData.design = 'reklam-premium';
 }
 export function addPremiumDisplay(body: T.Group, item?: ItemId, width = 1.52, openTop = false) {
@@ -440,7 +498,17 @@ export function addPremiumDisplay(body: T.Group, item?: ItemId, width = 1.52, op
     // Open pickup counter: no opaque roof, dangling posts or glass over stock.
     block(body, width - .12, .035, .035, frame, 0, 1.025, -.43, .008);
   }
-  label(body, item ? ITEMS[item].name.toLocaleUpperCase(localeTag()) : tr('TESLİM'), 1.24, .2, 0, .48, .49, P.green, P.cream);
+  label(
+    body,
+    item ? ITEMS[item].name.toLocaleUpperCase(localeTag()) : tr('TESLİM'),
+    Math.min(1.24, width - 0.16),
+    openTop ? .18 : .21,
+    0,
+    openTop ? .33 : .48,
+    .519,
+    P.green,
+    P.cream,
+  );
 
   body.userData.design = 'reklam-premium';
 }
@@ -449,47 +517,52 @@ export function addPremiumBin(body: T.Group) {
   block(body, .75, .79, .74, P.green, 0, .43, 0, .1);
   block(body, .8, .065, .8, P.gold, 0, .87, 0, .06);
   block(body, .42, .015, .34, P.dark, 0, .91, 0, .06);
-  label(body, tr('TEMİZLİK'), .59, .19, 0, .46, .379, P.green, P.cream);
+  label(body, tr('TEMİZLİK'), .59, .19, 0, .46, .386, P.green, P.cream);
 }
+const floorCanvases = new Map<"stone" | "oak", HTMLCanvasElement>();
 export function premiumFloorTexture(kind: "stone" | "oak") {
-  const c = document.createElement("canvas");
-  c.width = c.height = 1024;
-  const k = c.getContext("2d")!;
-  k.fillStyle = kind === "stone" ? "#e8e1ce" : "#96714f";
-  k.fillRect(0, 0, 1024, 1024);
-  if (kind === "stone") {
-    const colors = ["#cec3aa", "#fcf5df", "#b5c0ae", "#9baf9e", "#b6a185"];
-    for (let n = 0; n < 1400; n++) {
-      const x = (n * 337) % 1024,
-        y = (n * 613) % 1024,
-        r = 1 + (n % 4);
-      k.fillStyle = colors[n % colors.length];
-      k.globalAlpha = 0.23 + (n % 3) * 0.12;
-      k.beginPath();
-      k.ellipse(x, y, r, r * 0.55, n, 0, Math.PI * 2);
-      k.fill();
-    }
-  } else {
-    // Tahtalar birbirine yakın tonda ve aralıksız. Eski 1 piksellik koyu
-    // ek yeri, kamera kımıldayınca döşemede dikey bir çizgi olarak titriyordu.
-    for (let n = 0; n < 8; n++) {
-      const shift = (n % 3) - 1;
-      k.globalAlpha = 1;
-      k.fillStyle = `rgb(${0x96 + shift * 4},${0x71 + shift * 3},${0x4f + shift * 2})`;
-      k.fillRect(n * 128, 0, 128, 1024);
-      k.strokeStyle = "rgba(70,48,28,.06)";
-      k.lineWidth = 1;
-      for (let j = 0; j < 8; j++) {
+  let c = floorCanvases.get(kind);
+  if (!c) {
+    c = document.createElement("canvas");
+    c.width = c.height = 1024;
+    const k = c.getContext("2d")!;
+    k.fillStyle = kind === "stone" ? "#e8e1ce" : "#96714f";
+    k.fillRect(0, 0, 1024, 1024);
+    if (kind === "stone") {
+      const colors = ["#cec3aa", "#fcf5df", "#b5c0ae", "#9baf9e", "#b6a185"];
+      for (let n = 0; n < 1400; n++) {
+        const x = (n * 337) % 1024,
+          y = (n * 613) % 1024,
+          r = 1 + (n % 4);
+        k.fillStyle = colors[n % colors.length];
+        k.globalAlpha = 0.23 + (n % 3) * 0.12;
         k.beginPath();
-        for (let y = 0; y <= 1024; y += 16) {
-          const x = n * 128 + 10 + j * 14 + Math.sin(y * 0.01 + j) * 2;
-          y ? k.lineTo(x, y) : k.moveTo(x, y);
+        k.ellipse(x, y, r, r * 0.55, n, 0, Math.PI * 2);
+        k.fill();
+      }
+    } else {
+      // Tahtalar birbirine yakın tonda ve aralıksız. Eski 1 piksellik koyu
+      // ek yeri, kamera kımıldayınca döşemede dikey bir çizgi olarak titriyordu.
+      for (let n = 0; n < 8; n++) {
+        const shift = (n % 3) - 1;
+        k.globalAlpha = 1;
+        k.fillStyle = `rgb(${0x96 + shift * 4},${0x71 + shift * 3},${0x4f + shift * 2})`;
+        k.fillRect(n * 128, 0, 128, 1024);
+        k.strokeStyle = "rgba(70,48,28,.06)";
+        k.lineWidth = 1;
+        for (let j = 0; j < 8; j++) {
+          k.beginPath();
+          for (let y = 0; y <= 1024; y += 16) {
+            const x = n * 128 + 10 + j * 14 + Math.sin(y * 0.01 + j) * 2;
+            y ? k.lineTo(x, y) : k.moveTo(x, y);
+          }
+          k.stroke();
         }
-        k.stroke();
       }
     }
+    k.globalAlpha = 1;
+    floorCanvases.set(kind, c);
   }
-  k.globalAlpha = 1;
   const t = new T.CanvasTexture(c);
   t.colorSpace = T.SRGBColorSpace;
   t.wrapS = t.wrapT = T.RepeatWrapping;

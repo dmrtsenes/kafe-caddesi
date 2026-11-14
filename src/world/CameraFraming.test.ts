@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
+import {BALANCE} from '../data/balance.ts';
 import {cameraFraming, boundedCameraLead} from './CameraFraming.ts';
 
 test('portrait uses a centered middle distance with readable characters',()=>{
@@ -15,7 +16,7 @@ test('portrait uses a centered middle distance with readable characters',()=>{
 test('phone rotation and desktop framing stay finite and leave the actor central',()=>{
  for(const [w,h,mobile] of [[844,390,true],[1920,1080,false],[768,1024,false]] as const) {
   const f=cameraFraming(w,h,mobile);
-  assert.ok(f.distance>=16&&f.distance<=60);assert.ok(f.fov>=30&&f.fov<=48);
+  assert.ok(f.distance>=BALANCE.camera.minDistance&&f.distance<=60);assert.ok(f.fov>=30&&f.fov<=48);
   assert.equal(f.offsetY, 0);
   assert.deepEqual(f,cameraFraming(w,h,!mobile));
   for(const [x,z] of [[-4,7],[0,0],[3,-6]]) {
@@ -28,6 +29,6 @@ test('phone rotation and desktop framing stay finite and leave the actor central
 
 test('desktop framing is retained at its existing venue scale',()=>{
  const f=cameraFraming(1920,1080);
- assert.equal(f.distance,16);assert.equal(f.fov,34);assert.equal(f.offsetY,0);
+ assert.equal(f.distance,BALANCE.camera.minDistance);assert.equal(f.fov,34);assert.equal(f.offsetY,0);
  assert.ok(Number.isFinite(cameraFraming(0,0).distance));
 });

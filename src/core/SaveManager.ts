@@ -84,6 +84,8 @@ function parseSave(raw: string | null): SaveData | null {
 export class SaveManager {
   private available = true;
   private lastBackup = 0;
+  private lastMirroredBody = '';
+  private lastMirrorAt = 0;
 
   constructor() {
     try {
@@ -124,7 +126,13 @@ export class SaveManager {
       return false;
     }
     this.available = true;
-    mirrorStorage(SAVE_KEY, text);
+    const bodyIdx = text.indexOf(',"state":');
+    const body = bodyIdx >= 0 ? text.slice(bodyIdx) : text;
+    if (body !== this.lastMirroredBody || now - this.lastMirrorAt >= 60_000) {
+      this.lastMirroredBody = body;
+      this.lastMirrorAt = now;
+      void mirrorStorage(SAVE_KEY, text);
+    }
 
     // Yedek yuva: ana kayıt bozulursa en fazla 5 dakika kaybedilir.
     if (now - this.lastBackup > BACKUP_INTERVAL_MS) {
@@ -172,6 +180,8 @@ export class SaveManager {
     }
     await Promise.all([clearStorage(SAVE_KEY),clearStorage(BACKUP_KEY)]);
     this.lastBackup = 0;
+    this.lastMirroredBody = '';
+    this.lastMirrorAt = 0;
   }
 
   /* ================================================================ *
@@ -225,7 +235,10 @@ export class SaveManager {
       }
       void mirrorStorage(BACKUP_KEY, valid);
       void mirrorStorage(SAVE_KEY, valid);
-      this.lastBackup = Date.now();
+      const bodyIdx = valid.indexOf(',"state":');
+      this.lastMirroredBody = bodyIdx >= 0 ? valid.slice(bodyIdx) : valid;
+      this.lastMirrorAt = Date.now();
+      this.lastBackup = this.lastMirrorAt;
       this.available = true;
       return true;
     } catch {

@@ -46,22 +46,133 @@ export interface Tintable {
   off: THREE.Material;
 }
 
-/** Kilitli hâl: gri + yarı saydam, silüet korunur. */
+const lockedMaterialCache = new WeakMap<THREE.Material, THREE.Material>();
+
+/** Kilitli hâl: buzlu gri-mavi hayaletimsi önizleme tonu — doku ve tepe renkleri (BatchedPBR) korunur. */
 function lockedVariant(m: THREE.Material): THREE.Material {
+  const hit = lockedMaterialCache.get(m);
+  if (hit) return hit;
   const sm = m as THREE.MeshStandardMaterial;
   if (sm.isMeshStandardMaterial) {
-    return mat(mix(sm.color.getHex(), 0x9aa0a6, 0.8), {
-      rough: sm.roughness,
-      metal: sm.metalness * 0.35,
-      transparent: true,
-      opacity: 0.52,
-      flatShading: sm.flatShading,
-      side: sm.side,
-    });
+    let out: THREE.Material;
+    if (sm.vertexColors || sm.map || sm.onBeforeCompile !== THREE.Material.prototype.onBeforeCompile) {
+      const c = sm.clone();
+      c.color.setHex(mix(sm.color.getHex(), 0x7e92a6, 0.72));
+      c.emissive.setHex(0x283848);
+      c.emissiveIntensity = 0.28;
+      c.roughness = 0.9;
+      c.metalness = 0.05;
+      c.transparent = true;
+      c.opacity = 0.44;
+      c.depthWrite = false;
+      if (sm.onBeforeCompile !== THREE.Material.prototype.onBeforeCompile) {
+        c.onBeforeCompile = sm.onBeforeCompile;
+        const baseKey = sm.customProgramCacheKey?.bind(sm);
+        c.customProgramCacheKey = () => (baseKey ? `${baseKey()}-locked` : 'fincan-locked-std');
+      }
+      out = c;
+    } else {
+      const gm = mat(mix(sm.color.getHex(), 0x8295a8, 0.8), {
+        rough: 0.9,
+        metal: 0.05,
+        emissive: 0x283848,
+        emissiveIntensity: 0.26,
+        transparent: true,
+        opacity: 0.44,
+        flatShading: sm.flatShading,
+        side: sm.side,
+      });
+      gm.depthWrite = false;
+      out = gm;
+    }
+    lockedMaterialCache.set(m, out);
+    return out;
   }
   const bm = m as THREE.MeshBasicMaterial;
-  if (bm.isMeshBasicMaterial && !bm.map) return basic(mix(bm.color.getHex(), 0x9aa0a6, 0.8), 0.3, false);
+  if (bm.isMeshBasicMaterial) {
+    if (!bm.map) {
+      const out = basic(mix(bm.color.getHex(), 0x8295a8, 0.78), 0.38, false);
+      lockedMaterialCache.set(m, out);
+      return out;
+    }
+    const c = bm.clone();
+    c.color.setHex(0x8fa3b5);
+    c.transparent = true;
+    c.opacity = 0.48;
+    c.depthWrite = false;
+    lockedMaterialCache.set(m, c);
+    return c;
+  }
   return m;
+}
+
+let sharedPolishSwirlTex: THREE.Texture | null = null;
+let sharedGleamBeamTex: THREE.Texture | null = null;
+
+function getPolishSwirlTexture(): THREE.Texture | null {
+  if (sharedPolishSwirlTex) return sharedPolishSwirlTex;
+  if (typeof document === 'undefined') return null;
+  const c = document.createElement('canvas');
+  c.width = 256;
+  c.height = 256;
+  const ctx = c.getContext('2d');
+  if (ctx) {
+    const rg = ctx.createRadialGradient(128, 128, 10, 128, 128, 122);
+    rg.addColorStop(0, 'rgba(190, 252, 245, 0.55)');
+    rg.addColorStop(0.55, 'rgba(110, 240, 224, 0.28)');
+    rg.addColorStop(0.88, 'rgba(255, 255, 255, 0.42)');
+    rg.addColorStop(1, 'rgba(110, 240, 224, 0)');
+    ctx.fillStyle = rg;
+    ctx.beginPath();
+    ctx.arc(128, 128, 124, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.lineCap = 'round';
+    for (let i = 0; i < 3; i++) {
+      const a0 = (i * Math.PI * 2) / 3;
+      ctx.strokeStyle = i === 0 ? 'rgba(255, 255, 255, 0.85)' : 'rgba(148, 255, 238, 0.68)';
+      ctx.lineWidth = i === 0 ? 9 : 6;
+      ctx.beginPath();
+      ctx.arc(128, 128, 52 + i * 24, a0, a0 + 1.45);
+      ctx.stroke();
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  sharedPolishSwirlTex = t;
+  return t;
+}
+
+function getGleamBeamTexture(): THREE.Texture | null {
+  if (sharedGleamBeamTex) return sharedGleamBeamTex;
+  if (typeof document === 'undefined') return null;
+  const c = document.createElement('canvas');
+  c.width = 128;
+  c.height = 256;
+  const ctx = c.getContext('2d');
+  if (ctx) {
+    const hg = ctx.createLinearGradient(0, 0, 128, 0);
+    hg.addColorStop(0, 'rgba(255, 255, 255, 0)');
+    hg.addColorStop(0.3, 'rgba(170, 255, 242, 0.45)');
+    hg.addColorStop(0.5, 'rgba(255, 252, 230, 0.98)');
+    hg.addColorStop(0.7, 'rgba(255, 226, 148, 0.48)');
+    hg.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, 0, 128, 256);
+
+    ctx.globalCompositeOperation = 'destination-in';
+    const vg = ctx.createLinearGradient(0, 0, 0, 256);
+    vg.addColorStop(0, 'rgba(0,0,0,0)');
+    vg.addColorStop(0.18, 'rgba(0,0,0,1)');
+    vg.addColorStop(0.82, 'rgba(0,0,0,1)');
+    vg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, 128, 256);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  sharedGleamBeamTex = t;
+  return t;
 }
 
 export function collectTint(root: THREE.Object3D, out: Tintable[]): void {
@@ -1198,6 +1309,7 @@ const buildVacuumDock: Builder = (g, p) => {
   vac.name = 'parkedSeraVacuum';
   vac.position.z = -BALANCE.vacuum.brushForward;
   g.add(vac);
+  batchStationFurniture(g, [vac, plate]);
 
   return {
     // `setOutput(1)` → süpürge yerinde · `setOutput(0)` → oyuncunun elinde
@@ -1584,18 +1696,21 @@ const buildTable: Builder = (g, p, def) => {
 
   // Balondaki kodla aynı fiziksel masa plakası. Paket mobilya kullanılsa
   // bile dışarıda kurulur; model değişince servis dili kaybolmaz.
+  let tableCodeLabelMesh: THREE.Mesh | null = null;
   if (def.serviceCode) {
-    const codePlate = detail(
-      roundBox(0.5, 0.32, 0.12, 0.035),
-      mat(def.vip ? 0x8a6722 : 0x1d2b34, { rough: 0.78 }),
-      0,
-      1.16,
-      0.02,
-    );
-    codePlate.name = 'tableCodeStand';
-    codePlate.userData.settledFurniture = true;
-    codePlate.scale.set(.64,.64,.64); codePlate.position.set(.25,1.1024,-.21);
-    g.add(codePlate);
+    if (!packed) {
+      const codePlate = detail(
+        roundBox(0.5, 0.32, 0.12, 0.035),
+        mat(def.vip ? 0x8a6722 : 0x1d2b34, { rough: 0.78 }),
+        0,
+        1.16,
+        0.02,
+      );
+      codePlate.name = 'tableCodeStand';
+      codePlate.userData.settledFurniture = true;
+      codePlate.scale.set(.64,.64,.64); codePlate.position.set(.25,1.1024,-.21);
+      g.add(codePlate);
+    }
     const codeText = detail(
       plane(0.4, 0.2),
       sharedLabelMaterial(def.serviceCode, def.vip ? 0x8a6722 : 0x1d2b34, 0xfff1c7, 2),
@@ -1605,6 +1720,8 @@ const buildTable: Builder = (g, p, def) => {
     );
     codeText.scale.setScalar(.64); codeText.position.set(.25,1.103,-.17);
     codeText.userData.noTint = true;
+    codeText.userData.settledFurniture = true;
+    tableCodeLabelMesh = codeText;
     g.add(codeText);
   }
 
@@ -1668,8 +1785,37 @@ const buildTable: Builder = (g, p, def) => {
   flushInstances(tableCrumbs);
   tableGrimeDecal.add(tableCrumbs);
 
-  // --- Tamamlanma: tabla boyunca tek, yumuşak ışık geçişi ---
+  // --- Aktif silme köpük/mikrofiber cila girdabı + kabarcıklar ---
+  const polishSwirlMat = new THREE.MeshBasicMaterial({
+    map: getPolishSwirlTexture(),
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    forceSinglePass: true,
+  });
+  const polishSwirlMesh = detail(plane(topHalf * 1.62, topHalf * 1.62), polishSwirlMat, 0, 1.011, 0);
+  polishSwirlMesh.rotation.x = -Math.PI / 2;
+  polishSwirlMesh.visible = false;
+  polishSwirlMesh.userData.noTint = true;
+  g.add(polishSwirlMesh);
+
+  const bubbleMat = new THREE.MeshBasicMaterial({
+    color: 0xbffcff,
+    transparent: true,
+    opacity: 0.78,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const polishBubbles = makeInstanced(sph(0.026, 6, 5), bubbleMat, 6);
+  polishBubbles.visible = false;
+  polishBubbles.userData.noTint = true;
+  g.add(polishBubbles);
+
+  // --- Tamamlanma: yumuşak çift ışık hüzmesi + genişleyen altın-akuamarin kenar halkası ---
   const gleamMat = new THREE.MeshBasicMaterial({
+    map: getGleamBeamTexture(),
     color: 0xffffff,
     transparent: true,
     opacity: 0,
@@ -1678,16 +1824,36 @@ const buildTable: Builder = (g, p, def) => {
     side: THREE.DoubleSide,
     forceSinglePass: true,
   });
-  const gleamMesh = detail(plane(0.16, topHalf * 2.3), gleamMat, 0, 1.015, 0);
+  const gleamMesh = detail(plane(0.42, topHalf * 2.25), gleamMat, 0, 1.016, 0);
   gleamMesh.rotation.x = -Math.PI / 2;
   gleamMesh.rotation.z = Math.PI / 4;
   gleamMesh.visible = false;
   gleamMesh.userData.noTint = true;
   g.add(gleamMesh);
 
+  const gleamMesh2 = detail(plane(0.24, topHalf * 2.05), gleamMat, 0, 1.017, 0);
+  gleamMesh2.rotation.x = -Math.PI / 2;
+  gleamMesh2.rotation.z = Math.PI / 4;
+  gleamMesh2.visible = false;
+  gleamMesh2.userData.noTint = true;
+  g.add(gleamMesh2);
+
+  const rimHaloMat = new THREE.MeshBasicMaterial({
+    color: 0x7ff5df,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const rimHaloMesh = detail(torus(topHalf * 0.94, 0.024, 5, 28), rimHaloMat, 0, 1.015, 0);
+  rimHaloMesh.rotation.x = -Math.PI / 2;
+  rimHaloMesh.visible = false;
+  rimHaloMesh.userData.noTint = true;
+  g.add(rimHaloMesh);
+
   // Cila parlaması: tabla bir anlığına altın-beyaz yanıp söner (emissive flash)
   const flashMat = new THREE.MeshBasicMaterial({
-    color: 0xfff0b8,
+    color: 0xfff3c4,
     transparent: true,
     opacity: 0,
     blending: THREE.AdditiveBlending,
@@ -1706,6 +1872,7 @@ const buildTable: Builder = (g, p, def) => {
 
   let gleamT = 0;
   let wipeT = 0;
+  let cleanProg = 0;
 
   // Çok kirli masada dönen minik sinekler (3 mesh, tek paylaşılan materyal)
   const flyMat = mat(0x15110d, { rough: 1 });
@@ -1762,8 +1929,8 @@ const buildTable: Builder = (g, p, def) => {
   dirtyLabel.face.add(dirtyPlateDishes, dirtyPlateWipe);
   dirtySign.traverse((o) => (o.userData.noTint = true));
 
-  /* --- tabla kenarındaki ince ilerleme yayı --- */
-  const arc = makeInstanced(box(0.085, 0.03, 0.05), basic(p.brand, 0.95, true), ARC_SEG);
+  /* --- tabla kenarındaki parlak turkuaz ilerleme yayı --- */
+  const arc = makeInstanced(box(0.095, 0.032, 0.055), basic(0x4de6c7, 0.96, true), ARC_SEG);
   arc.userData.noTint = true;
   g.add(arc);
 
@@ -1876,13 +2043,15 @@ const buildTable: Builder = (g, p, def) => {
       showServed();
     },
     onProgress(pr) {
+      cleanProg = pr;
       showArc(pr);
       if (pr > 0.001 && pr < 0.999) {
         tableGrimeDecal.visible = !hidden;
-        const fade = (1 - pr) * (1 - pr);
+        const fade = Math.pow(1 - pr, 1.65);
         stainMat.opacity = 0.6 * fade;
         grimeFilmMat.opacity = 0.26 * fade;
-        tableGrimeDecal.scale.setScalar(1);
+        const shrink = Math.max(0.45, 1 - pr * 0.42);
+        tableGrimeDecal.scale.set(shrink, 1, shrink);
       } else if (pr >= 0.999 || (dirtyN <= 0 && soilLevel <= 0.02)) {
         tableGrimeDecal.visible = false;
         stainMat.opacity = 0;
@@ -1892,19 +2061,28 @@ const buildTable: Builder = (g, p, def) => {
       }
     },
     onWipe() {
-      wipeT = 0.14;
+      wipeT = 0.22;
     },
     playGleam() {
-      gleamT = 0.6;
+      gleamT = 0.78;
       gleamMesh.visible = true;
+      gleamMesh2.visible = true;
+      rimHaloMesh.visible = true;
       flashMesh.visible = true;
+      polishSwirlMesh.visible = false;
+      polishBubbles.visible = false;
     },
     onLocked(v) {
       hidden = v;
+      if (tableCodeLabelMesh) tableCodeLabelMesh.visible = !v;
       showDirt();
       showServed();
       arc.visible = !v && arcN > 0;
-      if (v) warm.visible = false;
+      if (v) {
+        warm.visible = false;
+        polishSwirlMesh.visible = false;
+        polishBubbles.visible = false;
+      }
     },
     tick(dt, t, act) {
       warm.visible = !hidden && act > 0.02;
@@ -1927,22 +2105,47 @@ const buildTable: Builder = (g, p, def) => {
       }
       if (gleamT > 0) {
         gleamT = Math.max(0, gleamT - dt);
-        const prog = 1 - gleamT / 0.6;
+        const prog = 1 - gleamT / 0.78;
         const e = prog * prog * (3 - 2 * prog);
-        const sweepRange = TABLE_R * 1.3;
+        const sweepRange = topHalf * 1.18;
         gleamMesh.position.x = lerp(-sweepRange, sweepRange, e);
-        gleamMesh.position.z = lerp(-sweepRange * 0.4, sweepRange * 0.4, e);
-        gleamMat.opacity = Math.sin(prog * Math.PI) * 0.9;
-        flashMat.opacity = Math.max(0, 1 - prog * 2.2) * 0.55;
+        gleamMesh.position.z = lerp(-sweepRange * 0.45, sweepRange * 0.45, e);
+        const e2 = clamp01((prog - 0.12) / 0.88);
+        gleamMesh2.position.x = lerp(-sweepRange * 1.05, sweepRange * 1.05, e2);
+        gleamMesh2.position.z = lerp(-sweepRange * 0.45, sweepRange * 0.45, e2);
+        gleamMat.opacity = Math.sin(prog * Math.PI) * 0.92;
+        flashMat.opacity = Math.max(0, 1 - prog * 2.1) * 0.5;
+        const haloScale = 0.86 + e * 0.38;
+        rimHaloMesh.scale.set(haloScale, haloScale, 1);
+        rimHaloMat.opacity = Math.sin(prog * Math.PI) * 0.72;
         if (gleamT <= 0) {
           gleamMesh.visible = false;
+          gleamMesh2.visible = false;
+          rimHaloMesh.visible = false;
           flashMesh.visible = false;
         }
       }
+      const wipingActive = !hidden && gleamT <= 0 && (wipeT > 0 || (cleanProg > 0.01 && cleanProg < 0.995));
       if (wipeT > 0) {
         wipeT = Math.max(0, wipeT - dt);
-        const k = Math.sin((wipeT / 0.14) * Math.PI);
-        tableGrimeDecal.scale.set(1 - k * 0.025, 1, 1 - k * 0.025);
+      }
+      polishSwirlMesh.visible = wipingActive;
+      polishBubbles.visible = wipingActive;
+      if (wipingActive) {
+        const wAlpha = wipeT > 0 ? Math.min(1, wipeT / 0.1) : 0.72;
+        polishSwirlMesh.rotation.z = -t * 5.4;
+        const pulseS = 0.82 + Math.sin(t * 9.5) * 0.08;
+        polishSwirlMesh.scale.set(pulseS, pulseS, 1);
+        polishSwirlMat.opacity = 0.58 * wAlpha;
+        bubbleMat.opacity = 0.72 * wAlpha;
+        for (let b = 0; b < 6; b++) {
+          const ba = t * 3.8 + b * 1.047;
+          const br = 0.16 + ((b * 0.09 + t * 0.28) % 0.38);
+          const lift = ((t * 1.6 + b * 0.21) % 1) * 0.18;
+          const bs = 0.75 + Math.sin(t * 7 + b) * 0.25;
+          setInstance(polishBubbles, b, Math.cos(ba) * br, 1.02 + lift, Math.sin(ba) * br, 0, 0, 0, bs, bs, bs);
+        }
+        flushInstances(polishBubbles);
       }
       if (dirtySign.visible) {
         dirtySign.position.y = 1.62 + Math.sin(t * 2.2) * 0.04;
@@ -1960,7 +2163,10 @@ const buildTable: Builder = (g, p, def) => {
     dispose() {
       stainMat.dispose();
       grimeFilmMat.dispose();
+      polishSwirlMat.dispose();
+      bubbleMat.dispose();
       gleamMat.dispose();
+      rimHaloMat.dispose();
       flashMat.dispose();
     },
   };
@@ -2517,11 +2723,133 @@ const buildCounter: Builder = (g) => {
   }};
 };
 
-const buildPremiumMachine: Builder = (g, p, def) => {
+const buildPremiumMachine: Builder = (g, _p, def) => {
+  const item = def.item!;
   const shell = new VisibilityRoot(); shell.name = 'premiumMachine'; g.add(shell);
-  addPremiumMachine(shell, def.item!); batchPremium(shell);
+  addPremiumMachine(shell, item); batchPremium(shell);
+
+  // Zero-idle-cost working VFX: stays hidden (0 draw calls) when idle, animates on active production.
+  const fxRoot = new VisibilityRoot();
+  fxRoot.name = 'machineWorkFx';
+  fxRoot.visible = false;
+  g.add(fxRoot);
+
+  let plume: Plume | null = null;
+  let plumePos: [number, number, number, number, number] = [0, 1.5, 0, 0.45, 0.08];
+  const spinners: THREE.Object3D[] = [];
+  const streams: THREE.Object3D[] = [];
+  let glowMesh: THREE.Mesh | null = null;
+
+  if (item === 'cay') {
+    plume = makePlume(5, 0xfaf5eb, 0.08, 0.42);
+    plumePos = [0, 2.06, 0, 0.52, 0.1];
+    fxRoot.add(plume.im);
+    const pour = detail(cyl(0.014, 0.01, 0.15, 6), basic(0xc63a1e, 0.88, false), 0, 1.11, 0.37);
+    pour.userData.noTint = true;
+    fxRoot.add(pour);
+    streams.push(pour);
+    glowMesh = detail(sph(0.032, 6, 5), basic(0xff9e3d, 0.9, false), 0, 1.25, 0.49);
+    glowMesh.userData.noTint = true;
+    fxRoot.add(glowMesh);
+  } else if (item === 'latte') {
+    plume = makePlume(5, 0xffffff, 0.072, 0.38);
+    plumePos = [0.42, 1.15, 0.28, 0.42, 0.09];
+    fxRoot.add(plume.im);
+    for (const sx of [-0.32, 0.32]) {
+      const shot = detail(cyl(0.011, 0.008, 0.1, 6), basic(0x6e3b1e, 0.9, false), sx, 1.075, 0.29);
+      shot.userData.noTint = true;
+      fxRoot.add(shot);
+      streams.push(shot);
+    }
+    glowMesh = detail(sph(0.028, 6, 5), basic(0xffb74d, 0.92, false), 0, 1.5, 0.34);
+    glowMesh.userData.noTint = true;
+    fxRoot.add(glowMesh);
+  } else if (item === 'tost' || item === 'waffle') {
+    plume = makePlume(4, 0xfff3dc, 0.072, 0.34);
+    plumePos = [0, 1.33, 0.14, 0.4, 0.12];
+    fxRoot.add(plume.im);
+    glowMesh = detail(
+      box(0.88, 0.03, 0.5),
+      basic(item === 'waffle' ? 0xffaa2b : 0xff6b1a, 0.85, false),
+      0,
+      1.19,
+      0.02,
+    );
+    glowMesh.userData.noTint = true;
+    fxRoot.add(glowMesh);
+  } else if (item === 'frappe') {
+    plume = makePlume(4, 0xf5efe4, 0.062, 0.3);
+    plumePos = [0, 1.76, 0, 0.32, 0.14];
+    fxRoot.add(plume.im);
+    for (const sx of [-0.33, 0.33]) {
+      const vortex = detail(torus(0.092, 0.022, 5, 12), basic(0xf7e6c4, 0.88, false), sx, 1.52, 0);
+      vortex.rotation.x = Math.PI / 2;
+      vortex.userData.noTint = true;
+      fxRoot.add(vortex);
+      spinners.push(vortex);
+    }
+  } else if (item === 'smoothie') {
+    for (const [sx, col] of [[-0.36, 0xffb3c8], [0.36, 0xffe09a]] as const) {
+      const vortex = detail(torus(0.105, 0.022, 5, 12), basic(col, 0.88, false), sx, 1.48, -0.02);
+      vortex.rotation.x = Math.PI / 2;
+      vortex.userData.noTint = true;
+      fxRoot.add(vortex);
+      spinners.push(vortex);
+    }
+    const pour = detail(cyl(0.013, 0.01, 0.14, 6), basic(0xff6b8b, 0.9, false), -0.36, 1.12, 0.22);
+    pour.userData.noTint = true;
+    fxRoot.add(pour);
+    streams.push(pour);
+  } else if (item === 'dondurma') {
+    const swirl = detail(cyl(0.026, 0.012, 0.17, 8), basic(0xfff0f5, 0.94, false), -0.26, 1.22, 0.31);
+    swirl.userData.noTint = true;
+    fxRoot.add(swirl);
+    streams.push(swirl);
+    spinners.push(swirl);
+    glowMesh = detail(sph(0.032, 6, 5), basic(0xffe082, 0.9, false), 0, 1.57, 0.31);
+    glowMesh.userData.noTint = true;
+    fxRoot.add(glowMesh);
+  } else if (item === 'milkshake') {
+    plume = makePlume(4, 0xffeef4, 0.058, 0.28);
+    plumePos = [0, 1.44, 0.04, 0.28, 0.14];
+    fxRoot.add(plume.im);
+    for (const sx of [-0.35, 0.35]) {
+      const froth = detail(torus(0.068, 0.018, 5, 12), basic(0xffd6e5, 0.9, false), sx, 1.39, 0.04);
+      froth.rotation.x = Math.PI / 2;
+      froth.userData.noTint = true;
+      fxRoot.add(froth);
+      spinners.push(froth);
+    }
+  }
+
+  function tick(_dt: number, t: number, act: number): void {
+    const active = act > 0.015;
+    if (!active) {
+      if (fxRoot.visible) {
+        plume?.tick(t, 0, plumePos[0], plumePos[1], plumePos[2], plumePos[3], plumePos[4]);
+        fxRoot.visible = false;
+      }
+      return;
+    }
+    fxRoot.visible = true;
+    plume?.tick(t, act, plumePos[0], plumePos[1], plumePos[2], plumePos[3], plumePos[4]);
+    for (let i = 0; i < spinners.length; i++) {
+      const sp = spinners[i];
+      if (item === 'dondurma') sp.rotation.y = t * 10;
+      else sp.rotation.z = t * (i % 2 === 0 ? 14 : -14);
+    }
+    const pulse = (0.78 + Math.sin(t * 11) * 0.22) * act;
+    for (let i = 0; i < streams.length; i++) {
+      streams[i].scale.set(pulse, act, pulse);
+    }
+    if (glowMesh) {
+      const gPulse = 0.72 + Math.sin(t * 7.5) * 0.28;
+      glowMesh.scale.setScalar(0.85 + gPulse * 0.2 * act);
+    }
+  }
+
   const output = new VisibilityRoot(); output.name = 'premiumMachineOutput'; g.add(output);
-  let instances = createPackProductInstanced(def.item!,3);
+  let instances = createPackProductInstanced(item,3);
   if (instances && (Array.isArray(instances.material) ? instances.material : [instances.material])
       .some(material=>material.transparent || !material.depthWrite || material.blending!==THREE.NormalBlending)) {
     // Transparent objects need their original per-product depth sorting.
@@ -2532,18 +2860,18 @@ const buildPremiumMachine: Builder = (g, p, def) => {
     for(let i=0;i<3;i++)setInstance(instances,i,-.68,1.025,-.27+i*.27,0,0,0,scale);
     flushInstances(instances,0); output.add(instances);
     let shown = -1;
-    return {ownOutput:true, onOutput(count) {
+    return {ownOutput:true, tick, onOutput(count) {
       const next = Math.min(3, Math.max(0, Math.ceil(count)));
       output.visible = next>0;
       if(next!==shown){shown=next;flushInstances(instances,next);}
     }};
   }
   const products = Array.from({length:3}, (_, i) => {
-    const product = createProductMesh(def.item!);
+    const product = createProductMesh(item);
     product.scale.setScalar(.65); product.position.set(-.68,1.025,-.27+i*.27);
     output.add(product); product.visible=false; return product;
   });
-  return {ownOutput:true, onOutput(count) {
+  return {ownOutput:true, tick, onOutput(count) {
     output.visible = count>0;
     products.forEach((product,i)=>product.visible=i<count);
   }};
@@ -2580,6 +2908,18 @@ function tryAddPackFurniture(g: THREE.Group, def: StationDef, seats: number, p: 
     ? toppedMat('vip', marbleTexture(0x3f4657, 0xf5d98c, 0.9), 0.26, 0.16)
     : liveTopMat(sq, p);
   addPremiumTable(furniture, def, seats, topMat);
+  if (def.serviceCode) {
+    const codePlate = mesh(
+      roundBox(0.5, 0.32, 0.12, 0.035),
+      mat(def.vip ? 0x8a6722 : 0x1d2b34, { rough: 0.78 }),
+      0.25,
+      1.1024,
+      -0.21,
+    );
+    codePlate.name = 'tableCodeStand';
+    codePlate.scale.set(0.64, 0.64, 0.64);
+    furniture.add(codePlate);
+  }
   batchPremium(furniture);
   return true;
 }
@@ -2730,7 +3070,7 @@ export function createStationVisual(def: StationDef, palette: LocationPalette): 
    */
   const half = STATION_BODY[def.visual] ?? { x: 0.9, z: 0.5 };
 
-  const filmMachine = def.kind === 'machine' && ['cay','latte','tost','waffle','frappe'].includes(def.item ?? '');
+  const filmMachine = def.kind === 'machine' && Boolean(def.item);
   const rig = (filmMachine ? buildPremiumMachine : def.kind === 'bin' ? buildPremiumBin : BUILDERS[def.visual])(body, palette, def);
   markDynamic(body);
   const settledShell = new SettledVisual(body.children.filter(child =>

@@ -1,6 +1,6 @@
 import type { ItemId } from '../../data/items';
 import type { StationVisualKind } from '../../data/stations';
-import manifest from './manifest.json';
+import manifest from './manifest.json' with { type: 'json' };
 
 const FURNITURE = manifest.kenneyFurniture.files;
 const FOOD = manifest.kenneyFood.files;

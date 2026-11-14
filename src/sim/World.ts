@@ -1,12 +1,12 @@
 import { separateCrowd } from './CrowdSeparation';
 import { arrivalPressure, checkoutQueueLimit } from './ArrivalPacing';
 import { SideActivities, type SideActivitiesSave, type SideActivityCompletion } from './SideActivities';
-import { SIDE_ACTIVITY_DEFS, SIDE_ACTIVITY_IDS, type SideActivityId } from '../data/sideActivities';
+import { SIDE_ACTIVITY_AUTO_SECONDS, SIDE_ACTIVITY_BY_ID, SIDE_ACTIVITY_DEFS, SIDE_ACTIVITY_IDS, type SideActivityId } from '../data/sideActivities';
 import { SIDE_GARDEN_LAYOUT, sideGardenObstacles, sideGardenGate } from '../data/sideGardenLayout';
-import { createSideActivityView } from '../world/SideActivityView';
+import { createSideActivityView, type SideActivityViewSnapshot } from '../world/SideActivityView';
 import type { UiSideActivityRow } from '../ui/api';
 import { MOP_FORWARD } from '../world/FloorMop';
-import { tr, localeTag } from "../core/I18n";
+import { tr, localeTag, getLanguage } from "../core/I18n";
 import * as THREE from 'three';
 import { VisibilityRoot } from '../world/VisibilityRoot';
 import {seatAngle,seatRadius,CHAIR_BODY,CHAIR_SIT} from '../data/seating';
@@ -58,11 +58,12 @@ import { createGuideMarker, type GuideMarker, type GuideTarget } from '../world/
 import { createArmRing, type ArmRing } from '../world/ArmRing';
 import { createPickupVisual, type PickupVisual } from '../world/PickupView';
 import { createEnvironment, type EnvironmentView } from '../world/Environment';
+import type { MenuBoardEntry } from '../world/MenuBoard';
 import { createSpillView, type SpillView } from '../world/SpillView';
 import { createGrimeView, type GrimeView } from '../world/GrimeView';
 import type { VFXSystem } from '../world/VFX';
 import { markDynamic } from '../world/layers';
-import { CHAR_CULL_RADIUS, CHAR_CULL_Y, extractCullPlanes, pointInView, sphereHitsFrustum, type CullPlane } from '../world/viewCull';
+import { CHAR_CULL_RADIUS, CHAR_CULL_Y, extractCullPlanesFromMatrix, pointInView, sphereHitsFrustum, type CullPlane } from '../world/viewCull';
 import { createGroundShadowBatch, type GroundShadowBatch } from '../world/GroundShadow';
 import { createStaffHirePad, STAFF_HIRE_PAD_HALF, type StaffHirePad } from '../world/StaffHirePad';
 import { RESTROOM_SUITE, TOILET_LAYOUT, canVisitRestroom, restroomPoint, restroomUseFee } from '../data/restrooms';
@@ -97,6 +98,10 @@ export interface EventModifiers {
 
 /** Gerçekleşen gelir ölçümünün unutma zaman sabiti (saniye). */
 const REVENUE_TAU = 240;
+/** Süpürge parkı fiziksel alma/bırakma yarıçapı (0,4×0,4 ped için daraltıldı). */
+const VACUUM_DOCK_RADIUS = 1.5;
+const VACUUM_CLEAR_RADIUS = 1.7;
+const VACUUM_POST_BIN_COOLDOWN = 1.0;
 
 /**
  * ÖLÇÜLEREK GÜVENLİ BULUNMUŞ DAR BOŞLUKLAR.
@@ -119,6 +124,7 @@ const REVENUE_TAU = 240;
 const KNOWN_SAFE_GAPS: [string, string][] = [
   [tr("Masa 1"), tr("Bulaşık Kovası")],
   [tr("Süpürge Dolabı"), 'Batı duvarı'],
+  [tr("Süpürge Yeri"), 'dekor:bench'],
   [tr("Salon Kovası"), 'Güney duvarı'],
 ];
 
@@ -162,11 +168,43 @@ export class World {
   private readonly sidePurchasePads = new Map<SideActivityId, StaffHirePad>();
   private readonly sidePurchaseArm = new Map<SideActivityId, number>();
   private readonly sidePurchaseExit = new Set<SideActivityId>();
+  private readonly _sidePadShown = new Map<SideActivityId, string>();
+  private readonly _sideBoardSnap: SideActivityViewSnapshot = {
+    id: 'garden',
+    level: 0,
+    completed: 0,
+    order: 0,
+    phase: 'locked',
+    lines: [],
+    workProgress: 0,
+    cleanProgress: 0,
+    reward: 0,
+    bonus: 0,
+    purchaseDeposit: 0,
+    nextCost: 0,
+    purchaseRemaining: 0,
+    manualSeconds: 3,
+    autoSeconds: 0,
+    blockedByCarry: false,
+  };
+  private padTickTimer = 0;
+  private padHapticCount = 0;
+  private cleanStreak = 0;
+  private cleanStreakAt = -99;
+  private cashTickTimer = 0;
+  private readonly _openMachinesBuf: StationEntity[] = [];
+  private readonly _openPickupsBuf: StationEntity[] = [];
+  private readonly _openCountersBuf: StationEntity[] = [];
+  private readonly _urgentCustomersBuf: Customer[] = [];
 
   private inSideLandscape(x:number,z:number): boolean {
     const restroom = x >= RESTROOM_SUITE.x0 && x <= RESTROOM_SUITE.x1 &&
       z >= RESTROOM_SUITE.z0 && z <= RESTROOM_SUITE.z1;
     return this.loc.id === 'kose' && Math.abs(x)>9.2 && z<9.3 && !restroom;
+  }
+
+  isWalkable(x: number, z: number, radius = 0.3): boolean {
+    return !this.inSideLandscape(x, z) && !this.nav.solidBlocked(x, z, radius);
   }
 
   private sideAvailable(id: SideActivityId): boolean {
@@ -232,31 +270,38 @@ export class World {
     for (const id of SIDE_ACTIVITY_IDS) {
       const point = SIDE_GARDEN_LAYOUT[id].service;
       const state = this.sideActivities.peek(id);
-      if (state.level === 0 || dist(player.x,player.z,point.x,point.z) > 0.88) continue;
+      if (state.level === 0 || dist(player.x, player.z, point.x, point.z) > 0.88) continue;
       if (player.planarSpeed >= 1) return false;
-      const item = player.distinctItems().find(item => this.sideActivities.needs(id,item));
+      let item: ItemId | undefined;
+      const distinct = player.distinctItems();
+      for (let i = 0; i < distinct.length; i++) {
+        if (this.sideActivities.needs(id, distinct[i])) {
+          item = distinct[i];
+          break;
+        }
+      }
       if (state.phase === 'delivery' && !item) return false;
       if ((state.phase === 'packing' || state.phase === 'cleaning') && !player.isEmpty) return false;
-      if (!this.armGate('sidework:' + id,dt,0.25,SIDE_ACTIVITY_DEFS[id].color,player)) return true;
+      if (!this.armGate('sidework:' + id, dt, 0.14, SIDE_ACTIVITY_DEFS[id].color, player)) return true;
       player.interacting = true;
       const bench = SIDE_GARDEN_LAYOUT[id].bench;
-      player.faceTowards(bench.x,bench.z,dt,10);
+      player.faceTowards(bench.x, bench.z, dt, 10);
       player.interactionKind = state.phase === 'cleaning' ? 'wipe' : 'reach';
-      if (state.phase === 'delivery' && item && player.tryHandContact('side:'+id+':'+item,'reach',dt,this.state.handInterval)) {
-        if (this.sideActivities.deposit(id,item)) {
+      if (state.phase === 'delivery' && item && player.tryHandContact('side:' + id + ':' + item, 'reach', dt, this.state.handInterval)) {
+        if (this.sideActivities.deposit(id, item)) {
           player.takeItem(item);
-          sfx('produce',0.4); haptic('light');
-          this.vfx?.puff(point.x,1.0,point.z,SIDE_ACTIVITY_DEFS[id].color,2);
+          sfx('produce', 0.44); haptic('light');
+          this.vfx?.puff(point.x, 1.0, point.z, SIDE_ACTIVITY_DEFS[id].color, 2);
           bus.emit('side:changed', { immediate: true });
         }
       } else if (state.phase === 'packing') {
-        player.tryHandContact('sidepack:'+id,'reach',dt,0.5);
-        const event = this.sideActivities.work(id,dt);
+        player.tryHandContact('sidepack:' + id, 'reach', dt, 0.5);
+        const event = this.sideActivities.work(id, dt);
         if (event) this.completeSideOrder(event);
       } else if (state.phase === 'cleaning') {
-        player.tryHandContact('sideclean:'+id,'wipe',dt,0.45);
-        if (this.sideActivities.clean(id,dt,this.menuItems())) {
-          sfx('clean');
+        player.tryHandContact('sideclean:' + id, 'wipe', dt, 0.45);
+        if (this.sideActivities.clean(id, dt, this.menuItems())) {
+          sfx('clean_chime', 0.55); haptic('success');
           bus.emit('side:changed', { immediate: true });
         }
       }
@@ -268,48 +313,86 @@ export class World {
   private updateSideActivities(dt: number, player: Player | null): void {
     if (this.loc.id !== 'kose') return;
     if (this.active) for (const completion of this.sideActivities.update(dt)) this.completeSideOrder(completion);
+    const sideArm = 0.38;
     for (const id of SIDE_ACTIVITY_IDS) {
-      const state = this.sideActivities.get(id), def = SIDE_ACTIVITY_DEFS[id], layout = SIDE_GARDEN_LAYOUT[id];
+      const state = this.sideActivities.peek(id);
+      const def = SIDE_ACTIVITY_DEFS[id];
+      const layout = SIDE_GARDEN_LAYOUT[id];
+      const nextCost = SIDE_ACTIVITY_BY_ID[id].costs[state.level] ?? 0;
+      const purchaseRemaining = Math.max(0, nextCost - state.purchaseDeposit);
       const visible = this.sideAvailable(id) && this.state.tutorialStep >= TUTORIAL_STEP_COUNT;
       const pad = this.sidePurchasePads.get(id);
-      const near = !!player && dist(player.x,player.z,layout.purchase.x,layout.purchase.z) < 3;
-      const on = !!player && Math.abs(player.x-layout.purchase.x)<0.55 && Math.abs(player.z-layout.purchase.z)<0.55;
+      const near = !!player && dist(player.x, player.z, layout.purchase.x, layout.purchase.z) < 3;
+      const on = !!player && Math.abs(player.x - layout.purchase.x) < 0.55 && Math.abs(player.z - layout.purchase.z) < 0.55;
       if (!on) this.sidePurchaseExit.delete(id);
-      const benefit = state.level === 0 ? tr('Yan siparişler açılır') : state.level === 1 ? tr('Daha değerli siparişler')
-        : state.level === 2 ? tr('Otomatik paketleme · 6 sn') : tr('Her 3 siparişte seri bonusu');
       if (pad) {
-        pad.root.visible = visible && state.nextCost > 0;
-        pad.setLabel(`${tr(def.title)} · ${state.level === 0 ? tr('AÇ') : '↑ ' + (state.level+1)} · ₺${formatShort(Math.ceil(state.purchaseRemaining))}`);
-        pad.setHint(near ? benefit : '');
-        pad.setProgress(state.purchaseDeposit / Math.max(1,state.nextCost));
-        pad.setActive(on && !this.sidePurchaseExit.has(id));
-        pad.update(dt,GUIDE_QUAT);
+        pad.root.visible = visible && nextCost > 0;
+        if (pad.root.visible) {
+          const step = purchaseRemaining > 1000 ? 50 : 5;
+          const shown = Math.ceil(purchaseRemaining / step) * step;
+          const labelKey = getLanguage() + ':' + state.level + ':' + shown;
+          if (this._sidePadShown.get(id) !== labelKey) {
+            this._sidePadShown.set(id, labelKey);
+            pad.setLabel(`${tr(def.title)} · ${state.level === 0 ? tr('AÇ') : '↑ ' + (state.level + 1)} · ₺${formatShort(shown)}`);
+          }
+          const benefit = state.level === 0 ? tr('Yan siparişler açılır') : state.level === 1 ? tr('Daha değerli siparişler')
+            : state.level === 2 ? tr('Otomatik paketleme · 6 sn') : tr('Her 3 siparişte seri bonusu');
+          pad.setHint(near ? benefit : '');
+          pad.setProgress(state.purchaseDeposit / Math.max(1, nextCost));
+          pad.setActive(on && !this.sidePurchaseExit.has(id));
+          pad.update(dt, GUIDE_QUAT);
+        }
       }
       const board = this.sideWorkViews.get(id);
       if (board) {
         board.root.visible = visible && state.level > 0;
-        board.update({...state,blockedByCarry:!!player && !player.isEmpty},!!player && dist(player.x,player.z,layout.service.x,layout.service.z)<3.8,GUIDE_QUAT);
+        if (board.root.visible) {
+          const snap = this._sideBoardSnap;
+          snap.id = state.id;
+          snap.level = state.level;
+          snap.completed = state.completed;
+          snap.order = state.order;
+          snap.phase = state.phase;
+          snap.lines = state.lines;
+          snap.workProgress = state.workProgress;
+          snap.cleanProgress = state.cleanProgress;
+          snap.reward = state.reward;
+          snap.bonus = state.bonus;
+          snap.purchaseDeposit = state.purchaseDeposit;
+          snap.nextCost = nextCost;
+          snap.purchaseRemaining = purchaseRemaining;
+          snap.manualSeconds = state.level >= 3 ? 2 : 3;
+          snap.autoSeconds = state.level >= 3 ? SIDE_ACTIVITY_AUTO_SECONDS : 0;
+          snap.blockedByCarry = !!player && !player.isEmpty;
+          board.update(snap, !!player && dist(player.x, player.z, layout.service.x, layout.service.z) < 3.8, GUIDE_QUAT);
+        }
       }
-      if (!visible || !on || !this.active || !player || player.hasVacuum || player.interacting || player.planarSpeed >= 1 || state.nextCost <= 0 || this.sidePurchaseExit.has(id)) {
-        this.sidePurchaseArm.set(id,0); pad?.setArmed(0); continue;
+      if (!visible || !on || !this.active || !player || player.hasVacuum || player.interacting || player.planarSpeed >= 1 || nextCost <= 0 || this.sidePurchaseExit.has(id)) {
+        this.sidePurchaseArm.set(id, 0); pad?.setArmed(0); continue;
       }
       const charge = (this.sidePurchaseArm.get(id) ?? 0) + dt;
-      this.sidePurchaseArm.set(id,charge); pad?.setArmed(charge / 0.9);
-      if (charge < 0.9 || this.state.money <= 0) continue;
-      const amount = Math.min(this.state.money,state.purchaseRemaining,Math.max(100,state.nextCost*0.65)*dt);
-      const purchase = this.sideActivities.depositPurchase(id,amount,this.menuItems());
+      this.sidePurchaseArm.set(id, charge); pad?.setArmed(charge / sideArm);
+      if (charge < sideArm || this.state.money <= 0) continue;
+      const hold = charge - sideArm;
+      const accel = Math.min(6, 1 + hold * 2.4 + hold * hold * 1.1);
+      const rate = Math.max(120, nextCost * 0.65) * accel;
+      const amount = Math.min(this.state.money, purchaseRemaining, rate * dt);
+      const purchase = this.sideActivities.depositPurchase(id, amount, this.menuItems());
       if (purchase.spent > 0) {
         this.state.spend(purchase.spent);
+        this.vfx?.coinBurst(layout.purchase.x, 0.35, layout.purchase.z, 1);
+        const ratio = state.purchaseDeposit / Math.max(1, nextCost);
+        this.firePadDepositTick(dt, ratio);
         if (purchase.upgraded) {
           // Leaving the square is required before paying toward another level.
           this.sidePurchaseExit.add(id);
           this.selectedSideActivity = id;
           this.syncSideArchitecture(); this.rebuildNav();
           sfx('upgrade'); haptic('success');
-          this.vfx?.ring(layout.purchase.x,0.1,layout.purchase.z,def.color,2);
-          bus.emit('toast',{text:tr('{0} · Seviye {1}',tr(def.title),purchase.level),glyph:'✓',tone:'good'});
+          this.vfx?.ring(layout.purchase.x, 0.1, layout.purchase.z, def.color, 2);
+          bus.emit('toast', { text: tr('{0} · Seviye {1}', tr(def.title), purchase.level), glyph: '✓', tone: 'good' });
         }
-        bus.emit('side:changed',{structural:purchase.upgraded,immediate:purchase.upgraded});
+        bus.emit('side:changed', { structural: purchase.upgraded, immediate: purchase.upgraded });
       }
     }
   }
@@ -413,7 +496,7 @@ export class World {
   /** false = sahne kurulmaz (test). */
   private readonly draw3d: boolean;
 
-  private state: GameState;
+  readonly state: GameState;
   private vfx: VFXSystem | null = null;
   private rng = new Rng((Math.random() * 0xffffffff) >>> 0);
 
@@ -457,7 +540,18 @@ export class World {
   private dustTimer = 22;
   private customerSeq = 0;
   private padProgress = new Map<string, number>();
+  private readonly _activeAdSlot: { zone: ZoneDef; tier: 'finish' | 'pay_half'; remaining: number } = {
+    zone: null as unknown as ZoneDef,
+    tier: 'finish',
+    remaining: 0,
+  };
+  private readonly _offeredAdSlot: { zone: ZoneDef; tier: 'finish' | 'pay_half'; remaining: number } = {
+    zone: null as unknown as ZoneDef,
+    tier: 'finish',
+    remaining: 0,
+  };
   private activeAdZone: { zone: ZoneDef; tier: 'finish' | 'pay_half'; remaining: number } | null = null;
+  private offeredAdZone: { zone: ZoneDef; tier: 'finish' | 'pay_half'; remaining: number } | null = null;
 
   /** Bir bölgenin pedine şu ana kadar akıtılmış para (yarım ödeme kaydolur). */
   padPaid(zoneId: string): number {
@@ -466,6 +560,10 @@ export class World {
 
   getActiveAdZone(): { zone: ZoneDef; tier: 'finish' | 'pay_half'; remaining: number } | null {
     return this.activeAdZone;
+  }
+
+  getOfferedAdZone(): { zone: ZoneDef; tier: 'finish' | 'pay_half'; remaining: number } | null {
+    return this.offeredAdZone;
   }
 
   payZoneAd(zoneId: string, amount: number): void {
@@ -692,7 +790,7 @@ export class World {
      * çalışır ve sorunları konsola basar; üretim derlemesinde tamamen
      * ağaçtan düşer.
      */
-    if (import.meta.env.DEV) {
+    if (import.meta.env?.DEV) {
       const problems = this.validateLayout();
       if (problems.length > 0) {
         console.warn(
@@ -1122,7 +1220,7 @@ export class World {
         const gapX = Math.abs(a.x - b.x) - (a.hx + b.hx);
         const gapZ = Math.abs(a.z - b.z) - (a.hz + b.hz);
 
-        if (gapX < 0 && gapZ < 0) {
+        if (gapX < -1e-6 && gapZ < -1e-6) {
           problems.push(
             `ÇAKIŞMA: ${a.name} ↔ ${b.name} — gövdeler ` +
               `${Math.min(-gapX, -gapZ).toFixed(2)} birim iç içe`,
@@ -1312,7 +1410,7 @@ export class World {
      * kombinasyon da denetlenir — kilitliyken görünmeyen bir tuzak,
      * açıldığı anda yakalansın.
      */
-    if (import.meta.env.DEV && new URLSearchParams(window.location.search).has('validateLayout')) {
+    if (import.meta.env?.DEV && typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('validateLayout')) {
       const problems = this.validateLayout();
       if (problems.length > 0) {
         console.warn(`[Yerleşim] "${zone.name}" açıldıktan sonra ${problems.length} sorun:\n` + problems.map((p) => '  • ' + p).join('\n'));
@@ -1371,7 +1469,13 @@ export class World {
 
   /** Açık menü makineleri (sarf deposu hariç). */
   openMachines(): StationEntity[] {
-    return this.machines.filter((m) => !m.locked && m.def.item && isProduct(m.def.item));
+    const out = this._openMachinesBuf;
+    out.length = 0;
+    for (let i = 0; i < this.machines.length; i++) {
+      const m = this.machines[i];
+      if (!m.locked && m.def.item && isProduct(m.def.item)) out.push(m);
+    }
+    return out;
   }
 
   /** MENÜ = açık makinelerin ürettiği ürünler. */
@@ -1389,11 +1493,23 @@ export class World {
   }
 
   openPickups(): StationEntity[] {
-    return this.pickups.filter((p) => !p.locked);
+    const out = this._openPickupsBuf;
+    out.length = 0;
+    for (let i = 0; i < this.pickups.length; i++) {
+      const p = this.pickups[i];
+      if (!p.locked) out.push(p);
+    }
+    return out;
   }
 
   openCounters(): StationEntity[] {
-    return this.counters.filter((c) => !c.locked);
+    const out = this._openCountersBuf;
+    out.length = 0;
+    for (let i = 0; i < this.counters.length; i++) {
+      const c = this.counters[i];
+      if (!c.locked) out.push(c);
+    }
+    return out;
   }
 
   /** Bu ürünü kabul edebilecek istasyonlar: teslim bankosu ve (sarfsa) tuvalet. */
@@ -1413,6 +1529,32 @@ export class World {
 
   /** Ürün başına istasyon yükseltme değer çarpanı (bkz. refreshValueBonus). */
   private valueBonus = new Map<ItemId, number>();
+  private menuBoardRows: MenuBoardEntry[] = [];
+  private menuBoardMachines: StationEntity[] | null = null;
+  private menuBoardTimer = 0;
+
+  syncMenuBoard(): void {
+    if (!this.env) return;
+    if (!this.menuBoardMachines) {
+      this.menuBoardMachines = this.machines
+        .filter((m) => m.def.item !== undefined && m.def.menuOrder !== undefined)
+        .sort((a, b) => (a.def.menuOrder ?? 0) - (b.def.menuOrder ?? 0));
+      this.menuBoardRows = this.menuBoardMachines.map((m) => {
+        const item = m.def.item!;
+        return { item, name: ITEMS[item].name, price: ITEMS[item].price, unlocked: false };
+      });
+    }
+    const mult = this.state.saleMultiplier * this.eventValueMult * this.sideValueMult;
+    for (let i = 0; i < this.menuBoardMachines.length; i++) {
+      const m = this.menuBoardMachines[i];
+      const item = m.def.item!;
+      const row = this.menuBoardRows[i];
+      row.name = ITEMS[item].name;
+      row.unlocked = this.zoneUnlocked(m.def.zone);
+      row.price = Math.max(1, Math.round(this.itemValue(item) * festivalValueMult(item) * mult));
+    }
+    this.env.updateMenuBoard(this.menuBoardRows, this.eventValueMult > 1.05);
+  }
 
   /**
    * İSTASYON YÜKSELTMESİ ÜRÜNÜN DEĞERİNİ ARTIRIR.
@@ -1439,6 +1581,7 @@ export class World {
       if (!m.def.item) continue;
       this.valueBonus.set(m.def.item, 1 + m.speedLevel * 0.06 + m.capLevel * 0.03);
     }
+    this.syncMenuBoard();
   }
 
   /** Menünün ortalama fiyatı. */
@@ -1479,7 +1622,8 @@ export class World {
   /* ---------------- salon & hijyen ---------------- */
 
   get salonOpen(): boolean {
-    return this.tables.some((t) => !t.locked);
+    for (let i = 0; i < this.tables.length; i++) if (!this.tables[i].locked) return true;
+    return false;
   }
 
   get hygieneActive(): boolean {
@@ -1526,7 +1670,8 @@ export class World {
   }
 
   get toiletOpen(): boolean {
-    return this.toilets.some((t) => !t.locked);
+    for (let i = 0; i < this.toilets.length; i++) if (!this.toilets[i].locked) return true;
+    return false;
   }
 
   get supplyLevel(): number {
@@ -1569,7 +1714,12 @@ export class World {
     this.dustTimer -= dt;
     if (this.dustTimer > 0) return;
     const v = BALANCE.vacuum;
-    const openTables = this.tables.filter((t) => !t.locked);
+    const openTables = TABLE_PICK;
+    openTables.length = 0;
+    for (let i = 0; i < this.tables.length; i++) {
+      const tb = this.tables[i];
+      if (!tb.locked) openTables.push(tb);
+    }
     const scale = Math.max(0.45, 1 - openTables.length * 0.05);
 
     /**
@@ -1884,9 +2034,14 @@ export class World {
     this.updateTempo(dt);
     this.applyTempoCapacity();
     this.eventValueMult = mods.valueMult;
-    this.rushPlayerOnly = mods.spawnMult > 1.2;
+    this.rushPlayerOnly = false;
     this.patienceBoost = mods.patienceMult * this.sidePatienceMult;
     this.tipBoost = mods.tipMult;
+    this.menuBoardTimer -= dt;
+    if (this.menuBoardTimer <= 0) {
+      this.menuBoardTimer = 0.5;
+      this.syncMenuBoard();
+    }
     /**
      * v5 — "EL VER": oyuncu bir makinenin 2,4 birim yakınındaysa o makine
      * 2× hızlı çalışır (Station.update okur). Oyuncunun istasyon başında
@@ -1993,8 +2148,7 @@ export class World {
   setViewFromCamera(camera: THREE.Camera): void {
     camera.updateMatrixWorld();
     _projScreen.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.setFromProjectionMatrix(_projScreen);
-    extractCullPlanes(_frustum, this.cullPlanes);
+    extractCullPlanesFromMatrix(_projScreen, this.cullPlanes);
     this.viewReady = true;
   }
 
@@ -2021,35 +2175,44 @@ export class World {
   focusZ = 0;
 
   private readonly _separateList: (Customer | Staff | Player)[] = [];
+  private _sepPlayer: Player | null = null;
+  private readonly _constrainActor = (actor: { x: number; z: number }, fromX?: number, fromZ?: number): void => {
+    const isPlayer = actor === this._sepPlayer;
+    const radius = isPlayer ? BALANCE.player.radius : 0.3;
+    if (fromX !== undefined && fromZ !== undefined) {
+      const dx = actor.x - fromX, dz = actor.z - fromZ;
+      actor.x = fromX; actor.z = fromZ;
+      this.nav.slideMove(actor, dx, dz, radius);
+    }
+    const bounds = this.loc.bounds;
+    const pad = isPlayer ? 0.7 : 0.4;
+    actor.x = clamp(actor.x, bounds.x0 + pad, bounds.x1 - pad);
+    actor.z = clamp(actor.z, bounds.z0 + pad, isPlayer ? bounds.z1 - pad : bounds.z1 + 1.6);
+    this.nav.resolve(actor, radius);
+  };
 
   private separateActors(player: Player | null): void {
     const list = this._separateList;
     list.length = 0;
     // Seated guests remain anchored at the shared seat coordinates.
-    for (const c of this.customers) if (!c.sitting && !c.standingUp && !c.done) list.push(c);
-    for (const staff of this.staff) list.push(staff);
-    if (player && this.active) list.push(player);
-    const bounds = this.loc.bounds;
-    const constrain = (actor: {x:number;z:number}, fromX?: number, fromZ?: number): void => {
-      const radius = actor === player ? BALANCE.player.radius : 0.3;
-      if (fromX !== undefined && fromZ !== undefined) {
-        const dx = actor.x - fromX, dz = actor.z - fromZ;
-        actor.x = fromX; actor.z = fromZ;
-        this.nav.slideMove(actor, dx, dz, radius);
-      }
-      const pad = actor === player ? 0.7 : 0.4;
-      actor.x = clamp(actor.x, bounds.x0 + pad, bounds.x1 - pad);
-      actor.z = clamp(actor.z, bounds.z0 + pad, actor === player ? bounds.z1 - pad : bounds.z1 + 1.6);
-      this.nav.resolve(actor, radius);
-    };
-    separateCrowd(list, constrain, 0.86, 12, player ?? undefined);
+    for (let i = 0; i < this.customers.length; i++) {
+      const c = this.customers[i];
+      if (!c.sitting && !c.standingUp && !c.done) list.push(c);
+    }
+    for (let i = 0; i < this.staff.length; i++) list.push(this.staff[i]);
+    const activePlayer = player && this.active ? player : null;
+    if (activePlayer) list.push(activePlayer);
+    this._sepPlayer = activePlayer;
+    separateCrowd(list, this._constrainActor, 0.86, 12, activePlayer ?? undefined);
     // Actor.step ran before separation. Without this sync the renderer keeps
     // drawing the pre-collision pose, even while simulation positions are apart.
-    for (const actor of list) {
-      constrain(actor);
+    for (let i = 0; i < list.length; i++) {
+      const actor = list[i];
+      this._constrainActor(actor);
       actor.char.root.position.x = actor.x;
       actor.char.root.position.z = actor.z;
     }
+    this._sepPlayer = null;
   }
   /**
    * YÜKSELTİLMİŞ ODA KOTU — yalnız görsel.
@@ -2063,13 +2226,17 @@ export class World {
   private updateFloorLift(dt: number, player: Player | null): void {
     if (!this.hasLift) return;
     const k = Math.min(1, dt * 9);
-    const apply = (a: { x: number; z: number; floorY: number }): void => {
-      const target = floorLiftAt(this.loc, a.x, a.z);
-      a.floorY += (target - a.floorY) * k;
-    };
-    for (const c of this.customers) apply(c);
-    for (const s of this.staff) apply(s);
-    if (player && this.active) apply(player);
+    for (let i = 0; i < this.customers.length; i++) {
+      const a = this.customers[i];
+      a.floorY += (floorLiftAt(this.loc, a.x, a.z) - a.floorY) * k;
+    }
+    for (let i = 0; i < this.staff.length; i++) {
+      const a = this.staff[i];
+      a.floorY += (floorLiftAt(this.loc, a.x, a.z) - a.floorY) * k;
+    }
+    if (player && this.active) {
+      player.floorY += (floorLiftAt(this.loc, player.x, player.z) - player.floorY) * k;
+    }
   }
 
   /**
@@ -2205,7 +2372,10 @@ export class World {
     const x = player?.x ?? this.loc.playerStart.x;
     const z = player?.z ?? this.loc.playerStart.z;
     this.state.earn(amount, x, z, 1.6);
-    this.vfx?.coinBurst(x, 1.3, z, 4);
+    this.vfx?.coinBurst(x, 1.3, z, 5);
+    this.vfx?.ring(x, 0.12, z, 0xffc84a, 2.0);
+    sfx('cashout', 0.54);
+    haptic('success');
     bus.emit('toast', { text: tr("Seri tamam +₺{0}", formatCompactMoney(amount)), glyph: '🔥', tone: 'good' });
   }
 
@@ -2406,16 +2576,46 @@ export class World {
 
 
 
-  private guideVacuumReturn(_dock: StationEntity, player: Player): GuideTarget {
+  private readonly _vacClearPath: number[] = [];
+  /** Kovaya çöp/bulaşık attıktan hemen sonra süpürgenin yanlışlıkla kapılmasını önleyen bekleme. */
+  private vacuumSuppressTimer = 0;
+
+  private guideVacuumReturn(dock: StationEntity, player: Player): GuideTarget {
+    const d = dist(player.x, player.z, dock.x, dock.z);
+    if (player.noTakeFrom === dock.id && d <= VACUUM_CLEAR_RADIUS) {
+      dock.servicePoint(_pt);
+      const baseAngle = Math.atan2(_pt.z - dock.z, _pt.x - dock.x);
+      const path = this._vacClearPath;
+      for (let ri = 0; ri < 3; ri++) {
+        const rad = 2.05 + ri * 0.32;
+        for (let oi = 0; oi < 9; oi++) {
+          const sign = (oi & 1) === 1 ? 1 : -1;
+          const off = oi === 0 ? 0 : Math.ceil(oi / 2) * 0.35 * sign;
+          const ang = baseAngle + off;
+          const cx = dock.x + Math.cos(ang) * rad;
+          const cz = dock.z + Math.sin(ang) * rad;
+          if (this.nav.solidBlocked(cx, cz, BALANCE.player.radius)) continue;
+          path.length = 0;
+          this.nav.findPath(player.x, player.z, cx, cz, path);
+          if (path.length > 0) {
+            return { x: cx, z: cz, label: tr("BİR ADIM UZAKLAŞ"), color: 0xffc84a };
+          }
+        }
+      }
+    }
+    if (d <= 5.5 || this.state.stats.orders < 1) {
+      dock.servicePoint(_pt);
+      return { x: _pt.x, z: _pt.z, label: tr("SÜPÜRGEYİ BIRAK"), color: 0xffc84a };
+    }
     return { x: player.x, z: player.z, label: tr("SÜPÜRGEYİ BIRAK düğmesine dokun"), color: 0xffc84a };
   }
 
   /** Explicit equipment intent works anywhere in the active venue.
-   *  Hidden until the first order: the opening minute has one verb. */
+   *  Hidden until the first order or completed tutorial: the opening minute has one verb. */
   vacuumAvailable(player: Player): boolean {
     if (!this.active) return false;
     if (player.hasVacuum) return true;
-    if (this.state.stats.orders < 1) return false;
+    if (this.state.stats.orders < 1 && this.state.tutorialStep < TUTORIAL_STEP_COUNT) return false;
     return this.vacuums.some(dock => !dock.locked && dock.output > 0);
   }
 
@@ -2431,7 +2631,7 @@ export class World {
       dock.output = holding ? 0 : 1;
       this.stationVisuals.get(dock.id)?.setOutput(dock.output, 1, null);
       // A button press next to the dock must not immediately reverse itself.
-      if (dist(player.x, player.z, dock.x, dock.z) <= 2.6) player.noTakeFrom = dock.id;
+      if (dist(player.x, player.z, dock.x, dock.z) <= VACUUM_CLEAR_RADIUS) player.noTakeFrom = dock.id;
     }
     // Start a new brush stroke here: do not clean a segment from the previous tool position.
     const brush = this.brushPoint(player, holding);
@@ -2449,19 +2649,42 @@ export class World {
 
   private updateVacuumDock(dt: number, player: Player): boolean {
     if (!this.active || (!player.hasVacuum && !player.isEmpty)) return false;
+    if (!player.hasVacuum) {
+      if (this.vacuumSuppressTimer > 0) return false;
+      if (this.guideCare?.kind === 'spill') return false;
+      const brush = this.brushPoint(player, false);
+      for (const s of this.spills.list) {
+        if (s.kind !== 'toz' && dist(s.x, s.z, brush.x, brush.z) < s.radius + BALANCE.vacuum.mopBrushRadius) {
+          return false;
+        }
+      }
+    }
     for (const dock of this.vacuums) {
-      if (dock.locked || dist(player.x, player.z, dock.x, dock.z) > 2.15) continue;
+      const distance = dist(player.x, player.z, dock.x, dock.z);
+      if (dock.locked || distance > VACUUM_DOCK_RADIUS) continue;
+      if (!player.hasVacuum) {
+        let nearBin = false;
+        for (let i = 0; i < this.bins.length; i++) {
+          const b = this.bins[i];
+          if (b.locked) continue;
+          const bd = dist(player.x, player.z, b.x, b.z);
+          if (bd < distance && bd < 1.8) {
+            nearBin = true;
+            break;
+          }
+        }
+        if (nearBin) continue;
+      }
       if (player.noTakeFrom === dock.id || player.handTimer > 0) return false;
       if (!player.hasVacuum && dock.output <= 0) continue;
       // Reach the nearest physical edge from every direction; never reach through a wall.
       const dx = player.x - dock.x, dz = player.z - dock.z;
-      const distance = Math.hypot(dx, dz);
       const reach = Math.min(0.64, distance);
       const x = distance > 0 ? dock.x + dx / distance * reach : dock.x;
       const z = distance > 0 ? dock.z + dz / distance * reach : dock.z;
       if (!this.nav.interactionLineClear(player.x, player.z, x, z)) continue;
       if (player.planarSpeed >= 0.8) return false;
-      if (!this.armGate(`vac:${dock.id}`, dt, 0.28, 0xd8cfbb, player)) {
+      if (!this.armGate(`vac:${dock.id}`, dt, BALANCE.player.vacuumArmTime, 0xd8cfbb, player)) {
         player.interacting = true; player.interactionKind = 'reach';
         return true;
       }
@@ -2594,7 +2817,7 @@ export class World {
       const pad = this.staffHirePads.get(goal.role);
       const remaining = this.state.hireCostFor(goal.role);
       if (point && pad?.root.visible && (this.state.money >= remaining || focused)) {
-        const roleName = STAFF_ROLE_MAP[goal.role].name.toLocaleUpperCase(localeTag());
+        const roleName = tr(STAFF_ROLE_MAP[goal.role].name).toLocaleUpperCase(localeTag());
         return { x: point.x, z: point.z, label: tr("{0} İŞE AL", roleName), color: 0xffc84a };
       }
     }
@@ -2683,12 +2906,23 @@ export class World {
     }
 
     /** En yakın değil, sabır oranı en düşük müşterinin yapılabilir işi. */
-    const urgent = this.customers
-      .filter((c) => !c.done && c.order && c.waiting && c.state !== 'angry' && c.state !== 'leave')
-      .sort((a, b) => a.patience / Math.max(0.01, a.maxPatience) - b.patience / Math.max(0.01, b.maxPatience));
+    const urgent = this._urgentCustomersBuf;
+    urgent.length = 0;
+    let criticalOrder = false;
+    for (let i = 0; i < this.customers.length; i++) {
+      const c = this.customers[i];
+      if (c.done || !c.waiting || c.state === 'angry' || c.state === 'leave') continue;
+      const ratio = c.patience / Math.max(0.01, c.maxPatience);
+      if (ratio < 0.3) criticalOrder = true;
+      if (c.order) urgent.push(c);
+    }
+    if (urgent.length > 1) {
+      urgent.sort((a, b) => a.patience / Math.max(0.01, a.maxPatience) - b.patience / Math.max(0.01, b.maxPatience));
+    }
 
     // Elde doğru ürün varsa önce en acil müşterinin gerçek teslim noktasına git.
-    for (const c of urgent) {
+    for (let i = 0; i < urgent.length; i++) {
+      const c = urgent[i];
       const want = c.order?.nextWanted();
       if (!want || !player.hasItem(want)) continue;
       const itemName = ITEMS[want].name.toLocaleUpperCase(localeTag());
@@ -2704,14 +2938,21 @@ export class World {
     // Carrying waste is a committed delivery; do not send the player to
     // take another product before their hands are usable again.
     if (player.hasItem('bulasik')) {
-      const bin = this.bins.filter((b) => !b.locked)
-        .sort((a, b) => dist(player.x, player.z, a.x, a.z) - dist(player.x, player.z, b.x, b.z))[0];
+      let bin: StationEntity | null = null;
+      let bestBinD = Infinity;
+      for (let i = 0; i < this.bins.length; i++) {
+        const b = this.bins[i];
+        if (b.locked) continue;
+        const d = dist(player.x, player.z, b.x, b.z);
+        if (d < bestBinD) {
+          bestBinD = d;
+          bin = b;
+        }
+      }
       if (bin) return this.guideAt(bin, tr("KOVAYA AT"), BLUE);
     }
     const register = this.unattendedRegisterGuide(player);
     if (register) return register;
-    const criticalOrder = this.customers.some((c) => !c.done && c.waiting && c.state !== 'angry' && c.state !== 'leave'
-      && c.patience / Math.max(0.01, c.maxPatience) < 0.3);
     if (!criticalOrder && player.isEmpty && this.state.tutorialStep >= TUTORIAL_STEP_COUNT
       && this.state.stats.orders > 0
       && this.state.playTime - this.lastGuideFloorAt >= 90
@@ -2721,7 +2962,9 @@ export class World {
       const floor = this.guideFloorCare(player);
       if (floor) return floor;
     }
-    const maintenance = this.state.stats.orders > 0 ? this.beginGuideCare(player, criticalOrder) : null;
+    const maintenance = (this.state.stats.orders > 0 || this.state.tutorialStep >= TUTORIAL_STEP_COUNT)
+      ? this.beginGuideCare(player, criticalOrder)
+      : null;
     if (maintenance) return maintenance;
     const goalTarget = this.guideGoalTarget(player);
     if (goalTarget && (!criticalOrder || (this.guideFocusId === this.guideGoal?.id && this.state.playTime < this.guideFocusUntil))) return goalTarget;
@@ -2891,13 +3134,20 @@ export class World {
      * bot koşusunda erken oyun üç kat yavaşladı. Rehber ile etkileşim
      * AYNI kuralı okumalı (kodun `noTakeFrom` için zaten koyduğu ilke).
      */
-    const carryingProduct = player.slots.some((it) => isProduct(it));
+    let carryingProduct = false;
+    for (let i = 0; i < player.slots.length; i++) {
+      if (isProduct(player.slots[i])) {
+        carryingProduct = true;
+        break;
+      }
+    }
     const dishRoom = player.capacity - player.slots.length - 1;
     if (!player.hasVacuum && !player.hasItem('bulasik')) {
       let dirty: StationEntity | null = null;
       let dirtyD = Infinity;
       for (const t of this.tables) {
         if (t.locked || (t.dishes <= 0 && t.soil <= 0.02)) continue;
+        if (t.dishes <= 0 && !player.isEmpty) continue;
         if (t.dishes > 0 && (!player.canTake('bulasik') || (carryingProduct && dishRoom < 1))) continue;
         const d = dist(player.x, player.z, t.x, t.z);
         if (d < dirtyD) {
@@ -2916,10 +3166,26 @@ export class World {
     // empty hands and must never become an impossible fallback instruction.
     if (!player.isEmpty) {
       const counters = this.openCounters();
-      const cash = counters.filter(c => c.cash > 0).sort((a,b) => b.cash-a.cash)[0];
+      let cash: StationEntity | null = null;
+      let bestCash = 0;
+      let counter: StationEntity | null = null;
+      let bestQueue = -1;
+      let bestCounterD = Infinity;
+      for (let i = 0; i < counters.length; i++) {
+        const c = counters[i];
+        if (c.cash > bestCash) {
+          bestCash = c.cash;
+          cash = c;
+        }
+        const qLen = c.queue.length;
+        const d = dist(player.x, player.z, c.x, c.z);
+        if (qLen > bestQueue || (qLen === bestQueue && d < bestCounterD)) {
+          bestQueue = qLen;
+          bestCounterD = d;
+          counter = c;
+        }
+      }
       if (cash) return this.guideAt(cash, tr("PARAYI TOPLA"), GOLD);
-      const counter = counters.sort((a,b) => b.queue.length-a.queue.length ||
-        dist(player.x,player.z,a.x,a.z)-dist(player.x,player.z,b.x,b.z))[0];
       return counter ? this.guideAt(counter, counter.queue.length ? tr("SİPARİŞ AL") : tr("YENİ SİPARİŞİ BEKLE"), GOLD) : null;
     }
 
@@ -3020,7 +3286,7 @@ export class World {
         }
       }
       if (bestPoint && bestRole) {
-        const roleName = STAFF_ROLE_MAP[bestRole].name.toLocaleUpperCase(localeTag());
+        const roleName = tr(STAFF_ROLE_MAP[bestRole].name).toLocaleUpperCase(localeTag());
         return { x: bestPoint.x, z: bestPoint.z, label: tr("{0} İŞE AL", roleName), color: GOLD };
       }
     }
@@ -3155,7 +3421,7 @@ export class World {
     const location = this.loc.id, cycle = this.state.prestigeCount;
     const stationary = player.planarSpeed < 1;
     const inFrame = (x: number, z: number): boolean =>
-      this.viewReady && _frustum.containsPoint(_v3.set(x, floorLiftAt(this.loc, x, z) + 0.1, z));
+      this.viewReady && pointInView(x, z, this.cullPlanes, 0.35, floorLiftAt(this.loc, x, z) + 0.1);
     for (const zone of this.loc.zones) {
       if (zone.cost <= 0 || this.zoneUnlocked(zone.id)) continue;
       const visible = this.visiblePadIds.has(zone.id) && inFrame(zone.padX, zone.padZ);
@@ -3197,6 +3463,7 @@ export class World {
 
   private updatePads(dt: number, player: Player | null): void {
     this.activeAdZone = null;
+    this.offeredAdZone = null;
     for (const zone of this.loc.zones) {
       if (!this.visiblePadIds.has(zone.id)) {
         this.env?.setPadActive(zone.id, false);
@@ -3221,6 +3488,12 @@ export class World {
       const offerAd = !blocked && isInsufficient && this.zoneDepth(zone.id) === 0
         && paidRatio >= (adTier === 'finish' ? 0.35 : 0.25);
       this.env?.setPadAdOffer(zone.id, offerAd ? adTier : null);
+      if (offerAd && !this.offeredAdZone) {
+        this._offeredAdSlot.zone = zone;
+        this._offeredAdSlot.tier = adTier;
+        this._offeredAdSlot.remaining = remaining;
+        this.offeredAdZone = this._offeredAdSlot;
+      }
 
       /**
        * Etiket metni KADEMELİ yuvarlanır.
@@ -3247,10 +3520,13 @@ export class World {
       this.env?.setPadActive(zone.id, on);
 
       if (offerAd && on && !player.hasVacuum) {
-        this.activeAdZone = { zone, tier: adTier, remaining };
+        this._activeAdSlot.zone = zone;
+        this._activeAdSlot.tier = adTier;
+        this._activeAdSlot.remaining = remaining;
+        this.activeAdZone = this._activeAdSlot;
       }
 
-      const adInstruction = adTier === 'finish' ? tr("📺 REKLAMLA TAMAMLA") : tr("📺 %50 ÖDE");
+      const adInstruction = adTier === 'finish' ? tr("ANAHTARLA AÇ") : tr("%50 HIZLI AÇ");
       this.env?.setPadInstruction(zone.id, !on ? '' : player.hasVacuum ? tr("SÜPÜRGEYİ BIRAK") : remaining <= 0.01 ? tr("Açmak için dur") : isInsufficient && this.state.money <= 0
         ? adInstruction
         : player.planarSpeed >= 1 ? tr("Ödeme için dur") : tr("Üzerinde dur"));
@@ -3289,10 +3565,13 @@ export class World {
       if (remaining <= 0.01) {
         this.unlockZone(zone.id, 'pad');
         sfx('unlock');
+        haptic('success');
         continue;
       }
-      // Ödeme akışı hızlı: bekleyiş bir "yükleme çubuğu" olmamalı.
-      const rate = Math.max(zone.cost * 0.4, 60) * Math.min(5, 1 + (charge - arm) * 2.2);
+      // Ödeme akışı hızlı ve ivmeli: pahalı bölgelerde bile yükleme çubuğu hissi vermez.
+      const hold = charge - arm;
+      const accel = Math.min(8, 1 + hold * 2.6 + hold * hold * 1.4);
+      const rate = Math.max(zone.cost * 0.52, 90) * accel;
       const want = Math.min(remaining, rate * dt);
       const pay = Math.min(want, this.state.money);
       if (pay <= 0) {
@@ -3305,19 +3584,41 @@ export class World {
       const next = paid + pay;
       this.padProgress.set(zone.id, next);
       this.vfx?.coinBurst(player.x, 1.1, player.z, 1);
-      if (Math.random() < 0.3) sfx('coin', 0.4);
+      this.firePadDepositTick(dt, next / Math.max(1, zone.cost));
       if (next >= zone.cost - 0.01) {
         this.padProgress.set(zone.id, zone.cost);
         this.unlockZone(zone.id, 'pad');
         sfx('unlock');
+        haptic('success');
       }
     }
   }
 
+  private firePadDepositTick(dt: number, progress01: number): void {
+    this.padTickTimer -= dt;
+    if (this.padTickTimer > 0) return;
+    const p = clamp01(progress01);
+    this.padTickTimer = 0.072 - p * 0.026;
+    sfx('pad_tick', 0.44);
+    if ((++this.padHapticCount & 3) === 0) haptic('light');
+  }
+
+  private bumpCleanStreak(x: number, y: number, z: number): number {
+    const now = this.state.playTime;
+    this.cleanStreak = now - this.cleanStreakAt <= 9 ? this.cleanStreak + 1 : 1;
+    this.cleanStreakAt = now;
+    if (this.cleanStreak >= 3) {
+      this.vfx?.sparkleBurst(x, y, z, 6, 0xffc84a);
+    }
+    return 1 + Math.min(5, this.cleanStreak - 1) * 0.055;
+  }
+
   /** Each role has its own small floor square beside that role's workplace. */
   private updateStaffHirePad(dt: number, player: Player | null): void {
-    for (const role of Object.keys(this.loc.staffHirePads) as StaffRole[]) {
+    for (let ri = 0; ri < STAFF_HIRE_ROLES.length; ri++) {
+      const role = STAFF_HIRE_ROLES[ri];
       const point = this.loc.staffHirePads[role];
+      if (!point) continue;
       const pad = this.staffHirePads.get(role);
       const count = this.state.staffCountAt(this.loc.id)[role];
       const on = !!player && this.active && this.state.activeLocation === this.loc.id &&
@@ -3345,7 +3646,7 @@ export class World {
       const paid = this.state.hirePaidFor(role, this.loc.id);
       const remaining = Math.max(0, total - paid);
       const step = remaining > 100_000 ? 1000 : remaining > 1000 ? 100 : 5;
-      pad?.setLabel(def.name + ' · ₺' + formatShort(Math.ceil(remaining / step) * step));
+      pad?.setLabel(tr(def.name) + ' · ₺' + formatShort(Math.ceil(remaining / step) * step));
       pad?.setProgress(total > 0 ? paid / total : 0);
       if (player && dist(player.x, player.z, point.x, point.z) < 2.5) {
         const benefit = tr(STAFF_HIRE_BENEFITS[role]);
@@ -3369,21 +3670,26 @@ export class World {
       const arm = BALANCE.player.padArmTime;
       pad?.setArmed(charge / arm);
       if (charge < arm) continue;
-      const rate = Math.max(80, total * 0.45) * Math.min(3, 1 + (charge - arm) * 1.5);
+      const hold = charge - arm;
+      const accel = Math.min(6, 1 + hold * 2.4 + hold * hold * 1.1);
+      const rate = Math.max(100, total * 0.55) * accel;
       const contributed = this.state.payStaffHire(role, rate * dt);
       if (contributed > 0) {
-        pad?.setProgress(this.state.hirePaidFor(role) / total);
+        const nextPaid = this.state.hirePaidFor(role, this.loc.id);
+        pad?.setProgress(total > 0 ? nextPaid / total : 0);
         this.vfx?.coinBurst(point.x, 0.35, point.z, 1);
+        this.firePadDepositTick(dt, total > 0 ? nextPaid / total : 0);
       }
-      if (this.state.staffCount[role] !== count) {
+      const nextCount = this.state.staffCountAt(this.loc.id)[role];
+      if (nextCount !== count) {
         this.staffHireWaitExit.add(role);
-        this.staffHireCountSeen.set(role, this.state.staffCount[role]);
+        this.staffHireCountSeen.set(role, nextCount);
         this.staffHireCharge.set(role, 0);
         pad?.setProgress(1);
         pad?.setArmed(0);
         this.vfx?.puff(point.x, 0.25, point.z, Number.parseInt(def.color.slice(1), 16), 5);
         sfx('hire');
-        haptic('medium');
+        haptic('success');
       }
     }
   }
@@ -3503,9 +3809,10 @@ export class World {
           s.z,
           true,
         );
+        const cleanPitch = this.bumpCleanStreak(s.x, 0.35, s.z);
         this.vfx?.ring(s.x, 0.06, s.z, vac ? 0xd8cfbb : 0x4fb59a, 1.8);
         this.vfx?.puff(s.x, 0.3, s.z, 0xefe7d6, 6);
-        sfx('goal', 0.35);
+        sfx('clean_chime', 0.56, cleanPitch);
         haptic('success');
       }
     }
@@ -3592,6 +3899,9 @@ export class World {
     this.releaseStaleLocks(player, r);
 
     player.handTimer -= dt;
+    if (this.vacuumSuppressTimer > 0) {
+      this.vacuumSuppressTimer = Math.max(0, this.vacuumSuppressTimer - dt);
+    }
 
     /**
      * 0) Taşıdıklarından birini kabul eden EN YAKIN istasyon → bırak
@@ -3624,7 +3934,7 @@ export class World {
         player.interactionKind = 'reach';
         player.faceTowards(target.x, target.z, dt, 10);
         const serveKey = `serve:${target.id}:${serveItem}`;
-        const serveArmed = this.armGate(serveKey, dt, 0.36, ITEMS[serveItem].color, player);
+        const serveArmed = this.armGate(serveKey, dt, 0.1, ITEMS[serveItem].color, player);
         if (
           serveArmed &&
           player.tryHandContact(serveKey, 'reach', dt, this.state.handInterval) &&
@@ -3641,21 +3951,12 @@ export class World {
     // Deliver held orders first; then collect visible earnings before taking more products.
     if (!player.hasVacuum && this.collectCounterCash(dt,player)) return;
 
-    // A brief stop anywhere around the tool also works; no fixed service point.
+    // Vacuum dock pickup/return runs before passive shelf/table grabs; while held, it excludes station work.
     if (this.updateVacuumDock(dt, player)) return;
-
-    // A held vacuum excludes station work; the mop yields to it.
-    if (player.hasVacuum) this.updateFloorCleaning(dt, player);
-
-    /**
-     * SÜPÜRGE BİR ALETTİR, MOD DEĞİL.
-     *
-     * Eskiden süpürge taşıma yığınını hiç işgal etmiyordu ("yoksa oyuncu
-     * süpürgeyle servis yapamazdı" gerekçesiyle): karakter önünde süpürge
-     * iterken göğsünde çay+tost kulesi yükseliyordu. Tür standardı (Clean
-     * It dahil) alet-münhasırdır: alet eldeyken alet işi yapılır.
-     */
-    if (player.hasVacuum) return;
+    if (player.hasVacuum) {
+      this.updateFloorCleaning(dt, player);
+      return;
+    }
 
     /**
      * 2) Kirli masayı topla — temizlik PARA KAZANDIRIR.
@@ -3674,7 +3975,13 @@ export class World {
     const dirty = this.nearestDirtyTable(player.x, player.z, r);
     if (dirty) {
       if (!this.playerAccess(dirty, player.x, player.z, 1.4, _pt)) return;
-      const carryingProduct = player.slots.some((it) => isProduct(it));
+      let carryingProduct = false;
+      for (let i = 0; i < player.slots.length; i++) {
+        if (isProduct(player.slots[i])) {
+          carryingProduct = true;
+          break;
+        }
+      }
       const roomAfter = player.capacity - player.slots.length - 1;
 
       if (dirty.dishes > 0 && player.canTake('bulasik') && !(carryingProduct && roomAfter < 1)) {
@@ -3682,7 +3989,7 @@ export class World {
         player.interactionKind = 'reach';
         player.faceTowards(dirty.x, dirty.z, dt, 10);
         const dishKey = `dish:${dirty.id}`;
-        const dishArmed = this.armGate(dishKey, dt, 0.34, 0x8a7f74, player);
+        const dishArmed = this.armGate(dishKey, dt, 0.1, 0x8a7f74, player);
         if (
           dishArmed &&
           player.tryHandContact(dishKey, 'reach', dt, this.state.handInterval) &&
@@ -3705,15 +4012,35 @@ export class World {
           // Tok porselen tıkırtısı ve minik beyaz hava patlaması
           this.vfx?.puff(dirty.x, 1.12, dirty.z, 0xf0ece2, 4);
           sfx('dish_clatter', 0.65);
+          haptic('light');
 
           if (dirty.dishes === 0 && dirty.soil <= 0.02) {
+            dirty.soil = 0;
+            dirty.progress = 0;
+            dirty.cleanStartSoil = 0;
+            dirty.dirtyAge = 0;
+            this.state.stats.tablesCleaned++;
+            this.playerCare = null;
+
+            const cleanPitch = this.bumpCleanStreak(dirty.x, 1.25, dirty.z);
+            this.stationVisuals.get(dirty.id)?.playGleam?.();
+            this.vfx?.sparkleBurst(dirty.x, 1.15, dirty.z, 10, 0xfff3c4);
+            this.vfx?.ring(dirty.x, 1.02, dirty.z, 0x7ff0e0, 1.3);
+            sfx('clean_chime', 0.65, cleanPitch);
+            sfx('coin', 0.45);
+            haptic('success');
+
+            bus.emit('table:cleaned', { id: dirty.id, x: dirty.x, z: dirty.z, byPlayer: true });
+            const completedWork = Math.max(1, dirty.cleanValue);
+            dirty.cleanValue = 0;
+            this.payClean(BALANCE.dirt.dishRewardRate * completedWork, dirty.x, dirty.z, true);
             this.assignWaitingCustomersToTables();
           }
         }
         return;
       }
 
-      // Bulaşık veya süpürge taşırken masa silinmez; elde yalnız ürün varken masa parlatılabilir.
+      // Bulaşık veya süpürge taşırken masa silinmez; boş elle (veya yalnız ürün varken) masa parlatılabilir.
       if (dirty.dishes <= 0 && dirty.soil > 0.02 && !player.hasVacuum && !player.hasItem('bulasik')) {
         this.playerCare = { id: dirty.id, remaining: 35 };
         player.interacting = true;
@@ -3740,12 +4067,13 @@ export class World {
           this.playerCare = null;
 
           // Tamamlanma: parlama süpürmesi + altın/turkuaz ışıltı + neon halka + kristal zil
+          const cleanPitch = this.bumpCleanStreak(dirty.x, 1.3, dirty.z);
           this.stationVisuals.get(dirty.id)?.playGleam?.();
           this.vfx?.sparkleBurst(dirty.x, 1.15, dirty.z, 12, 0xfff3c4);
           this.vfx?.sparkleBurst(dirty.x, 1.3, dirty.z, 8, 0x7ff0e0);
           this.vfx?.ring(dirty.x, 1.02, dirty.z, 0x7ff0e0, 1.4);
           this.vfx?.ring(dirty.x, 1.02, dirty.z, 0xffffff, 1.1);
-          sfx('clean_chime', 0.7);
+          sfx('clean_chime', 0.7, cleanPitch);
           sfx('coin', 0.45);
           haptic('success');
 
@@ -3820,14 +4148,18 @@ export class World {
         player.interactionKind = 'reach';
         const tint = target.def.kind === 'bin' ? 0xd23b2e : ITEMS[dropItem].color;
         const unloadKey = `unload:${target.id}:${dropItem}`;
-        const unloadArmed = this.armGate(unloadKey, dt, 0.55, tint, player);
+        const unloadArmed = this.armGate(unloadKey, dt, 0.12, tint, player);
         if (unloadArmed && player.tryHandContact(unloadKey, 'reach', dt, this.state.handInterval)) {
           if (target.accept(dropItem)) {
             player.takeItem(dropItem);
-              player.noTakeFrom = target.id;
+            player.noTakeFrom = target.id;
+            if (target.def.kind === 'bin') {
+              this.vacuumSuppressTimer = Math.max(this.vacuumSuppressTimer, VACUUM_POST_BIN_COOLDOWN);
+            }
             this.pickupVisuals.get(target.id)?.pop();
             this.vfx?.puff(target.x, 1.1, target.z, ITEMS[dropItem].color, 3);
-            sfx('drop', 0.45);
+            sfx('drop', 0.48);
+            haptic('light');
             this.bumpTempo(BALANCE.tempo.gain.shelfDrop);
           }
         }
@@ -3838,13 +4170,13 @@ export class World {
     // 6) Yakında çıkışı olan bir istasyondan al — niyet kapısından geçince
     const src = this.nearestWithOutput(player.x, player.z, r, player);
     if (src) {
-      if (!this.playerAccess(src,player.x,player.z,1.3,_pt,true)) return;
+      if (!this.playerAccess(src, player.x, player.z, 1.3, _pt, true)) return;
       player.interacting = true;
       player.interactionKind = 'reach';
       player.faceTowards(src.x, src.z, dt, 10);
       const itemColor = src.def.item ? ITEMS[src.def.item].color : 0xffc84a;
       const takeKey = `take:${src.id}`;
-      if (!this.armGate(takeKey, dt, BALANCE.player.pickupArmTime, itemColor, player)) return;
+      if (!this.armGate(takeKey, dt, Math.min(0.08, BALANCE.player.pickupArmTime), itemColor, player)) return;
       if (player.tryHandContact(takeKey, 'reach', dt, this.state.handInterval)) {
         /**
          * BANKODAN GEREKEN ÜRÜN ALINIR — sıradaki değil.
@@ -3869,10 +4201,11 @@ export class World {
         const item = src.def.kind === 'pickup' ? this.takeWanted(src) : src.takeOutput();
         if (item) {
           if (player.give(item)) {
-              player.noDropTo = src.id;
+            player.noDropTo = src.id;
             bus.emit('item:picked', { item, x: src.x, z: src.z });
             this.vfx?.puff(src.x, 1.0, src.z + 0.7, ITEMS[item].color, 3);
-            sfx('pickup', 0.5);
+            sfx('pickup', 0.52);
+            haptic('light');
           } else if (src.def.kind === 'pickup') {
             src.accept(item);
           } else {
@@ -3883,38 +4216,48 @@ export class World {
       }
       return;
     }
-
-
   }
 
   /** Clear the visible till before taking another product at overlapping work areas. */
   private collectCounterCash(dt: number, player: Player): boolean {
-    for (const co of this.counters) {
+    for (let i = 0; i < this.counters.length; i++) {
+      const co = this.counters[i];
       if (co.locked || co.cash <= 0) continue;
-      if (!this.playerAccess(co,player.x,player.z,1.3,_pt)) continue;
+      if (!this.playerAccess(co, player.x, player.z, 1.35, _pt)) continue;
       player.interacting = true;
       player.interactionKind = 'cash';
       player.faceTowards(co.x, co.z, dt, 10);
       const cashKey = `cash:${co.id}`;
-      const cashArmed = this.armGate(cashKey, dt, 0.14, 0xffc84a, player);
-      if (cashArmed && player.tryHandContact(cashKey, 'cash', dt, Math.max(0.09, BALANCE.money.pickupInterval * 0.5))) {
+      const cashArmed = this.armGate(cashKey, dt, 0.06, 0xffc84a, player);
+      const interval = Math.max(0.08, BALANCE.money.pickupInterval * 0.45);
+      if (player.planarSpeed <= 0.45) {
+        player.tryHandContact(cashKey, 'cash', dt, interval);
+      }
+      this.cashTickTimer -= dt;
+      if (cashArmed && player.planarSpeed < 2.2 && this.cashTickTimer <= 0) {
+        this.cashTickTimer = interval;
         const before = co.cash;
         const batch = Math.min(before, Math.max(1, Math.ceil(before / 2)));
-        const amount = (co.cashValue / before) * batch;
+        const amount = batch >= before ? co.cashValue : (co.cashValue / before) * batch;
         co.cash -= batch;
-        co.cashValue = Math.max(0, co.cashValue - amount);
-        if (co.cash === 0) co.cashValue = 0;
+        co.cashValue = co.cash === 0 ? 0 : Math.max(0, co.cashValue - amount);
         this.state.earn(amount, co.x, co.z, 1.5);
         // Öğretici "PARAYI TOPLA" adımı bunu dinler: leke/bulaşık ödülü
         // değil, TEZGÂHTAN toplama sayılmalı (bkz. sim/Tutorial.ts).
         bus.emit('counter:collected', { amount });
         this.bumpTempo(BALANCE.tempo.gain.cashCollect);
         this.vfx?.coinBurst(co.x, 1.3, co.z, Math.min(8, 2 + batch));
-        sfx('coin', 0.5);
-        if (co.cash === 0) haptic('success');
+        sfx('coin', 0.52);
+        if (co.cash === 0) {
+          sfx('cashout', 0.56);
+          haptic('success');
+        } else {
+          haptic('light');
+        }
       }
       return true;
     }
+    this.cashTickTimer = 0;
     return false;
   }
 
@@ -3928,7 +4271,7 @@ export class World {
       if (!id) return false;
       const st = this.byId.get(id);
       if (st?.def.kind === 'vacuum') {
-        return dist(player.x, player.z, st.x, st.z) > 2.6;
+        return dist(player.x, player.z, st.x, st.z) > VACUUM_CLEAR_RADIUS;
       }
       return !st || dist(player.x, player.z, st.x, st.z) > r + 1.4;
     };
@@ -3973,6 +4316,7 @@ export class World {
         if (left > 0) guest.showItem(item, left);
         else if (guest.orderComplete) this.startEating(guest);
         sfx('drop', 0.55);
+        if (byPlayer) haptic('light');
         break;
       }
       case 'pickup':
@@ -3980,6 +4324,7 @@ export class World {
         this.pickupVisuals.get(target.id)?.pop();
         this.vfx?.puff(target.x, 1.1, target.z + 0.6, ITEMS[item].color, 4);
         sfx('stock', 0.55);
+        if (byPlayer) haptic('light');
         break;
       case 'toilet':
         this.state.stats.refills++;
@@ -3987,8 +4332,12 @@ export class World {
         bus.emit('item:refilled', { item, x: target.x, z: target.z });
         this.vfx?.sparkle(target.x, 1.4, target.z + 0.5, 0xffffff);
         sfx('drop', 0.5);
+        if (byPlayer) haptic('light');
         break;
       case 'bin': {
+        if (byPlayer) {
+          this.vacuumSuppressTimer = Math.max(this.vacuumSuppressTimer, VACUUM_POST_BIN_COOLDOWN);
+        }
         /**
          * KOVA EFEKTİ — üç katman: kapak çarpması, içeri düşen bulaşık ve
          * kenardan taşan toz. Tek bir gri puf "bir şey oldu" bile demiyordu;
@@ -3999,6 +4348,7 @@ export class World {
         this.vfx?.ring(target.x, 0.06, target.z, 0x8a949b, 1.1);
         this.vfx?.sparkle(target.x, 1.35, target.z, 0xdfe6ea);
         sfx('drop', 0.55);
+        if (byPlayer) haptic('light');
         break;
       }
       default:
@@ -4324,6 +4674,8 @@ export class World {
     }
   }
 
+  private readonly _waitingCustomers: Customer[] = [];
+
   private assignWaitingCustomersToTables(): void {
     let hasFreeSeat = false;
     for (let i = 0; i < this.tables.length; i++) {
@@ -4334,9 +4686,18 @@ export class World {
     }
     if (!hasFreeSeat) return;
 
-    const waiting = this.customers
-      .filter((c) => !c.done && c.state === 'toTable' && c.dineIn && !c.table)
-      .sort((a, b) => b.tableWait - a.tableWait);
+    const waiting = this._waitingCustomers;
+    waiting.length = 0;
+    for (let i = 0; i < this.customers.length; i++) {
+      const c = this.customers[i];
+      if (!c.done && c.state === 'toTable' && c.dineIn && !c.table) {
+        waiting.push(c);
+      }
+    }
+    if (waiting.length === 0) return;
+    if (waiting.length > 1) {
+      waiting.sort((a, b) => b.tableWait - a.tableWait);
+    }
 
     for (const c of waiting) {
       this.routeToTable(c);
@@ -4408,7 +4769,11 @@ export class World {
   }
 
   private cashierReady(counter: StationEntity): boolean {
-    return this.staff.some((s) => s.role === 'cashier' && s.assigned === counter && s.atStation);
+    for (let i = 0; i < this.staff.length; i++) {
+      const s = this.staff[i];
+      if (s.role === 'cashier' && s.assigned === counter && s.atStation) return true;
+    }
+    return false;
   }
 
   /** Queue is waiting and no cashier is at the register. From a distance, say
@@ -4550,13 +4915,35 @@ export class World {
   }
 
   /**
+   * Dönüş satışı önizlemesi: `sellStockShare(share, mult)` ile satılacak stoğun
+   * tam nakit karşılığını stoğu eksiltmeden hesaplar.
+   */
+  estimateStockShareValue(share: number, mult: number = 1): number {
+    let total = 0;
+    for (const m of this.machines) {
+      if (m.locked || !m.def.item || m.output <= 0) continue;
+      const n = Math.floor(m.output * share);
+      if (n > 0) total += this.itemValue(m.def.item) * n;
+    }
+    for (const p of this.pickups) {
+      if (p.locked || p.output <= 0) continue;
+      const n = Math.min(p.contents.length, Math.floor(p.output * share));
+      for (let i = 0; i < n; i++) {
+        total += this.itemValue(p.contents[i]);
+      }
+    }
+    if (total <= 0) return 0;
+    return Math.round(total * this.state.saleMultiplier * this.hygieneMult * mult);
+  }
+
+  /**
    * "Dönüş Satışı" (comeback_sale): makine + raf stoğunun `share` payını
    * anında satar, hasılatı hesaba yazar. Ödül reklamla açılır; bedava
    * offline para DEĞİLDİR — satılan şey oyuncunun kendi ürettiği stoktur.
    */
   sellStockShare(share: number, mult: number = 1): number {
     let total = 0;
-    const sell = (st: StationEntity, count: number, item: ItemId | null) => {
+    const sell = (_st: StationEntity, count: number, item: ItemId | null) => {
       if (count <= 0 || !item) return;
       total += this.itemValue(item) * count;
     };
@@ -4577,7 +4964,9 @@ export class World {
     }
     if (total > 0) {
       const t = Math.round(total * this.state.saleMultiplier * this.hygieneMult * mult);
-      this.revenueAcc += t;
+      // NOT: Toplu dönüş satışı `revenueAcc` içine YAZILMAZ; aksi hâlde saatlik
+      // stok ×3 çarpanla 60 sn'lik pencereye girip `realizedIncome`'ı yapay
+      // biçimde şişirir ve sonraki çevrimdışı/reklam ödüllerini üstel büyütür.
       this.state.earn(t, this.loc.playerStart.x, this.loc.playerStart.z, 1.8);
       return t;
     }
@@ -4668,7 +5057,9 @@ export class World {
 
   private spawnCustomers(dt: number, mods: EventModifiers): void {
     // Keep the first complete service loop readable; normal demand starts afterwards.
-    if (this.state.tutorialStep < TUTORIAL_STEP_COUNT && this.customers.some(c => !c.done)) return;
+    if (this.state.tutorialStep < TUTORIAL_STEP_COUNT) {
+      for (let i = 0; i < this.customers.length; i++) if (!this.customers[i].done) return;
+    }
     if (this.customers.length >= this.maxCustomers) return;
 
     let menuCount = 0;
@@ -4820,7 +5211,10 @@ export class World {
     this.customers.push(c);
 
     if (kind === 'investor') {
+      c.state = 'investor';
+      c.waiting = false;
       c.showInvestor();
+      sfx('vip_arrive', 0.55);
       // Kafenin kapısından içeriye doğru yürür: açık tezgâhın veya ilk makinenin önüne yönelir
       const targetCounter = this.openCounters()[0] ?? this.openMachines()[0];
       if (targetCounter) {
@@ -4833,8 +5227,15 @@ export class World {
     }
 
     if (kind === 'dasher') {
-      const targets = this.openPickups().filter((p) => p.output > 0);
-      const target = targets.length > 0 ? targets[0] : this.openPickups()[0];
+      const pickups = this.openPickups();
+      let target: StationEntity | undefined;
+      for (let i = 0; i < pickups.length; i++) {
+        if (pickups[i].output > 0) {
+          target = pickups[i];
+          break;
+        }
+      }
+      target ??= pickups[0];
       if (!target) {
         c.done = true;
         return c;
@@ -4847,6 +5248,7 @@ export class World {
       return c;
     }
 
+    if (kind === 'influencer') sfx('vip_arrive', 0.48);
     c.needsToilet = this.toiletOpen && this.rng.chance(BALANCE.toilet.useChance);
     this.sendToCounter(c);
     return c;
@@ -4858,15 +5260,35 @@ export class World {
       this.makeAngry(c, 'no_counter', false);
       return;
     }
-    const working = all.filter((r) => r.cash < BALANCE.money.counterCap);
-    const candidates = working.length > 0 ? working : all;
-    const withRoom = candidates.filter(co => co.queue.length < Math.min(BALANCE.customers.maxQueue,
-      checkoutQueueLimit(this.cashierReady(co) && !this.rushPlayerOnly)));
-    const usable = withRoom.length > 0 ? withRoom : candidates;
+    let hasWorking = false;
+    for (let i = 0; i < all.length; i++) {
+      if (all[i].cash < BALANCE.money.counterCap) {
+        hasWorking = true;
+        break;
+      }
+    }
+    let hasRoom = false;
+    for (let i = 0; i < all.length; i++) {
+      const co = all[i];
+      if (hasWorking && co.cash >= BALANCE.money.counterCap) continue;
+      const limit = Math.min(BALANCE.customers.maxQueue,
+        checkoutQueueLimit(this.cashierReady(co) && !this.rushPlayerOnly));
+      if (co.queue.length < limit) {
+        hasRoom = true;
+        break;
+      }
+    }
 
-    let best = usable[0];
-    let bestLen = queueOf(best).length;
-    for (const r of usable) {
+    let best = all[0];
+    let bestLen = Infinity;
+    for (let i = 0; i < all.length; i++) {
+      const r = all[i];
+      if (hasWorking && r.cash >= BALANCE.money.counterCap) continue;
+      if (hasRoom) {
+        const limit = Math.min(BALANCE.customers.maxQueue,
+          checkoutQueueLimit(this.cashierReady(r) && !this.rushPlayerOnly));
+        if (r.queue.length >= limit) continue;
+      }
       const len = queueOf(r).length;
       if (len < bestLen || (len === bestLen && c.distanceTo(r.x, r.z) < c.distanceTo(best.x, best.z))) {
         best = r;
@@ -4960,6 +5382,7 @@ export class World {
   }
 
   private updateCustomers(dt: number, player: Player | null): void {
+    let visibleAnimated = 0;
     for (let i = this.customers.length - 1; i >= 0; i--) {
       const c = this.customers[i];
       if (c.order) c.order.age += dt;
@@ -4987,7 +5410,8 @@ export class World {
       // güncellemesi yapıyor; kadraj dışındaki 20 müşteri için bu tamamen
       // israf. Konum yine işlenir, yani sim davranışı hiç değişmez.
       const animate = this.isNearCamera(c.x, c.z);
-      c.step(dt, this.nav, animate);
+      if (animate) visibleAnimated++;
+      c.step(dt, this.nav, animate, animate && visibleAnimated > QUALITY.customerVisualCap);
       this.syncActorRender(c.char.root,animate);
       if (c.done) {
         this.releaseCustomerHolds(c);
@@ -5400,6 +5824,15 @@ export class World {
         break;
       }
 
+      case 'investor': {
+        c.waiting = false;
+        if (player && dist(player.x, player.z, c.x, c.z) < 3.6) {
+          c.stop();
+          c.faceTowards(player.x, player.z, dt, 5);
+        }
+        break;
+      }
+
       default:
         break;
     }
@@ -5444,12 +5877,17 @@ export class World {
   }
 
   hasDasher(): boolean {
-    return this.customers.some((c) => c.isDasher && !c.done);
+    for (let i = 0; i < this.customers.length; i++) {
+      const c = this.customers[i];
+      if (c.isDasher && !c.done) return true;
+    }
+    return false;
   }
 
   checkInvestorInteraction(player: Player): Customer | null {
-    for (const c of this.customers) {
-      if (!c.isInvestor || c.done || c.state === 'leave') continue;
+    for (let i = 0; i < this.customers.length; i++) {
+      const c = this.customers[i];
+      if (!c.isInvestor || c.done || c.state === 'leave' || c.waving) continue;
       const d = dist(player.x, player.z, c.x, c.z);
       if (d <= (BALANCE.events.investorInteractRadius ?? 2.2)) {
         c.stop();
@@ -5462,7 +5900,11 @@ export class World {
   }
 
   hasInvestor(): boolean {
-    return this.customers.some((c) => c.isInvestor && !c.done && c.state !== 'leave');
+    for (let i = 0; i < this.customers.length; i++) {
+      const c = this.customers[i];
+      if (c.isInvestor && !c.done && c.state !== 'leave' && !c.waving) return true;
+    }
+    return false;
   }
 
   dismissInvestor(rewarded = false): void {
@@ -5720,7 +6162,15 @@ export class World {
     s.atStation = s.distanceTo(_pt.x, _pt.z) < 0.9 + s.reachBonus;
     if (s.atStation) {
       s.faceTowards(co.x, co.z + 2, dt, 8);
-      s.workingVisual = queueOf(co).some((customer) => customer.state === 'order');
+      const q = queueOf(co);
+      let hasOrder = false;
+      for (let i = 0; i < q.length; i++) {
+        if (q[i].state === 'order') {
+          hasOrder = true;
+          break;
+        }
+      }
+      s.workingVisual = hasOrder;
     }
   }
 
@@ -5747,7 +6197,41 @@ export class World {
    * tuvalet ve sarf oyuncunun aktif işidir; kominin topladığı bulaşık
    * para veya görev ilerlemesi üretmez.
    */
+  private completeBusserTableClean(table: StationEntity, uid: string): void {
+    table.soil = 0;
+    table.progress = 0;
+    table.cleanStartSoil = 0;
+    const completedWork = Math.max(1, table.cleanValue);
+    table.cleanValue = 0;
+    table.dirtyAge = 0;
+    table.clearReserve(uid);
+    this.stationVisuals.get(table.id)?.playGleam?.();
+    this.vfx?.sparkleBurst(table.x, 1.14, table.z, 8, 0xfff3c4);
+    this.vfx?.ring(table.x, 1.02, table.z, 0x7ff0e0, 1.2);
+    sfx('clean_chime', 0.22);
+    this.payClean(BALANCE.dirt.dishRewardRate * completedWork * 0.5, table.x, table.z, false);
+    bus.emit('table:cleaned', { id: table.id, x: table.x, z: table.z, byPlayer: false });
+    this.assignWaitingCustomersToTables();
+  }
+
   private updateBusserAssist(s: Staff, dt: number): void {
+    // Yürürken geçtiği güzergâhtaki ağır trafik kirini pasif olarak süpürür.
+    if (Number.isFinite(s.grimePrevX) && Number.isFinite(s.grimePrevZ)) {
+      const moved = Math.hypot(s.x - s.grimePrevX, s.z - s.grimePrevZ);
+      if (moved > 0.005 && moved < 1.5) {
+        this.grime.cleanStroke(
+          s.grimePrevX,
+          s.grimePrevZ,
+          s.x,
+          s.z,
+          BALANCE.dirt.busserSweepRadius,
+          BALANCE.dirt.busserSweepRate * dt,
+        );
+      }
+    }
+    s.grimePrevX = s.x;
+    s.grimePrevZ = s.z;
+
     s.char.setWorkKind('generic');
     if (s.carryCount > 0 && s.carryItem !== 'bulasik') s.dropAll();
 
@@ -5773,8 +6257,11 @@ export class World {
       if (s.atStation && s.handTimer <= 0 && activeTable.takeDish() && s.give('bulasik')) {
         s.handTimer = busserWorkTime(s.level);
         this.vfx?.puff(activeTable.x, 1.15, activeTable.z, 0x8a7f74, 3);
-        if (activeTable.dishes === 0 && activeTable.soil <= 0.02) this.assignWaitingCustomersToTables();
         sfx('pickup', 0.25);
+        if (activeTable.dishes === 0) {
+          this.completeBusserTableClean(activeTable, s.uid);
+          s.source = null;
+        }
       }
       return;
     }
@@ -5832,16 +6319,15 @@ export class World {
       const myTurn = openIdx % teamSize === s.index;
       openIdx++;
       if (
-        !myTurn ||
+        (!myTurn && t.dirtyAge < 14) ||
         !t.isDirty ||
         this.playerClaimsTable(t) ||
-
         t.isReservedByOther(s.uid) ||
         (t.cleanValue > 0 && t.dirtyAge < 12)
       ) {
         continue;
       }
-      const score = t.dirtyAge - dist(s.x, s.z, t.x, t.z) * 0.6;
+      const score = t.dirtyAge - dist(s.x, s.z, t.x, t.z) * 0.6 + (myTurn ? 12 : 0);
       if (score > bestScore) {
         bestScore = score;
         table = t;
@@ -5865,8 +6351,9 @@ export class World {
         s.handTimer = busserWorkTime(s.level);
         this.vfx?.puff(table.x, 1.15, table.z, 0xf0ece2, 3);
         sfx('dish_clatter', 0.35);
-        if (table.dishes === 0 && table.soil <= 0.02) {
-          this.assignWaitingCustomersToTables();
+        if (table.dishes === 0) {
+          this.completeBusserTableClean(table, s.uid);
+          s.source = null;
         }
       }
       return;
@@ -5917,9 +6404,10 @@ export class World {
 
   /**
    * TEZGÂHTAR / GARSON:
-   * 1. Masada oturan ve sipariş bekleyen müşterilere servis (masaya teslimat).
-   * 2. Tüm açık makinelerden ürünü alıp ilgili rafları tam kapasiteye dizme (ikmal).
-   * Oyuncuyu gölgede bırakmamak için masaya servis yaparken bilerek daha yavaş hareket eder.
+   * 1. Tüm açık makinelerden ürünü alıp ilgili rafları tam kapasiteye dizme (birincil ikmal).
+   * 2. VIP olmayan ve oyuncunun başında olmadığı, uzun süre beklemiş normal masalara
+   *    (sabır <= tableAssistPatienceRatio) gecikmeli yedek servis.
+   * Taze masa siparişleri, hızlı bahşiş ve VIP masalar oyuncuda kalır.
    */
   private updateWaiter(s: Staff, dt: number): void {
     if (this.rushPlayerOnly) {
@@ -5937,7 +6425,16 @@ export class World {
     if (s.job === 'fetch' || s.job === 'deliver') return;
 
     if (s.carryCount > 0 && s.carryItem) {
-      // Masada bekleyen müşteriye teslimat (öncelikli)
+      // Eldeki ürün için önce eksik raf, sonra gecikmiş normal masa, son çare tavansız raf.
+      const shelfDest = this.bestConsumer(s.carryItem, s.x, s.z, s.uid, true);
+      if (shelfDest) {
+        s.dest = shelfDest;
+        if (!shelfDest.isReservedByOther(s.uid)) shelfDest.reserve(s.uid);
+        s.job = 'deliver';
+        shelfDest.servicePoint(_pt);
+        s.moveTo(this.nav, _pt.x, _pt.z);
+        return;
+      }
       const tableDest = this.findTableNeedingItem(s.carryItem, s);
       if (tableDest) {
         s.dest = tableDest;
@@ -5959,11 +6456,11 @@ export class World {
         s.moveTo(this.nav, _pt.x, _pt.z);
         return;
       }
-      // Hedef raf tamamen dolduysa ve hiçbir masa bu ürünü istemiyorsa:
+      // Hedef raf tamamen dolduysa ve uygun masa yoksa:
       // Başka bir hatta bekleyen aktif iş varsa ürünü makinesine iade et ki
       // tezgâhtar elinde ürünle kilitlenmesin; yoksa elindekini koru ve bekle.
       const hasOtherWork =
-        this.findTableServeJob(s) !== null || this.findRelayJob(s) !== null;
+        this.findRelayJob(s) !== null || this.findTableServeJob(s) !== null;
       if (!hasOtherWork) {
         this.goRest(s);
         return;
@@ -5975,21 +6472,7 @@ export class World {
       s.dropAll();
     }
 
-    // 1. Masada oturan ve sipariş bekleyen müşteriye raf veya makineden teslimat
-    const tableServe = this.findTableServeJob(s);
-    if (tableServe) {
-      s.source = tableServe.source;
-      s.dest = tableServe.dest;
-      s.fetchItem = tableServe.item;
-      if (!tableServe.source.isReservedByOther(s.uid)) tableServe.source.reserve(s.uid);
-      if (!tableServe.dest.isReservedByOther(s.uid)) tableServe.dest.reserve(s.uid);
-      s.job = 'fetch';
-      tableServe.source.servicePoint(_pt);
-      s.moveTo(this.nav, _pt.x, _pt.z);
-      return;
-    }
-
-    // 2. Dolan makineleri kendi raflarına boşaltma (çoklu ürün ikmali)
+    // 1. Dolan makineleri kendi raflarına boşaltma (birincil ürün ikmali)
     const relay = this.findRelayJob(s);
     if (relay) {
       s.source = relay.source;
@@ -6003,7 +6486,48 @@ export class World {
       return;
     }
 
+    // 2. Raflar yeterliyse ve normal bir masa uzun süre beklediyse gecikmeli yedek servis
+    const tableServe = this.findTableServeJob(s);
+    if (tableServe) {
+      s.source = tableServe.source;
+      s.dest = tableServe.dest;
+      s.fetchItem = tableServe.item;
+      if (!tableServe.source.isReservedByOther(s.uid)) tableServe.source.reserve(s.uid);
+      if (!tableServe.dest.isReservedByOther(s.uid)) tableServe.dest.reserve(s.uid);
+      s.job = 'fetch';
+      tableServe.source.servicePoint(_pt);
+      s.moveTo(this.nav, _pt.x, _pt.z);
+      return;
+    }
+
     this.goRest(s);
+  }
+
+  /**
+   * VIP olmayan normal masalarda, oyuncu masanın başında değilken ve misafir
+   * sabrı gecikme eşiğinin (tableAssistPatienceRatio) altına düşmüşse true döner.
+   */
+  private tableEligibleForWaiterAssist(t: StationEntity, want?: ItemId): boolean {
+    if (t.locked || t.def.vip) return false;
+    if (
+      this.active &&
+      this.assistPlayer &&
+      !this.assistPlayer.hasVacuum &&
+      dist(this.assistPlayer.x, this.assistPlayer.z, t.x, t.z) < 3.6
+    ) {
+      return false;
+    }
+    const ratioCap = BALANCE.staff.tableAssistPatienceRatio;
+    const guests = guestsOf(t);
+    for (let i = 0; i < guests.length; i++) {
+      const g = guests[i];
+      if (!g.order || g.orderComplete || g.eating) continue;
+      if (want && g.order.remainingOf(want) <= 0) continue;
+      if (g.maxPatience > 0 && g.patience / g.maxPatience <= ratioCap) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Masada bekleyen misafirlerin belirli bir üründen toplam kaç adet beklediği. */
@@ -6080,24 +6604,14 @@ export class World {
     return incoming;
   }
 
-  /** Masada bekleyen müşterinin ihtiyacı olan ürünü teslim edebilecek masa. */
+  /** Uzun süredir bekleyen (VIP olmayan) masada bekleyen ürünü teslim edebilecek masa. */
   private findTableNeedingItem(item: ItemId, s: Staff): StationEntity | null {
     let bestTable: StationEntity | null = null;
     let bestDist = Infinity;
     for (let i = 0; i < this.tables.length; i++) {
       const t = this.tables[i];
       if (t.locked || t.isReservedByOther(s.uid)) continue;
-      if (!t.guestNeeds(item)) continue;
-      let hasWaiting = false;
-      const guests = guestsOf(t);
-      for (let j = 0; j < guests.length; j++) {
-        const c = guests[j];
-        if (c.order && !c.orderComplete && !c.eating) {
-          hasWaiting = true;
-          break;
-        }
-      }
-      if (!hasWaiting) continue;
+      if (!this.tableEligibleForWaiterAssist(t, item)) continue;
       const d = dist(s.x, s.z, t.x, t.z);
       if (d < bestDist) {
         bestDist = d;
@@ -6108,23 +6622,26 @@ export class World {
   }
 
   /**
-   * Masada bekleyen müşteriye yiyecek/içecek getirme işi:
-   * Oturan müşterinin beklediği ürünü raf veya makineden alıp masaya götürür.
+   * Uzun süredir bekleyen normal (VIP olmayan) masalara gecikmeli yedek teslimat işi:
+   * Taze siparişleri oyuncuya bırakır; yalnızca sabır eşiğini geçen misafirlere raf/makineden taşır.
    */
   private findTableServeJob(s: Staff): { source: StationEntity; dest: StationEntity; item: ItemId } | null {
     let bestSrc: StationEntity | null = null;
     let bestDest: StationEntity | null = null;
     let bestItem: ItemId = 'cay';
     let bestScore = Infinity;
+    const ratioCap = BALANCE.staff.tableAssistPatienceRatio;
 
     for (let ti = 0; ti < this.tables.length; ti++) {
       const t = this.tables[ti];
       if (t.locked || t.isReservedByOther(s.uid)) continue;
+      if (!this.tableEligibleForWaiterAssist(t)) continue;
 
       const guests = guestsOf(t);
       for (let gi = 0; gi < guests.length; gi++) {
         const guest = guests[gi];
         if (!guest.order || guest.orderComplete || guest.eating) continue;
+        if (guest.maxPatience <= 0 || guest.patience / guest.maxPatience > ratioCap) continue;
         const lines = guest.order.lines;
         for (let li = 0; li < lines.length; li++) {
           const line = lines[li];
@@ -6470,6 +6987,32 @@ export class World {
       } else {
         if (s.role === 'waiter') s.speed = waiterSpeed(s.level);
         dest?.clearReserve(s.uid);
+        s.dest = null;
+        s.fetchItem = null;
+        s.job = 'rest';
+        s.thinkTimer = 0;
+        return;
+      }
+    }
+    if (
+      s.role === 'waiter' &&
+      dest?.def.kind === 'table' &&
+      !s.atStation &&
+      this.active &&
+      this.assistPlayer &&
+      !this.assistPlayer.hasVacuum &&
+      dist(this.assistPlayer.x, this.assistPlayer.z, dest.x, dest.z) < 2.6
+    ) {
+      const alt = s.carryItem
+        ? (this.bestConsumer(s.carryItem, s.x, s.z, s.uid, true) ?? this.bestConsumer(s.carryItem, s.x, s.z, s.uid, false))
+        : null;
+      dest.clearReserve(s.uid);
+      if (alt) {
+        s.dest = alt;
+        if (!alt.isReservedByOther(s.uid)) alt.reserve(s.uid);
+        dest = alt;
+      } else {
+        s.speed = waiterSpeed(s.level);
         s.dest = null;
         s.fetchItem = null;
         s.job = 'rest';
@@ -6926,7 +7469,17 @@ export class World {
     return this.nearCoverIds.has(st.id) ? 'sheet' : 'hidden';
   }
 
-  /** Nearest locked bar/table pieces at depth 1. Rebuilt on nav, not per frame. */
+  private stationInsideLockedRoom(st: { x: number; z: number }): boolean {
+    for (let i = 0; i < this.loc.zones.length; i++) {
+      const z = this.loc.zones[i];
+      const r = z.room;
+      if (!r || this.state.isZoneUnlocked(this.loc.id, z.id)) continue;
+      if (st.x >= r.x0 && st.x <= r.x1 && st.z >= r.z0 && st.z <= r.z1) return true;
+    }
+    return false;
+  }
+
+  /** Nearest locked bar/table pieces at depth 1 + open-room locked kitchen machines. Rebuilt on nav, not per frame. */
   private refreshNearCovers(): void {
     this.nearCoverIds.clear();
     if (!this.padsUnlocked) return;
@@ -6960,6 +7513,18 @@ export class World {
     picks.sort((a, b) => a.d - b.d);
     const cap = 2;
     for (let i = 0; i < picks.length && this.nearCoverIds.size < cap; i++) this.nearCoverIds.add(picks[i].id);
+
+    // Also preview up to 2 locked open-kitchen menu machines so the kitchen line reads as a full planned station bay.
+    const machinePicks: { id: string; x: number }[] = [];
+    for (const st of this.machines) {
+      if (this.zoneUnlocked(st.def.zone) || this.stationInsideLockedRoom(st)) continue;
+      if (this.zoneVisibility(st.def.zone) !== 'hidden') continue;
+      machinePicks.push({ id: st.id, x: st.x });
+    }
+    machinePicks.sort((a, b) => a.x - b.x);
+    for (let i = 0; i < machinePicks.length && i < 2; i++) {
+      this.nearCoverIds.add(machinePicks[i].id);
+    }
   }
 
   syncLocks(): void {
@@ -6993,6 +7558,7 @@ export class World {
       if (vis === 'open') this.padProgress.set(zone.id, zone.cost);
     }
     this.refreshSideBonuses();
+    this.syncMenuBoard();
     this.sideActivities.syncMenu(this.menuItems());
     this.syncSideArchitecture();
     this.rebuildNav();

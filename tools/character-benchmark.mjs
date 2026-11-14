@@ -25,7 +25,7 @@ try {
     await Promise.all([actors.loadCafeCharacterPack(),customers.loadCafeCustomerPack()]);
     createPackCharacter=(role,opts)=>role==='customer'||role==='dasher'?customers.createCafeCustomer(role,opts):actors.createCafeCharacter(role,opts);
   }else{
-   const actors=await import('/src/chars/PackCharacters.ts');await actors.loadCharacterPack();createPackCharacter=actors.createPackCharacter;
+   const actors=await import('/src/chars/index.ts');await actors.loadCharacterPack();createPackCharacter=actors.createCharacter;
   }
   const renderer=new T.WebGLRenderer({antialias:false,preserveDrawingBuffer:true});renderer.setSize(256,320);
   renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.NeutralToneMapping;renderer.toneMappingExposure=1.04;

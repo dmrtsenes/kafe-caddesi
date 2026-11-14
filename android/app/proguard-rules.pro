@@ -14,11 +14,14 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
--keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable,*Annotation*,Signature,InnerClasses,EnclosingMethod
 
 # Capacitor & Game Native Plugins
 -keep class com.getcapacitor.** { *; }
+-keep class com.getcapacitor.community.admob.** { *; }
 -keep @com.getcapacitor.annotation.CapacitorPlugin class * { *; }
 -keep class com.fincansokagi.game.** { *; }
 -keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.android.ump.** { *; }
+-keep class com.google.firebase.analytics.** { *; }
 

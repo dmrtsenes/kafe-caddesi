@@ -21,6 +21,8 @@ export interface UiUpgradeRow {
   nextText: string;
   /** Somut katkı rozeti, ör. "+%14 Hız" veya "+1 Kapasite" */
   deltaBadge?: string;
+  /** Getiri / darboğaz öneri rozeti */
+  roiBadge?: 'bottleneck' | 'best_roi';
 }
 
 export interface UiUpgradeAdvice {
@@ -89,6 +91,8 @@ export interface UiStationRow {
   /** Kapasite butonunun adı: makinede "Depo", masada "Sandalye". */
   capLabel: string;
   hasCap: boolean;
+  /** Getiri / darboğaz öneri rozeti */
+  roiBadge?: 'bottleneck' | 'best_roi';
 }
 
 export interface UiLocationRow {
@@ -124,6 +128,9 @@ export interface UiDaily {
   }[];
   /** Alınmayı bekleyen bir şey var mı — rozet için. */
   pending: number;
+  /** Bugün kırılan >=2 günlük seri (varsa reklamla kurtarılabilir). */
+  brokenStreak?: number;
+  canRecoverStreak?: boolean;
 }
 
 /* ================================================================ *
@@ -314,6 +321,10 @@ export interface UiOfflineReport {
   offlineCash?: number;
   /** Üretilen stoğun nakit karşılığı. */
   stockValue?: number;
+  /** Ödüllü reklam izlenirse kasaya girecek toplam nakit (vardiya × çarpan + stok × çarpan). */
+  rewardedTotalCash?: number;
+  /** Reklamsız geçilirse masada bırakılan ek kazanç (loss-aversion). */
+  forfeitedBonusCash?: number;
 }
 
 export interface UiEventBanner {
@@ -458,7 +469,8 @@ export type UiAdRewardKind =
   | 'tip_rain'
   | 'investor'
   | 'comeback_sale'
-  | 'free_upgrade';
+  | 'free_upgrade'
+  | 'streak_freeze';
 
 /* ================================================================ *
  *  Dekorasyon (bkz. data/cosmetics.ts)
@@ -551,6 +563,10 @@ export interface UIApi {
   getDaily(): UiDaily;
   /** Günün giriş ödülünü al. */
   claimDaily(): void;
+  /** Kırılan günlük seriyi ödüllü reklamla geri yükle. */
+  recoverDailyStreak?(): Promise<boolean>;
+  /** Kırılan günlük seri kurtarma teklifini kapat. */
+  dismissDailyStreakRecovery?(): void;
   /** Tamamlanmış bir günlük görevin ödülünü al. */
   claimMission(index: number): void;
 
@@ -611,9 +627,13 @@ export interface UIApi {
   getAdOffers(): UiAdOffers;
   /** Reklamı göster; ödül hak edildiyse uygula ve true döndür. */
   watchAd(kind: UiAdRewardKind): Promise<boolean>;
+  /** Dönüş modalı açıkken ödüllü reklamın sonradan yüklenip yüklenmediğini bildirir. */
+  isComebackAdReady?(): boolean;
 
   skipTutorial(): void;
   dismissOnboarding?(kind: 'upgrade' | 'staff'): void;
+  dismissAdChip?(): void;
+  openBoostOffer?(): void;
 
   formatMoney(v: number): string;
   itemInfo(id: ItemId): { name: string; glyph: string; color: number };
@@ -638,7 +658,7 @@ export interface UIRoot {
    * gösterir. Uygulayıcı (HUD) kind'ı yalnız geri çağrıya taşır; metod
    * parametreleri TS'te çift yönlü denetlendiği için HUD'un dar imzası
    * bu sözleşmeyi karşılamaya devam eder. */
-  showAdChip(kind: UiAdRewardKind, glyph: string, title: string, text: string): void;
+  showAdChip(kind: UiAdRewardKind, glyph: string, title: string, text: string, variant?: 'default' | 'urgent' | 'vip'): void;
   hideAdChip(): void;
   /** Çipteki geri sayım halkası: 1 → 0 (kalan ömür oranı). Game her kare yazar. */
   setAdChipProgress(t01: number): void;
@@ -660,6 +680,10 @@ export interface UIRoot {
   handleBack(): boolean;
   /** Açılış perdesini kaldır. */
   hideBoot(): void;
+  /** Doğal mola öncesi 2.8 sn iptal edilebilir "Kahve Molası İkramı" kartını açar. */
+  showBreakPrompt(bonusFormatted: string, onComplete: () => void, onCancel: () => void): void;
+  hideBreakPrompt(): void;
+  readonly breakPromptOpen: boolean;
   /** Zafer / şube açılış kutlaması. */
   celebrate(title: string, subtitle: string, glyph: string): void;
   dispose(): void;

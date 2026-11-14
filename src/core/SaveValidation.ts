@@ -13,13 +13,13 @@ export function validSavedState(value: unknown): boolean {
   if (!record(value) || !number(value.money) || !stringList(value.zones) ||
     !stringList(value.locations) || typeof value.activeLocation !== 'string') return false;
   if (!optionalFields(value, ['totalEarned', 'revenueEarned', 'reputation', 'goalIndex', 'goalProgress',
-    'goalBase', 'prestigePoints', 'prestigeCount', 'dailyStreak', 'coupons', 'weekBase', 'festivalBase',
+    'goalBase', 'prestigePoints', 'prestigeCount', 'dailyStreak', 'brokenStreak', 'coupons', 'weekBase', 'festivalBase',
     'festivalGoalTarget', 'weekPrevServed', 'festPrevItem', 'changeCount', 'changeAt', 'playTime', 'tutorialStep'], number)) return false;
   if (!optionalFields(value, ['upgrades', 'staffCount', 'staffLevel', 'prestigeLevels', 'dailyBase',
     'regularVisits', 'regularMilestones', 'adBuffs', 'dailyPrevDone', 'statsBase'], numberMap)) return false;
   if (!optionalFields(value, ['seenLocations', 'cosmeticsOwned'], stringList)) return false;
   if (!optionalFields(value, ['dailyClaimed', 'vacuumHinted', 'upgradeOnboarded', 'staffOnboarded', 'weekClaimed', 'festivalClaimed'], field => typeof field === 'boolean')) return false;
-  if (!optionalFields(value, ['dailyDay', 'weekKey', 'festivalWeek', 'festivalGoalId', 'changeDay'], field => typeof field === 'string')) return false;
+  if (!optionalFields(value, ['dailyDay', 'brokenStreakDay', 'weekKey', 'festivalWeek', 'festivalGoalId', 'changeDay'], field => typeof field === 'string')) return false;
   if (!optionalFields(value, ['staffByLocation', 'staffLevelByLocation'], field => record(field) && Object.values(field).every(numberMap))) return false;
   if (!optionalFields(value, ['staffHireDeposits'], field => record(field) && Object.values(field).every(roles =>
     record(roles) && Object.values(roles).every(deposit => record(deposit) && number(deposit.count) && number(deposit.paid))))) return false;

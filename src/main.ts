@@ -7,6 +7,7 @@ import { PERSISTED_KEYS } from './core/SaveManager';
 
 import { installCrashReporter } from './core/CrashReporter';
 import { installBrowserShield } from './core/BrowserShield';
+import { analytics } from './core/Analytics';
 
 installCanvasCompat();
 installCrashReporter();
@@ -28,6 +29,7 @@ function fatal(message: string, err?: unknown): void {
 }
 
 async function boot(): Promise<void> {
+  analytics.init();
   performance.mark('fincan:boot-start');
   if (!canvas || !uiHost) {
     fatal(tr('Oyun yüklenemedi: sayfa yapısı eksik.'));
@@ -72,7 +74,7 @@ async function boot(): Promise<void> {
       })(),
     ]);
   } catch (err) {
-    fatal(tr('Karakterler yüklenemedi. Sayfayı yenilemeyi dene.'), err);
+    fatal(tr('Karakterler yüklenemedi. Uygulamayı yeniden başlatın.'), err);
     return;
   }
   try {
@@ -93,7 +95,7 @@ async function boot(): Promise<void> {
     performance.measure('fincan:boot', 'fincan:boot-start', 'fincan:playable');
     (window as unknown as { __fincan?: InstanceType<typeof Game> }).__fincan = game;
   } catch (err) {
-    fatal(tr('WebGL başlatılamadı. Tarayıcı ayarlarından donanım hızlandırmayı açmayı dene.'), err);
+    fatal(tr('3B grafik motoru başlatılamadı. Uygulamayı kapatıp yeniden açın.'), err);
     return;
   }
   /**

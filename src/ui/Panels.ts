@@ -13,10 +13,11 @@ import type {
 import { couponPrice } from './api';
 import { bus, haptic, sfx } from '../core/EventBus';
 import { el, makeRing, retrigger } from './HUD';
+import { createRewardHeroSvg, rewardOfferCopy } from './RewardArt';
 import { ModalFocus, CONTROL_SELECTOR } from './ModalFocus';
 import { clamp01, formatPct } from '../core/MathUtils';
 import { openPrivacyOptions } from '../core/Ads';
-import { isIos } from '../core/Native';
+import { isIos, requestNativeAppReview } from '../core/Native';
 
 /**
  * YAYINLANMIŞ GİZLİLİK POLİTİKASININ ADRESİ.
@@ -48,16 +49,26 @@ export const APP_STORE_URL = (import.meta.env.VITE_IOS_APP_STORE_URL || '').trim
  */
 import { APP_VERSION } from '../core/version';
 
-const TITLES: Record<UiPanelId, string> = {
-  upgrades: tr("Yükseltmeler"),
-  stations: tr("İstasyonlar"),
-  staff: tr("Personel"),
-  locations: tr("Şubeler"),
-  settings: tr("Ayarlar"),
-  goals: tr("Hedefler"),
-  prestige: tr("Sokağı Devret"),
-  decor: tr("Dekorasyon"),
-};
+function panelTitle(id: UiPanelId): string {
+  switch (id) {
+    case 'upgrades':
+      return tr("Yükseltmeler");
+    case 'stations':
+      return tr("İstasyonlar");
+    case 'staff':
+      return tr("Personel");
+    case 'locations':
+      return tr("Şubeler");
+    case 'settings':
+      return tr("Ayarlar");
+    case 'goals':
+      return tr("Hedefler");
+    case 'prestige':
+      return tr("Sokağı Devret");
+    case 'decor':
+      return tr("Dekorasyon");
+  }
+}
 
 type BuyMode = 'ok' | 'poor' | 'maxed';
 
@@ -148,10 +159,10 @@ function formatSingleTransition(cur: string, next: string): string {
     const aUnit = a.slice(aLast + 1);
     const bUnit = b.slice(bLast + 1);
     if (aUnit === bUnit && !/\d/.test(aUnit)) {
-      return `${a.slice(0, aLast)} ➜ ${b.slice(0, bLast)} ${aUnit}`;
+      return `${a.slice(0, aLast)} → ${b.slice(0, bLast)} ${aUnit}`;
     }
   }
-  return `${a} ➜ ${b}`;
+  return `${a} → ${b}`;
 }
 
 function formatStatParts(cur: string, next: string, maxed = false): string[] {
@@ -405,7 +416,7 @@ export class Panels {
     const keep = resetScroll ? 0 : this.body.scrollTop;
     const active = document.activeElement instanceof HTMLElement && this.body.contains(document.activeElement) ? document.activeElement.dataset.focusKey : this.pendingFocusKey;
     this.pendingFocusKey = undefined;
-    this.titleEl.textContent = TITLES[id];
+    this.titleEl.textContent = panelTitle(id);
     this.body.textContent = '';
 
     const tabbed = id === 'upgrades' || id === 'stations' || id === 'staff';
@@ -624,6 +635,15 @@ export class Panels {
       main.appendChild(el('div', 'c-desc', u.desc));
 
       const meta = el('div', 'st-meta');
+      if (!u.maxed && u.roiBadge) {
+        meta.appendChild(
+          el(
+            'span',
+            'roi-pill ' + (u.roiBadge === 'bottleneck' ? 'hot' : 'roi'),
+            u.roiBadge === 'bottleneck' ? tr("🔥 DARBOĞAZ") : tr("⚡ EN İYİ GETİRİ"),
+          ),
+        );
+      }
       for (const part of formatStatParts(u.valueText, u.nextText, u.maxed)) {
         meta.appendChild(el('span', 'tag mint', '⚡ ' + part));
       }
@@ -700,15 +720,18 @@ export class Panels {
     const main = el('div', 'st-main');
     const headRow = el('div', 'c-row');
     headRow.appendChild(el('span', 'st-name', s.name));
-    if (!s.locked && s.speedDeltaBadge && s.hasSpeed && s.speedLevel < s.speedMaxLevel) {
-      headRow.appendChild(el('span', 'delta-pill', s.speedDeltaBadge));
-    }
-    if (!s.locked && s.capDeltaBadge && s.hasCap && s.capLevel < s.capMaxLevel) {
-      headRow.appendChild(el('span', 'delta-pill gold', s.capDeltaBadge));
-    }
     main.appendChild(headRow);
 
     const meta = el('div', 'st-meta');
+    if (!s.locked && s.roiBadge) {
+      meta.appendChild(
+        el(
+          'span',
+          'roi-pill ' + (s.roiBadge === 'bottleneck' ? 'hot' : 'roi'),
+          s.roiBadge === 'bottleneck' ? tr("🔥 DARBOĞAZ") : tr("⚡ EN İYİ GETİRİ"),
+        ),
+      );
+    }
     if (s.hasSpeed) {
       const spMaxed = s.speedLevel >= s.speedMaxLevel;
       for (const part of formatStatParts(s.speedText, s.nextSpeedText, spMaxed)) {
@@ -721,6 +744,12 @@ export class Panels {
       for (const part of formatStatParts(s.capText, s.nextCapText, capMaxed)) {
         meta.appendChild(el('span', 'tag gold', capGlyph + part));
       }
+    }
+    if (!s.locked && s.speedDeltaBadge && s.hasSpeed && s.speedLevel < s.speedMaxLevel) {
+      meta.appendChild(el('span', 'delta-pill', s.speedDeltaBadge));
+    }
+    if (!s.locked && s.capDeltaBadge && s.hasCap && s.capLevel < s.capMaxLevel) {
+      meta.appendChild(el('span', 'delta-pill gold', s.capDeltaBadge));
     }
     if (s.capBlockedReason) meta.appendChild(el('span', 'c-desc', s.capBlockedReason));
     if (s.locked) meta.appendChild(el('span', 'tag lock-tag', s.unlockHint ?? ('🔒 ' + tr('Kilitli'))));
@@ -1133,7 +1162,16 @@ export class Panels {
       rateBtn.href = storeUrl;
       rateBtn.target = '_blank';
       rateBtn.rel = 'noopener noreferrer';
-      rateBtn.addEventListener('click', () => sfx('ui_click'));
+      rateBtn.addEventListener('click', (ev) => {
+        sfx('ui_click');
+        if (!isIos) return;
+        ev.preventDefault();
+        void requestNativeAppReview(false).then((requested) => {
+          if (!requested && typeof window !== 'undefined') {
+            window.open(storeUrl, '_blank', 'noopener,noreferrer');
+          }
+        });
+      });
       acts.appendChild(rateBtn);
     }
 
@@ -1223,7 +1261,7 @@ export class Panels {
 
   private buildFooter(): HTMLElement {
     const foot = el('div', 'set-footer');
-    foot.appendChild(el('div', 'set-foot-brand', '☕ KAFE CADDESİ'));
+    foot.appendChild(el('div', 'set-foot-brand', tr("☕ KAFE CADDESİ")));
     foot.appendChild(el('div', 'set-foot-sub', tr("Sokağın En Sıcak Kahve Serüveni")));
     foot.appendChild(el('div', 'set-foot-ver', tr("Sürüm {0} · Mobil", APP_VERSION)));
     foot.appendChild(el('div', 'set-foot-copy', tr("Tüm hakları saklıdır.")));
@@ -1444,11 +1482,36 @@ export class Panels {
     this.body.appendChild(el('div', 'sec-title', tr("Günlük Ödül")));
 
     const box = el('div', 'daily');
+    if ((d.brokenStreak ?? 0) >= 2 && d.canRecoverStreak && this.api.recoverDailyStreak) {
+      const lost = d.brokenStreak!;
+      const freeze = el('div', 'streak-freeze');
+      freeze.appendChild(el('div', 'streak-freeze-title', tr("🔥 {0} Günlük Serin Bozuldu!", lost)));
+      const fBtn = el('button', 'btn btn-gold btn-wide', tr("📺 SERİYİ KURTAR ({0} Gün)", lost));
+      fBtn.type = 'button';
+      fBtn.addEventListener('click', () => {
+        if (fBtn.disabled) return;
+        fBtn.disabled = true;
+        sfx('ui_click');
+        void this.api.recoverDailyStreak?.().then((ok) => {
+          fBtn.disabled = false;
+          if (ok && this.current !== null) this.build(this.current);
+        });
+      });
+      freeze.appendChild(fBtn);
+      box.appendChild(freeze);
+    }
+
     const ladder = el('div', 'daily-ladder');
     for (let i = 0; i < d.ladder; i++) {
-      const cell = el('div', 'dl-cell' + (i < d.streak ? ' past' : i === d.streak ? ' now' : ''));
+      const isCrown = i === d.ladder - 1;
+      const cell = el(
+        'div',
+        'dl-cell' +
+          (i < d.streak ? ' past' : i === d.streak ? ' now' : '') +
+          (isCrown ? ' dl-crown' : ''),
+      );
       cell.appendChild(el('span', 'dl-day', `${i + 1}`));
-      cell.appendChild(el('span', 'dl-mark', i < d.streak ? '✓' : '🎁'));
+      cell.appendChild(el('span', 'dl-mark', i < d.streak ? '✓' : isCrown ? '🎟️' : '🎁'));
       ladder.appendChild(cell);
     }
     box.appendChild(ladder);
@@ -1680,6 +1743,7 @@ export class Panels {
       main.appendChild(
         el('div', 'c-desc', tr("Kafeyi devret, +{0} Fincan Puanı kazan. Puanlar kalıcı yükseltmelere gider.", p.gain)),
       );
+      main.appendChild(el('div', 'pres-safe-strip', tr("✅ Dekorasyonlar & Kuponlar Kalır · ✅ Günlük Seri Korunur")));
     } else {
       // Ufuktaki hedef: ne kadar kaldığı SAYIYLA yazar, çubuk da onu çizer.
       main.appendChild(
@@ -1800,6 +1864,7 @@ export class Panels {
 
     const info = el('p', undefined, tr("Şimdi devredersen +{0} Fincan Puanı kazanırsın.", p.gain));
     box.appendChild(info);
+    box.appendChild(el('div', 'pres-safe-strip', tr("✅ Dekorasyonlar & Kuponlar Kalır · ✅ Günlük Seri Korunur")));
 
     const row = el('div', 'c-actions');
     const first = actionBtn(tr("SOKAĞI DEVRET"), `+${p.gain} ☕`, 'btn-gold btn-wide');
@@ -2045,30 +2110,33 @@ export class Panels {
    */
   private adOffer(kind: UiAdKind): void {
     const offers = this.api.getAdOffers();
-    const META: Record<UiAdKind, { o: UiAdOffer; glyph: string; ad: string }> = {
-      happy_hour: { o: offers.happyHour, glyph: '🎉', ad: tr("Mutlu Saat") },
-      zone_finish: { o: offers.zoneFinish, glyph: '🚧', ad: tr("Bölümü Tamamla") },
-      robot_vacuum: { o: offers.robotVacuum, glyph: '🤖', ad: tr("Süpürge Robotu") },
-      stock_refill: { o: offers.stockRefill, glyph: '📦', ad: tr("Depoları Doldur") },
-      daily_double: { o: offers.dailyDouble, glyph: '🎁', ad: tr("Ödülü İkiye Katla") },
+    const META: Record<UiAdKind, { o: UiAdOffer; ad: string }> = {
+      happy_hour: { o: offers.happyHour, ad: tr("Mutlu Saat") },
+      zone_finish: { o: offers.zoneFinish, ad: tr("Bölümü Tamamla") },
+      robot_vacuum: { o: offers.robotVacuum, ad: tr("Süpürge Robotu") },
+      stock_refill: { o: offers.stockRefill, ad: tr("Depoları Doldur") },
+      daily_double: { o: offers.dailyDouble, ad: tr("Ödülü İkiye Katla") },
     };
     const meta = META[kind];
     const o = meta.o;
     if (!o.ready || this.body.querySelector('.offer')) return;
 
+    const copy = rewardOfferCopy(kind, 'default');
     const card = el('div', 'card offer');
-    card.appendChild(el('div', 'c-glyph', meta.glyph));
+    const iconSlot = el('div', 'c-glyph offer-hero-glyph');
+    iconSlot.appendChild(createRewardHeroSvg(kind));
+    card.appendChild(iconSlot);
 
     const main = el('div', 'c-main');
     const top = el('div', 'c-row');
     top.appendChild(el('span', 'c-name', meta.ad));
-    top.appendChild(el('span', 'tag mint', tr("HEDİYE")));
+    top.appendChild(el('span', 'tag mint', copy.badge));
     main.appendChild(top);
     main.appendChild(el('div', 'c-desc', o.text));
     card.appendChild(main);
 
     /* Reklam asenkron: buton beklerken kilitlenir, ödül gelmezse açılır. */
-    const btn = actionBtn(tr("İzle"), tr("REKLAM"), 'btn-mint');
+    const btn = actionBtn('🎬 ' + copy.cta, tr("Kısa Video"), 'btn-mint');
     let busy = false;
     btn.addEventListener('click', () => {
       if (busy) return;

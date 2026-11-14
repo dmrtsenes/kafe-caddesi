@@ -11,6 +11,7 @@ import {
   targetFps,
   setNativeThermalStatus,
   setAutoQuality,
+  isLowEndGpuString,
 } from "./Quality.ts";
 
 describe("composeQuality", () => {
@@ -28,7 +29,7 @@ describe("composeQuality", () => {
     const cold = composeQuality("high", 0),
       hot = composeQuality("high", 5);
     assert.ok(hot.dprCap < cold.dprCap);
-    assert.equal(hot.pixelBudget, cold.pixelBudget * 0.75);
+    assert.equal(hot.pixelBudget, Math.floor(cold.pixelBudget * 0.62));
     assert.equal(hot.shadows, false);
     assert.equal(hot.charLod, cold.charLod);
     assert.equal(hot.maxCustomers, cold.maxCustomers);
@@ -44,13 +45,13 @@ describe("composeQuality", () => {
 });
 
 describe('sustained load protection',()=>{
- it('preserves sharpness at the first pressure step, then scales under continuing pressure',()=>{
+ it('steps down 3D resolution progressively from the first pressure step while preserving customer count',()=>{
   for(const tier of ['low','medium','high'] as const){
    let previous=composeQuality(tier,0);
    for(let heat=1;heat<=5;heat++){
     const next=composeQuality(tier,heat);
-    if(heat<=2){assert.equal(next.pixelBudget,previous.pixelBudget);assert.equal(next.dprCap,previous.dprCap);}
-    else {assert.ok(next.pixelBudget<previous.pixelBudget);assert.ok(next.dprCap<previous.dprCap);}
+    assert.ok(next.pixelBudget<previous.pixelBudget);
+    assert.ok(next.dprCap<previous.dprCap);
     assert.equal(next.maxCustomers,previous.maxCustomers);previous=next;
    }
   }
@@ -248,5 +249,19 @@ describe("quality listener lifetime", () => {
       applyTier("low", true);
       assert.equal(count, 0);
     } finally { stopFirst(); stopSecond(); applyTier("high", true); resetHeat(); }
+  });
+});
+
+describe("isLowEndGpuString", () => {
+  it("classifies budget Adreno 61x, Mali-G5x, and IMG GE8xxx GPUs as low-end", () => {
+    assert.equal(isLowEndGpuString("Adreno (TM) 610"), true);
+    assert.equal(isLowEndGpuString("Adreno (TM) 618"), true);
+    assert.equal(isLowEndGpuString("Adreno 619"), true);
+    assert.equal(isLowEndGpuString("Mali-G52 MC2"), true);
+    assert.equal(isLowEndGpuString("Mali-G57 MC2"), true);
+    assert.equal(isLowEndGpuString("IMG GE8320"), true);
+    assert.equal(isLowEndGpuString("Adreno (TM) 650"), false);
+    assert.equal(isLowEndGpuString("Adreno (TM) 740"), false);
+    assert.equal(isLowEndGpuString("Apple GPU"), false);
   });
 });

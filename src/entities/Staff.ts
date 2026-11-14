@@ -1,6 +1,5 @@
-import { Actor } from './Actor';
+import { Actor, safeCreateCharacter } from './Actor';
 import { CarryStack } from './CarryStack';
-import { createCharacter } from '../chars';
 import type { ItemId } from '../data/items';
 import type { StaffRole } from '../data/staff';
 import {
@@ -134,7 +133,7 @@ export class Staff extends Actor {
    */
   constructor(role: StaffRole, index: number, level: number, uniform?: string) {
     super(
-      createCharacter(STAFF_CHAR_ROLE[role], {
+      safeCreateCharacter(STAFF_CHAR_ROLE[role], {
         variant: index,
         seed: (role.charCodeAt(0) * 977 + index * 131) | 0,
         level,

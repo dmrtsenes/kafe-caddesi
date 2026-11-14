@@ -72,16 +72,16 @@ const D = (d: ItemDef) => d;
 
 export const ITEMS: Record<ItemId, ItemDef> = {
   /* ---------------- menü: Köşe Şubesi ---------------- */
-  cay:        { id: 'cay',        get name() { return tr("Çay"); },        tier: 'product', shape: 'teaglass',      color: 0xc2551f, accent: 0xf2d9a8, glyph: '🫖', price: 25,   dwell: 0.75 },
-  latte:      { id: 'latte',      get name() { return tr("Sütlü Kahve"); }, tier: 'product', shape: 'lattecup',      color: 0xf3efe6, accent: 0xc08a4e, glyph: '☕', price: 82,   dwell: 1.0 },
-  tost:       { id: 'tost',       get name() { return tr("Tost"); },       tier: 'product', shape: 'sandwich',      color: 0xd9a55c, accent: 0xf2c94c, glyph: '🥪', price: 210,  dwell: 1.2 },
-  waffle:     { id: 'waffle',     get name() { return tr("Vafıl"); },       tier: 'product', shape: 'waffle',        color: 0xe8bd72, accent: 0xd8567a, glyph: '🧇', price: 520,  dwell: 1.3 },
-  frappe:     { id: 'frappe',     get name() { return tr("Buzlu Kahve"); }, tier: 'product', shape: 'frappeglass',   color: 0xc8a077, accent: 0xfff4e2, glyph: '🥤', price: 1150, dwell: 1.05 },
+  cay:        { id: 'cay',        get name() { return tr("Çay"); },        tier: 'product', shape: 'teaglass',      color: 0xc2551f, accent: 0xf2d9a8, glyph: '🫖', price: 19,   dwell: 0.75 },
+  latte:      { id: 'latte',      get name() { return tr("Sütlü Kahve"); }, tier: 'product', shape: 'lattecup',      color: 0xf3efe6, accent: 0xc08a4e, glyph: '☕', price: 58,   dwell: 1.0 },
+  tost:       { id: 'tost',       get name() { return tr("Tost"); },       tier: 'product', shape: 'sandwich',      color: 0xd9a55c, accent: 0xf2c94c, glyph: '🥪', price: 150,  dwell: 1.15 },
+  waffle:     { id: 'waffle',     get name() { return tr("Vafıl"); },       tier: 'product', shape: 'waffle',        color: 0xe8bd72, accent: 0xd8567a, glyph: '🧇', price: 380,  dwell: 1.2 },
+  frappe:     { id: 'frappe',     get name() { return tr("Buzlu Kahve"); }, tier: 'product', shape: 'frappeglass',   color: 0xc8a077, accent: 0xfff4e2, glyph: '🥤', price: 850,  dwell: 1.0 },
 
   /* ---------------- menü: Sahil Şubesi ---------------- */
-  smoothie:   { id: 'smoothie',   get name() { return tr("Meyve Karışımı"); }, tier: 'product', shape: 'smoothieglass', color: 0xff8fa8, accent: 0x7ed957, glyph: '🥤', price: 2400, dwell: 0.95 },
-  dondurma:   { id: 'dondurma',   get name() { return tr("Dondurma"); },   tier: 'product', shape: 'cone',          color: 0xfff2f6, accent: 0xffb0c4, glyph: '🍦', price: 3600, dwell: 0.8 },
-  milkshake:  { id: 'milkshake',  get name() { return tr("Sütlü Kokteyl"); }, tier: 'product', shape: 'shake',         color: 0xffd9e2, accent: 0xd8567a, glyph: '🥤', price: 5200, dwell: 1.1 },
+  smoothie:   { id: 'smoothie',   get name() { return tr("Meyve Karışımı"); }, tier: 'product', shape: 'smoothieglass', color: 0xff8fa8, accent: 0x7ed957, glyph: '🥤', price: 1600, dwell: 0.95 },
+  dondurma:   { id: 'dondurma',   get name() { return tr("Dondurma"); },   tier: 'product', shape: 'cone',          color: 0xfff2f6, accent: 0xffb0c4, glyph: '🍦', price: 2500, dwell: 0.8 },
+  milkshake:  { id: 'milkshake',  get name() { return tr("Sütlü Kokteyl"); }, tier: 'product', shape: 'shake',         color: 0xffd9e2, accent: 0xd8567a, glyph: '🥤', price: 3800, dwell: 1.1 },
 
   /* ---------------- sarf ---------------- */
   pecete:     { id: 'pecete',     get name() { return tr("Peçete"); },     tier: 'supply', shape: 'napkin', color: 0xfdfbf5, accent: 0xd8c9a8, glyph: '🧻', price: 0 },

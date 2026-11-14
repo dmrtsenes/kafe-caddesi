@@ -55,6 +55,23 @@ export class FloatingTextPool {
   }
 
   spawn(x: number, y: number, text: string, tone: FloatTone = 'money'): void {
+    // Eşzamanlı yakın doğumları dikey basamakla ki "+₺30" ve "+₺50" üst üste binmesin
+    let spawnY = y;
+    for (let pass = 0; pass < 4; pass++) {
+      let clash = false;
+      for (let i = 0; i < this.slots.length; i++) {
+        const o = this.slots[i];
+        if (!o.live || o.t > 0.38) continue;
+        const oy = o.y - RISE * easeOutCubic(o.t / LIFE);
+        if (Math.abs(o.x - x) < 52 && Math.abs(oy - spawnY) < 24) {
+          clash = true;
+          break;
+        }
+      }
+      if (!clash) break;
+      spawnY -= 24;
+    }
+
     const s = this.take();
     if (s.text !== text) {
       s.text = text;
@@ -66,13 +83,13 @@ export class FloatingTextPool {
       s.tone = tone;
     }
     s.x = x;
-    s.y = y;
+    s.y = spawnY;
     s.drift = (Math.random() * 2 - 1) * 16;
     s.t = 0;
     s.alpha = 1;
     s.root.style.opacity = '1';
     // Kökte scale YOK (netlik notu ui.css'te); pop, span'deki keyframe'de.
-    s.root.style.transform = 'translate3d(' + (x | 0) + 'px,' + (y | 0) + 'px,0)';
+    s.root.style.transform = 'translate3d(' + (x | 0) + 'px,' + (spawnY | 0) + 'px,0)';
     s.pop = !s.pop;
     s.root.classList.toggle('ft-pop-a', s.pop);
     s.root.classList.toggle('ft-pop-b', !s.pop);

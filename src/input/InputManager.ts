@@ -87,15 +87,26 @@ export class InputManager {
     const onKeyUp = (e: KeyboardEvent) => {
       this.keys.delete(normalizeKey(e));
     };
-    const onBlur = () => this.keys.clear();
+    const onBlur = () => {
+      this.keys.clear();
+      this.resetPointer();
+    };
+    const onVisibility = () => {
+      if (document.hidden) {
+        this.keys.clear();
+        this.resetPointer();
+      }
+    };
 
     window.addEventListener('keydown', onKeyDown, { passive: false });
     window.addEventListener('keyup', onKeyUp);
     window.addEventListener('blur', onBlur);
+    document.addEventListener('visibilitychange', onVisibility);
     this.detach.push(() => {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
       window.removeEventListener('blur', onBlur);
+      document.removeEventListener('visibilitychange', onVisibility);
     });
 
     const onResize = () => this.updateRadius();
@@ -168,13 +179,22 @@ export class InputManager {
     this.onFirstInteraction?.();
   }
 
+  private resetPointer(): void {
+    this.pointerId = null;
+    this.dragActive = false;
+    this.smoothX = 0;
+    this.smoothY = 0;
+    this.move.x = 0;
+    this.move.y = 0;
+    this.move.mag = 0;
+    this.move.active = false;
+  }
+
   setEnabled(on: boolean): void {
     this.enabled = on;
     if (!on) {
-      this.pointerId = null;
-      this.dragActive = false;
-      this.smoothX = 0;
-      this.smoothY = 0;
+      this.keys.clear();
+      this.resetPointer();
     }
   }
 

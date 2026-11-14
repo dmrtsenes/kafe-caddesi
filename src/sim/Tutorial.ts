@@ -56,7 +56,7 @@ export const TUTORIAL_STEPS: TutorialStepDef[] = [
   {
     text: 'Ekrana bas ve sürükle.',
     pointAt: (w) => station(w, 'k_tezgah_1'),
-    verb: 'KASAYA YÜRÜ',
+    verb: 'BURAYA GEL',
     done: (c) => c.movedDistance > 3,
   },
   {
@@ -110,8 +110,16 @@ export const TUTORIAL_STEPS: TutorialStepDef[] = [
       }
       return null;
     },
-    verb: (_w, _state, p) =>
-      p.hasItem('bulasik') ? 'KOVAYA AT' : p.carryCount > 0 ? 'RAFA KOY' : 'MASAYI HAZIRLA',
+    verb: (w, _state, p) => {
+      if (p.hasItem('bulasik')) return 'KOVAYA AT';
+      if (p.carryCount > 0) return 'RAFA KOY';
+      for (const t of w.tables) {
+        if (!t.locked && !t.seatTaken.some(Boolean) && (t.dishes > 0 || t.soil > 0.02)) {
+          return t.dishes > 0 ? 'BULAŞIĞI TOPLA' : 'MASAYI PARLAT';
+        }
+      }
+      return 'MASAYI HAZIRLA';
+    },
     done: (c) => c.cleanedTable,
   },
   {

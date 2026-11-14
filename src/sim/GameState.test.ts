@@ -42,7 +42,7 @@ describe('branch-specific staff', () => {
       staffLevel: { waiter: 99, cashier: 99, barista: 99, busser: 99 },
     });
     assert.deepEqual(state.staffCountAt('kose'), { waiter: 5, cashier: 2, barista: 5, busser: 3 });
-    assert.deepEqual(state.staffCountAt('sahil'), { waiter: 3, cashier: 1, barista: 3, busser: 1 });
+    assert.deepEqual(state.staffCountAt('sahil'), { waiter: 3, cashier: 2, barista: 3, busser: 3 });
     assert.equal(state.staffLevelAt('kose').waiter, 10);
   });
 
@@ -100,8 +100,8 @@ describe('offline staff hire deposits', () => {
     assert.equal(state.money, 1600);
     assert.equal(state.staffCount.waiter, 1);
     assert.equal(state.hirePaidFor('waiter'), 0);
-    assert.equal(state.hireTotalCostFor('waiter'), 740);
-    assert.equal(state.hireCostFor('waiter'), 740);
+    assert.equal(state.hireTotalCostFor('waiter'), 820);
+    assert.equal(state.hireCostFor('waiter'), 820);
     assert.equal(state.hire('waiter'), false, 'one starter shelf supports one assistant');
     assert.equal(state.money, 1600);
   });
@@ -116,10 +116,10 @@ describe('offline staff hire deposits', () => {
     assert.equal(state.staffCount.waiter, 1);
     assert.equal(state.money, 2600);
     assert.equal(state.hirePaidFor('waiter'), 0);
-    assert.equal(state.hireCostFor('waiter'), 740);
+    assert.equal(state.hireCostFor('waiter'), 820);
     state.payStaffHire('waiter', 100);
     assert.equal(state.hirePaidFor('waiter'), 100);
-    assert.equal(state.hireCostFor('waiter'), 640);
+    assert.equal(state.hireCostFor('waiter'), 720);
   });
 
   it('does not pay locked roles, exhausted staff slots or invalid contribution values', () => {
@@ -184,7 +184,7 @@ describe('offline staff hire deposits', () => {
     const state = new GameState();
     assert.equal(state.hireCostFor('waiter'), 400);
     state.staffCount.waiter = 5;
-    assert.equal(state.hireCostFor('waiter'), 8668);
+    assert.equal(state.hireCostFor('waiter'), 14482);
   });
 });
 
@@ -222,27 +222,27 @@ describe('included branch starter areas', () => {
     assert.equal(restored.money,123);assert.equal(restored.isZoneUnlocked('sahil','p1'),true);
   });
 
-  it('eases staff inflation shock at sahil with 3.5x multiplier instead of 20x', () => {
-    assert.equal(BRANCH_STAFF_MULTIPLIER, 3.5);
+  it('eases staff inflation shock at sahil with 3.2x multiplier instead of 20x', () => {
+    assert.equal(BRANCH_STAFF_MULTIPLIER, 3.2);
     const state = new GameState();
     const koseWaiter = state.hireTotalCostFor('waiter', 'kose');
     const sahilWaiter = state.hireTotalCostFor('waiter', 'sahil');
-    assert.equal(sahilWaiter, Math.round(koseWaiter * 3.5));
-    assert.equal(sahilWaiter, 1400); // 400 * 3.5, down from 8000
+    assert.equal(sahilWaiter, Math.round(koseWaiter * 3.2));
+    assert.equal(sahilWaiter, 1280); // 400 * 3.2, down from 8000
   });
 
   it('deducts only the actual branch price leaving savings intact', () => {
     const state = new GameState();
-    const initialSavings = 250_000;
+    const initialSavings = 480_000;
     state.money = initialSavings;
     const branchPrice = BRANCH_COSTS.sahil;
-    assert.equal(branchPrice, 180_000);
+    assert.equal(branchPrice, 380_000);
     assert.ok(state.canAfford(branchPrice));
     assert.equal(state.spend(branchPrice), true);
     state.unlockLocation('sahil');
     assert.equal(state.isLocationUnlocked('sahil'), true);
     assert.equal(state.money, initialSavings - branchPrice);
-    assert.equal(state.money, 70_000);
+    assert.equal(state.money, 100_000);
   });
 });
 
@@ -269,11 +269,43 @@ describe('upgrade and staff onboarding persistence', () => {
   it('auto-migrates legacy saves that already have upgrades or staff so returning players are not re-prompted', () => {
     const state = new GameState();
     state.load({
-      playerUpgrades: { speed: 2, carry: 0, tip: 0, magnet: 0 },
+      playerUpgrades: { speed: 2, carry: 3, tip: 1, magnet: 0 },
       staffCount: { waiter: 1, cashier: 0, barista: 0, busser: 0 },
     });
+    assert.equal(state.upgrades.speed, 2);
+    assert.equal(state.upgrades.capacity, 3);
+    assert.equal(state.upgrades.charm, 1);
     assert.equal(state.upgradeOnboarded, true);
     assert.equal(state.staffOnboarded, true);
+  });
+});
+
+describe('wallet and reputation numerical integrity', () => {
+  it('rejects NaN, Infinity and negative values across earn, grant, spend and reputation', () => {
+    const state = new GameState();
+    state.money = 500;
+    state.earn(Number.NaN);
+    state.earn(Number.POSITIVE_INFINITY);
+    state.earn(-100);
+    state.grant(Number.NaN);
+    state.grant(Number.POSITIVE_INFINITY);
+    state.grant(-50);
+    assert.equal(state.money, 500);
+    assert.equal(state.totalEarned, 0);
+    assert.equal(state.revenueEarned, 0);
+
+    assert.equal(state.canAfford(Number.NaN), false);
+    assert.equal(state.canAfford(Number.POSITIVE_INFINITY), false);
+    assert.equal(state.canAfford(-1), false);
+    assert.equal(state.spend(Number.NaN), false);
+    assert.equal(state.spend(Number.POSITIVE_INFINITY), false);
+    assert.equal(state.spend(-50), false);
+    assert.equal(state.money, 500);
+
+    const repBefore = state.reputation;
+    state.addReputation(Number.NaN);
+    state.addReputation(Number.POSITIVE_INFINITY);
+    assert.equal(state.reputation, repBefore);
   });
 });
 

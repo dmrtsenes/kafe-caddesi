@@ -1,20 +1,44 @@
-BAŞLIK (27/30)
-Kafe Caddesi: İşletme Oyunu
+BAŞLIK (28/30)
+Kafe Caddesi: Kafe & İşletme
 
-KISA AÇIKLAMA (64/80)
-Kahve hazırla, masalara servis yap ve kendi kafe işletmeni büyüt
+KISA AÇIKLAMA (78/80)
+Çay ve kahve hazırla, masalara servis yap, salonu süpür ve kendi kafeni büyüt.
 
-TAM AÇIKLAMA (1219/4000)
-Kafe Caddesi, masalara servis yapıp kazancınla işletmeni büyüttüğün hareketli bir kafe oyunu. Tepsini al, siparişleri karşıla ve küçük kafene yeni alanlar kazandır.
+BU SÜRÜMDEKİ YENİLİKLER (423/500)
+v1.0.9 — Akıcı Mobil Performans ve Dengeli Ekip İş Bölümü:
+• Otomatik mobilde 60 FPS deneyimi koruyan kademeli 3D çözünürlük ve hareketli kamera optimizasyonu eklendi.
+• Tezgâhtar önceliği açık ürün raflarını dolduracak şekilde yenilendi; taze masa servisi, hızlı bahşiş ve VIP masalar tamamen sende kalır.
+• Masa Görevlisi bulaşık ve masa silmeye odaklandı; elektrikli süpürge ve lavabo bakım ödülleri doğrudan senin olur.
 
-Kahve ve çay hazırla, tost gibi yiyecekleri doğru müşteriye götür. Paket servis raflarını dolu tut, masalardaki siparişleri takip et ve biriken kazancını kasadan topla. Dokunup sürükleyerek hareket et; ürün alma ve servis işlemleri ilgili noktaya yaklaştığında gerçekleşir.
+TAM AÇIKLAMA (3009/4000)
+Kafe Caddesi, sıcak çay ve kahve kokusunu hızlı masa servisiyle birleştiren 3D bir kafe işletme oyunu ve restoran simülasyonudur. Tepsini eline al, masada bekleyen müşterilere siparişlerini yetiştir, kasada biriken paraları topla ve mahalle köşesindeki küçük dükkanını dev bir kafe zincirine dönüştür.
 
-Temiz bir kafe için bulaşıkları kaldır, masaları sil ve elektrikli süpürgenle zemini temizle. Servis, üretim ve bakım arasında kendi iş sıralamanı kur.
+AKICI MASA SERVİSİ VE PAKET SATIŞ DENGESİ
+Her adımda oyunun merkezindesin ve restoran temposunu bizzat yönetirsin. Semaverden taze çay, kahve makinesinden sütlü kahve, taş fırından sıcak tost, tatlı dolabından vafıl ve buzlu kahve doğrudan servise hazır çıkar:
+• Masada Servis: Oturan müşterilere tepsiyle doğrudan servis yaparak 1,5 kat hesap ve hızlı servis bahşişi kazan.
+• Paket Servis Rafları: Acelesi olan kuryeler ve ofis çalışanları için rafları dolu tut, satış hızını kesme.
+• Doğrudan Üretim Akışı: Her makine bitmiş ürün üretir; ara ürün taşıma yükü olmadan kendi servis ritmini kur.
 
-Tezgâhtar, kasiyer, komi ve barista işe alarak ekibini geliştir. Personelin belirli işlerde yardımcı olur; masalara servis yapmak ve kazancı toplamak senin elindedir. Kazandıklarını makinelere, taşıma kapasitesine ve yeni alanlara yatır.
+ELEKTRİKLİ SÜPÜRGE VE TEMİZLİKTEN ANINDA KAZANÇ
+Hareketli bir kafe ve restoran yönetiminde temiz salon doğrudan gelir demektir. Bu oyunda yaptığın her bakım işi kasana anında nakit olarak döner:
+• Masadan kalkan misafirlerin bulaşıklarını topla ve masaları silerek yeni müşterilere yer aç.
+• Elektrikli süpürgeni al, kalabalık saatlerde kirlenen salon zeminini tek geçişte süpür ve anında nakit ödül topla.
+• Lavaboları aç, peçete ve tuvalet kâğıdı raflarını doldurarak hijyen puanını 100'de tut; bahşiş çarpanını %25 artır.
 
-Yeni masalar ve odalar aç, ilerledikçe Sahil şubesine uzan. Dekor ve üniforma seçenekleriyle kendi tarzını belirle. Günlük hedefler ve festival görevleriyle işletmene yeni amaçlar ekle.
+GARSON, KASİYER VE BARİSTA EKİBİNİ İŞE AL
+Kafe büyüdükçe yükünü paylaşmak için dört farklı rolde personel işe al ve seviyelerini yükselt:
+1. Tezgâhtar (Garson): Makinelerden çıkan ürünleri paket servis raflarına dizer ve uzun süre bekleyen normal masalara yedek servis desteği verir; hızlı bahşişler ve VIP siparişler hep sende kalır.
+2. Kasiyer: Sipariş tezgâhındaki kuyruğu eritir ve kasada nakit biriktirir.
+3. Masa Görevlisi (Komi): Boşalan masaların bulaşıklarını kaldırır ve masa yüzeylerini parlatır.
+4. Kahve Ustası (Barista): Makinelerin başında durarak hazırlık hızını %85'e kadar artırır.
 
-Idle arcade akışını işletme geliştirmeyle birleştiren bu oyunda işin başındasın. Sen yokken makinelerde stok birikebilir; para aktif oynanışla kazanılır.
+KÖŞE ŞUBESİNDEN SAHİL ŞUBESİNE BÜYÜME VE DEKORASYON
+Kazandığın parayı ödeme pedlerine yatırarak yeni masalar, VIP Salon, Müzik Köşesi ve Açık Teras aç. VIP mermer masalarda 2,4 kat gelir elde et. İlk şubeni tamamladığında Sahil Şubesi'ne geçerek meyve karışımı (smoothie), dondurma ve sütlü kokteyl (milkshake) satmaya başla. Duvar boyasını, ahşap parke veya damalı karo zeminleri, masa tablalarını ve ekip üniformalarını kendi tarzına göre dekore et.
 
-Türkçe ve İngilizce dil seçenekleriyle oyna.
+CANLI OLAYLAR, FESTİVALLER VE GÜNLÜK HEDEFLER
+• Hesabı ödemeden kaçan müşteriyi yakala, kasayı koru.
+• Kafeni ziyaret eden sosyal medya fenomenine zamanında servis yap, 3,7 kat ödeme ve itibar kazan.
+• Yoğun Saat (Rush Hour) dalgalarında hızını konuştur, bozulan makineleri tamir et.
+• Günlük görevler, 7 günlük ödül serisi, haftalık ürün festivalleri ve Sokağı Devret (Prestij) sistemiyle kalıcı çarpanlar aç.
+
+Tek elle rahat dikey oynanış, çevrimdışı stok birikimi, Türkçe ve İngilizce dil desteğiyle Kafe Caddesi seni bekliyor.

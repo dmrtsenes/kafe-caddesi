@@ -18,3 +18,19 @@ export function chooseUpgradePressure(stations: readonly UpgradePressure[]): Upg
   }
   return null;
 }
+
+/** Pick the highest relative gain-per-coin candidate among unlocked upgrade options. */
+export function pickBestRoiId(candidates: readonly { id: string; cost: number; weight: number }[]): string | null {
+  let bestId: string | null = null;
+  let bestScore = 0;
+  for (let i = 0; i < candidates.length; i++) {
+    const c = candidates[i];
+    if (!(c.cost > 0) || !(c.weight > 0)) continue;
+    const score = c.weight / c.cost;
+    if (score > bestScore) {
+      bestScore = score;
+      bestId = c.id;
+    }
+  }
+  return bestId;
+}

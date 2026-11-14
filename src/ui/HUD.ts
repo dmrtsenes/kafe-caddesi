@@ -1,10 +1,11 @@
 import { tr,localeTag } from "../core/I18n";
 import { HAPPY_HOUR_STEP_SECONDS } from '../core/Ads';
-import type { UIApi, UiAdKind, UiEventBanner, UiHudState, UiPanelId, UiSideActivityRow } from './api';
+import type { UIApi, UiAdRewardKind, UiEventBanner, UiHudState, UiPanelId, UiSideActivityRow } from './api';
 import { bus, sfx } from '../core/EventBus';
 import { clamp01, damp, formatPct } from '../core/MathUtils';
 
 import { setIconText } from './Icons';
+import { createClapperPlaySvg, createRewardHeroSvg, rewardOfferCopy } from './RewardArt';
 
 /** Küçük DOM yardımcısı — tüm UI modülleri bunu kullanır. */
 export function el<K extends keyof HTMLElementTagNameMap>(
@@ -64,10 +65,10 @@ interface SideDef {
 }
 
 const SIDE: readonly SideDef[] = [
-  { id: 'upgrades', glyph: '⬆️', cap: tr("YÜKSELT"), label: tr("Yükseltmeler") },
-  { id: 'staff', glyph: '👷', cap: tr("PERSONEL"), label: tr("Personel") },
-  { id: 'locations', glyph: '🏪', cap: tr("ŞUBE"), label: tr("Şubeler") },
-  { id: 'settings', glyph: '⚙️', cap: tr("AYAR"), label: tr("Ayarlar") },
+  { id: 'upgrades', glyph: '⬆️', get cap() { return tr("YÜKSELT"); }, get label() { return tr("Yükseltmeler"); } },
+  { id: 'staff', glyph: '👷', get cap() { return tr("PERSONEL"); }, get label() { return tr("Personel"); } },
+  { id: 'locations', glyph: '🏪', get cap() { return tr("ŞUBE"); }, get label() { return tr("Şubeler"); } },
+  { id: 'settings', glyph: '⚙️', get cap() { return tr("AYAR"); }, get label() { return tr("Ayarlar"); } },
 ];
 
 interface SideJobSlot {
@@ -177,13 +178,16 @@ export class HUD {
   private readonly pips: HTMLElement[] = [];
 
   private readonly eventsBox: HTMLDivElement;
+  private readonly adChipBackdrop: HTMLDivElement;
   private readonly adChip: HTMLDivElement;
   /** Çipteki geri sayım halkası — her gösterimde yeniden kurulur. */
   private adChipRing: HTMLElement | null = null;
+  private adChipBar: HTMLElement | null = null;
   /** Halkaya son yazılan oran; yalnız görünür değişimde stile yazılır. */
   private adChipP = -1;
   /** Çipe basılınca çağrılır; UIRoot bağlar. */
-  onAdChip: ((kind: UiAdKind) => void) | null = null;
+  onAdChip: ((kind: UiAdRewardKind) => void) | null = null;
+  onAdChipDismiss: (() => void) | null = null;
   private readonly events: EventSlot[] = [];
 
   // --- son yazılan değerler (yalnızca değişince yaz) ---
@@ -402,9 +406,13 @@ export class HUD {
         sfx('ui_click');
         return;
       }
+      sfx('ui_click');
+      if (this.api.openBoostOffer) {
+        this.api.openBoostOffer();
+        return;
+      }
       this.boostInFlight = true;
       this.boostBtn.classList.add('loading');
-      sfx('ui_click');
       try {
         await this.api.watchAd('happy_hour');
       } finally {
@@ -439,6 +447,11 @@ export class HUD {
      * alınmayı bekleyen ödül (günlük/haftalık/festival/albüm) varken yanar. */
     this.goalDot = el('span', 'goal-dot');
     this.goalBtn.appendChild(this.goalDot);
+    this.goalBtn.addEventListener('animationend', (e) => {
+      if (e.animationName === 'goalDone' || e.animationName === 'goalDone2') {
+        this.goalBtn.classList.remove('done-a', 'done-b');
+      }
+    });
     this.goalBtn.addEventListener('click', () => {
       sfx('ui_click');
       this.onPanel('goals');
@@ -559,7 +572,7 @@ export class HUD {
     for (let i = 0; i < SIDE.length; i++) {
       const def = SIDE[i];
       const isPrimary = def.id === 'upgrades' || def.id === 'staff';
-      const b = el('button', 'side-btn' + (isPrimary ? ' side-btn-hero' : ''));
+      const b = el('button', 'side-btn' + (isPrimary ? ' side-btn-hero' : ' side-btn-util'));
       b.type = 'button';
       b.dataset.sideId = def.id;
       b.setAttribute('aria-label', def.label);
@@ -646,16 +659,28 @@ export class HUD {
     this.eventsBox = el('div', 'events');
     root.appendChild(this.eventsBox);
 
+    this.adChipBackdrop = el('div', 'adchip-backdrop');
+    this.adChipBackdrop.style.display = 'none';
+    root.appendChild(this.adChipBackdrop);
+
     this.adChip = el('div', 'adchip');
     this.adChip.style.display = 'none';
+    this.adChip.setAttribute('role', 'dialog');
+    this.adChip.setAttribute('aria-modal', 'false');
     blockPointer(this.adChip);
     root.appendChild(this.adChip);
 
     // rozetler para/yenileme olaylarında bayrağa alınır, update'te işlenir
     this.offs.push(bus.on('money:changed', () => (this.badgeDirty = true)));
-    this.offs.push(bus.on('ui:refresh', () => (this.badgeDirty = true)));
+    this.offs.push(bus.on('ui:refresh', () => {
+      this.badgeDirty = true;
+      this.anchorDirty = true;
+    }));
     this.offs.push(bus.on('upgrade:bought', () => (this.badgeDirty = true)));
     this.offs.push(bus.on('staff:hired', () => (this.badgeDirty = true)));
+    const onResize = () => { this.anchorDirty = true; };
+    window.addEventListener('resize', onResize);
+    this.offs.push(() => window.removeEventListener('resize', onResize));
   }
 
   /**
@@ -685,12 +710,14 @@ export class HUD {
     this.vacuumSignature = signature;
     this.vacuumButton.classList.toggle('hide', !visible);
     this.vacuumButton.classList.toggle('holding', holding);
+    this.vacuumButton.classList.toggle('blocked', blocked);
     this.vacuumButton.disabled = blocked;
     this.vacuumButton.setAttribute('aria-pressed', String(holding));
     const label = holding ? tr('SÜPÜRGEYİ BIRAK') : tr('SÜPÜRGEYİ AL');
     const hint = blocked ? tr('Önce tepsiyi boşalt') : holding ? tr('Servise dön') : tr('Her yerden al');
     this.vacuumLabel.textContent = label;
-    this.vacuumHint.textContent = hint;
+    this.vacuumHint.textContent = blocked ? hint : '';
+    this.vacuumHint.style.display = blocked ? '' : 'none';
     this.vacuumButton.setAttribute('aria-label', `${label}. ${hint}`);
   }
 
@@ -928,7 +955,8 @@ export class HUD {
    */
   private anchorX = 60;
   private anchorY = 40;
-  private anchorAge = 99;
+  private anchorDirty = true;
+  private lastMoneyLen = 0;
 
   moneyAnchorX(): number {
     return this.anchorX;
@@ -938,14 +966,13 @@ export class HUD {
     return this.anchorY;
   }
 
-  private refreshAnchor(dt: number): void {
-    this.anchorAge += dt;
-    if (this.anchorAge < 0.5) return;
-    this.anchorAge = 0;
+  private refreshAnchor(_dt: number): void {
+    if (!this.anchorDirty) return;
     const r = this.moneyPill.getBoundingClientRect();
     if (r.width > 0) {
       this.anchorX = r.left + r.width / 2;
       this.anchorY = r.top + r.height / 2;
+      this.anchorDirty = false;
     }
   }
 
@@ -976,6 +1003,10 @@ export class HUD {
       this.lastMoneyInt = n;
       const txt = '₺' + this.api.formatMoney(n);
       if (txt !== this.lastMoneyTxt) {
+        if (txt.length !== this.lastMoneyLen) {
+          this.lastMoneyLen = txt.length;
+          this.anchorDirty = true;
+        }
         this.lastMoneyTxt = txt;
         this.moneyVal.textContent = txt;
       }
@@ -1123,73 +1154,113 @@ export class HUD {
   }
 
   /**
-   * Teklif çipini göster. Aynı çip zaten açıksa hiçbir şey yapmaz —
-   * yeniden kurmak yanıp sönmeye ve yanlış basmaya yol açar.
+   * Merkez-ekran ödüllü teklif kartı. Ekranın tamamını kapatmaz; orta odakta
+   * özel vektör ödül vitrini, net kazanç kutusu, 44×44 ✕ kapatma düğmesi ve
+   * AdMob politikasına uyumlu aksiyon odaklı CTA sunar.
    */
-  showAdChip(kind: UiAdKind, glyph: string, title: string, text: string): void {
-    if (this.adChip.dataset.kind === kind && this.adChip.style.display !== 'none') return;
+  showAdChip(
+    kind: UiAdRewardKind,
+    _glyph: string,
+    title: string,
+    text: string,
+    variant: 'default' | 'urgent' | 'vip' = 'default',
+  ): void {
+    const sig = `${kind}|${variant}|${title}|${text}`;
+    if (this.adChip.dataset.sig === sig && this.adChip.style.display !== 'none') return;
+    const wasOpen = this.adChip.style.display !== 'none';
     this.adChip.dataset.kind = kind;
+    this.adChip.dataset.sig = sig;
+    this.adChip.classList.toggle('adchip-urgent', variant === 'urgent');
+    this.adChip.classList.toggle('adchip-vip', variant === 'vip');
     this.adChip.textContent = '';
-    /**
-     * GERİ SAYIM HALKASI simgeyi sarar. Çip `OMUR` saniye sonra kendi
-     * kendine kapanıyor (bkz. Game.maybeOfferAd) ama bu eskiden görünmezdi:
-     * oyuncu "az önce buradaydı, kayboldu" yaşıyordu. Kalan ömrü halka
-     * gösterir; Game her kare `setAdChipProgress` ile `--p`yi yazar.
-     */
+
+    const isPartialZone = kind === 'zone_finish' && title.includes('50');
+    const copy = rewardOfferCopy(kind, variant, isPartialZone);
+    const cleanTitle = title.replace(/^[^\p{L}\p{N}%₺×+-]+\s*/u, '').trim() || title;
+
+    const head = el('div', 'adchip-head');
+    head.appendChild(el('span', 'adchip-badge', copy.badge));
+    const x = el('button', 'adchip-x', '✕');
+    x.type = 'button';
+    x.setAttribute('aria-label', tr("Kapat"));
+    x.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sfx('ui_close');
+      this.hideAdChip();
+      if (this.onAdChipDismiss) this.onAdChipDismiss();
+    });
+    head.appendChild(x);
+    this.adChip.appendChild(head);
+
+    const showcase = el('div', 'adchip-showcase');
     const wrap = el('span', 'adchip-ringwrap');
     const ring = el('i', 'adchip-ring');
     wrap.appendChild(ring);
-    wrap.appendChild(el('span', 'adchip-glyph', glyph));
-    this.adChip.appendChild(wrap);
-    this.adChipRing = ring;
-    this.adChipP = -1;
-    this.setAdChipProgress(1);
+    const art = el('span', 'adchip-art');
+    art.appendChild(createRewardHeroSvg(kind));
+    wrap.appendChild(art);
+    showcase.appendChild(wrap);
+
     const body = el('div', 'adchip-body');
-    body.appendChild(el('div', 'adchip-title', title));
+    body.appendChild(el('div', 'adchip-title', cleanTitle));
     body.appendChild(el('div', 'adchip-desc', text));
-    this.adChip.appendChild(body);
-    const go = el('button', 'adchip-go', tr("İZLE"));
+    showcase.appendChild(body);
+    this.adChip.appendChild(showcase);
+
+    const go = el('button', 'adchip-go');
     go.type = 'button';
+    const goIcon = el('span', 'adchip-go-ico');
+    goIcon.appendChild(createClapperPlaySvg());
+    const goCol = el('span', 'adchip-go-col');
+    goCol.appendChild(el('span', 'adchip-go-main', copy.cta));
+    goCol.appendChild(el('span', 'adchip-go-sub', copy.subCta));
+    go.append(goIcon, goCol);
     go.addEventListener('click', (e) => {
       e.stopPropagation();
       sfx('ui_click');
       if (this.onAdChip) this.onAdChip(kind);
     });
     this.adChip.appendChild(go);
-    /* Kapatma: teklifi istemeyen oyuncu onu ekrandan kaldırabilmeli.
-     * "Reddedilemeyen teklif" bir tekliftir değil, bir engeldir. */
-    const x = el('button', 'adchip-x', '✕');
-    x.type = 'button';
-    x.setAttribute('aria-label', tr("Kapat"));
-    x.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.hideAdChip();
-    });
-    this.adChip.appendChild(x);
-    /* display none → '' geçişi pop-in animasyonunu her belirişte yeniden
-     * oynatır (bkz. ui.css `adchip-pop`). */
+
+    const timerTrack = el('div', 'adchip-timer');
+    const timerFill = el('i');
+    timerTrack.appendChild(timerFill);
+    this.adChip.appendChild(timerTrack);
+
+    this.adChipRing = ring;
+    this.adChipBar = timerFill;
+    this.adChipP = -1;
+    this.setAdChipProgress(1);
+
+    this.adChipBackdrop.style.display = '';
     this.adChip.style.display = '';
-    /* Beliriş duyulur da: kısa, davetkâr bir tını + hafif titreşim.
-     * HUD'un ses yolu bus üstünden (bkz. EventBus.sfx); titreşim de aynı
-     * kalıpla olay olarak gider — Game dinleyicisi sessize saygı duyar. */
-    sfx('chip', 0.8);
-    bus.emit('haptic', { kind: 'light' });
+    if (!wasOpen) {
+      sfx('chip', 0.8);
+      bus.emit('haptic', { kind: 'light' });
+    }
   }
 
   hideAdChip(): void {
     if (this.adChip.style.display === 'none') return;
     this.adChip.style.display = 'none';
+    this.adChipBackdrop.style.display = 'none';
+    this.adChip.classList.remove('adchip-urgent', 'adchip-vip');
     delete this.adChip.dataset.kind;
+    delete this.adChip.dataset.sig;
     this.adChipRing = null;
+    this.adChipBar = null;
   }
 
-  /** Geri sayım halkası: 1 → 0. Yalnız görünür değişimde stile yazar. */
+  /** Geri sayım halkası + alt süre çubuğu: 1 → 0. Yalnız görünür değişimde stile yazar. */
   setAdChipProgress(t01: number): void {
     if (!this.adChipRing) return;
     const p = Math.round(clamp01(t01) * 200) / 200; // %0,5 adım — stil çalkantısı olmasın
     if (p === this.adChipP) return;
     this.adChipP = p;
     this.adChipRing.style.setProperty('--p', String(p));
+    if (this.adChipBar) {
+      this.adChipBar.style.transform = `scaleX(${p.toFixed(3)})`;
+    }
   }
 
   /** Çip şu an ekranda mı — Game gereksiz yere yeniden teklif etmesin. */
@@ -1218,7 +1289,6 @@ export class HUD {
       if (!event.dying && (!foreground || event.priority > foreground.priority)) foreground = event;
     }
     for (const event of this.events) event.root.hidden = event !== foreground;
-    if (foreground) this.hideAdChip();
   }
 
   private tickEvents(dt: number): void {
@@ -1352,14 +1422,11 @@ export class HUD {
       this.dots[i].textContent = count > 9 ? '9+' : count > 0 ? String(count) : '';
     }
     if (i === 0 || i === 1) {
-      const subTxt = on
-        ? tr("AÇIK!")
-        : Number.isFinite(minCost)
-          ? '₺' + this.num(minCost)
-          : '';
+      const subTxt = !on && Number.isFinite(minCost) ? '₺' + this.num(minCost) : '';
       if (this.subTxtState[i] !== subTxt) {
         this.subTxtState[i] = subTxt;
         this.sideSubs[i].textContent = subTxt;
+        this.sideSubs[i].style.display = subTxt ? '' : 'none';
       }
       const progPct = on
         ? 100

@@ -28,8 +28,9 @@ export function isMobileDevice(
  *
  * 45, 120 Hz panelde her üçüncü vsync'e düşüp 40 fps olur. Bütün kademeler
  * 60 ister; `vsyncStride` gerekirse iner (90 Hz → 45). Isı tavanı burada
- * değil, `playFps` içinde: düşük kademe ilk sürekli kare kaybında (ısı 1),
- * diğer otomatik mobil/native ısı 2'de 30'a düşer, ısı 3 herkesi 30'a çeker.
+ * değil, `playFps` içinde: düşük kademe ilk sürekli kare kaybında (ısı 1)
+ * 30'a iner; orta/üst kademeler ısı 1-2'de 3D çözünürlük düşürerek 60 FPS'i
+ * korur, yalnızca ağır yükte (ısı 3+) herkesi 30'a çeker.
  */
 export function defaultFpsPreference(
   _native: boolean,
@@ -51,8 +52,6 @@ export function playFps(input: Omit<FramePolicyInput, "uiBlocked">): number {
   const preferred =
     input.preference ?? defaultFps(input.native, input.mobile, input.tier);
   if (input.preference === undefined && input.tier === "low" && input.heat >= 1)
-    return Math.min(preferred, 30);
-  if (input.preference === undefined && (input.native || input.mobile) && input.heat >= 2)
     return Math.min(preferred, 30);
   if (input.heat >= 3) return preferred > 0 ? Math.min(preferred, 30) : 30;
   return preferred;

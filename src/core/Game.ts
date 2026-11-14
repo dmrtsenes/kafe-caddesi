@@ -4,7 +4,7 @@ import { boundedCameraLead } from '../world/CameraFraming';
 import { PLAYER_STAFF_WORK, STAFF_JOIN_BENEFIT } from '../data/staff';
 import { VisibilityGate } from './VisibilityGate';
 import { debounce } from './debounce';
-import { chooseUpgradePressure } from '../ui/UpgradeAdvice';
+import { chooseUpgradePressure, pickBestRoiId, type UpgradePressure } from '../ui/UpgradeAdvice';
 import type { UiUpgradeAdvice, UiCollection } from '../ui/api';
 import { Scene3D, type ScreenPoint } from '../world/Scene3D';
 import { markDynamic } from '../world/layers';
@@ -12,7 +12,7 @@ import { createVFX, type VFXSystem } from '../world/VFX';
 import { InputManager } from '../input/InputManager';
 import { createAudio, type AudioManager, type SfxId } from '../audio/AudioManager';
 import { createUI } from '../ui/UIRoot';
-import { GameplayTelemetry } from './Telemetry';
+import { GameplayTelemetry, TELEMETRY_KEY, computePlayerHealthScore } from './Telemetry';
 import { formatDecimal, getLanguage, setLanguage, LANGUAGE_KEY, type Language } from './I18n';
 import { mirrorStorage,flushStorage,onNativeThermalStatus } from './Native';
 import { setNativeThermalStatus } from './Quality';
@@ -33,23 +33,29 @@ import type {
   UiDaily,
   UiPrestige,
   UiCosmeticAxis,
+  UiEventBanner,
   UiFpsPreference,
+  UiTutorialStep,
   } from '../ui/api';
 import { GameState } from '../sim/GameState';
 import { World, type EventModifiers, type WorldSave } from '../sim/World';
 import { GoalTracker, goalWorkSeconds } from '../sim/Goals';
 import { EventManager, type ChaosEventId } from '../sim/Events';
 import { Tutorial } from '../sim/Tutorial';
-import { applyOfflineStock, computeOfflineEarnings } from '../sim/Offline';
+import { applyOfflineStock, computeOfflineEarnings, computeOfflineOfferBreakdown, computeComebackGift } from '../sim/Offline';
 import { Player } from '../entities/Player';
 import { SaveManager } from './SaveManager';
 import { clearCrashDiagnostics } from './CrashReporter';
-import { haptic, isAppExiting, isNative, onAppStateChange, onBackButton, requestNotificationPermission, scheduleReminders } from './Native';
+import { haptic, isAppExiting, isNative, onAppStateChange, onBackButton, requestNativeAppReview, requestNotificationPermission, scheduleReminders } from './Native';
 import {
+  canRecoverStreak,
   dailyReward,
+  dismissStreakRecovery,
+  lostStreakDays,
   missionProgress,
   missionReward,
   missionsFor,
+  recoverStreak,
   rollDay,
   rollWeek,
   weekDaysLeft,
@@ -78,8 +84,6 @@ import {
 } from '../data/prestige';
 import { Settings } from './Settings';
 import {
-  CASH_BOOST_FLOOR,
-  CASH_BOOST_INCOME_SECONDS,
   CASH_BOOST_MAX_PAID,
   CASH_BOOST_MIN_PAID,
   COMEBACK_MIN_STOCK,
@@ -103,9 +107,20 @@ import {
   USTA_SPEED_MULT,
   ZONE_FINISH_MIN_PAID,
   adReady,
+  computeCashBoostAmount,
+  computeInvestorOfferAmount,
+  decayAdBuffMap,
+  notifyBreakPromptSkipped,
+  sessionRewardedWatchedCount,
+  setBannerVisible,
   showRewarded,
   tryInterstitial,
   canShowInterstitial,
+  tryRewardedInterstitial,
+  canShowRewardedInterstitial,
+  tryAppOpen,
+  canShowAppOpen,
+  warmSecondaryAds,
   INTERSTITIAL_GOAL_WARMUP,
   type InterstitialSafetyContext,
 } from './Ads';
@@ -121,8 +136,18 @@ import { FramePacer, FrameRateMeter, RefreshRateEstimator } from './FrameClock';
 import { attachCpuPressure } from './thermal';
 import { cameraMoveEpsilon, cameraMovedEnough } from '../world/staticBake';
 import { BALANCE } from '../data/balance';
+import { BRANCH_COSTS } from '../data/economy';
 import { ITEMS, itemName, type ItemId } from '../data/items';
-import { LOCATION_ORDER, locationDef, zoneDef } from '../data/layouts';
+import { LOCATION_ORDER, floorLiftAt, locationDef, zoneDef } from '../data/layouts';
+import { ZONE_PURCHASE_HALF } from '../world/ZonePurchasePad';
+import {
+  AD_SPOT_ARM_TIME,
+  AD_SPOT_DISMISS_RADIUS,
+  AD_SPOT_TRIGGER_RADIUS,
+  createAdSpotView,
+  pickAdSpotPosition,
+  type AdSpotVariant,
+} from '../world/AdSpotView';
 import { GOALS } from '../data/goals';
 import { PLAYER_UPGRADES, PLAYER_UPGRADE_MAP, type PlayerUpgradeId, STATION_CAP_MAX, STATION_SPEED_MAX } from '../data/upgrades';
 import {
@@ -141,6 +166,9 @@ import { Customer, disposeCustomerIcons } from '../entities/Customer';
 import { COSMETIC_AXES, COSMETIC_AXIS_DEFS, cosmeticOptions, type CosmeticAxis } from '../data/cosmetics';
 
 const _screen: ScreenPoint = { x: 0, y: 0, behind: false };
+const _banner: UiEventBanner = { id: '', title: '', desc: '', glyph: '', remaining: 0, duration: 1, tone: 'good' };
+const _tutStep: UiTutorialStep = { text: '', index: 0, total: 1 };
+const _tutGuide = { x: 0, z: 0, label: '', color: 0xffc84a };
 
 /** Arayüzden gelen ham metni bilinen eksenlere daraltır (beyaz liste). */
 function asAxis(v: string): CosmeticAxis | null {
@@ -184,6 +212,9 @@ export class Game implements UIApi {
   private lookZ = 0;
   private readonly cameraLead = { x: 0, z: 0 };
   private persistDisabled = false;
+  private readonly sessionStartMs = Date.now();
+  private firstSeenMs = Date.now();
+  private lastUnlockPlayTime = 0;
   public adVisualTick: ((rawDt: number) => void) | null = null;
   public adSimPaused = false;
   private unsubs: (() => void)[] = [];
@@ -215,10 +246,19 @@ export class Game implements UIApi {
 
     this.loadGame();
     this.tutorial.resume(this.world);
+    if (this.tutorial.finished) {
+      const warmTimer = window.setTimeout(() => warmSecondaryAds(), 2500);
+      this.unsubs.push(() => window.clearTimeout(warmTimer));
+    }
     this.bindEvents();
     this.applySettings();
     if (!this.persistDisabled) this.checkDaily();
     this.telemetry = new GameplayTelemetry(() => ({location: this.state.activeLocation, step:this.tutorial.step, play_seconds:this.state.playTime, served:this.state.stats.served, orders:this.state.stats.orders, fps:this.measuredFps, quality:QUALITY.tier,language:getLanguage()}));
+    try {
+      const rawMetrics = JSON.parse(localStorage.getItem(TELEMETRY_KEY) ?? 'null');
+      if (rawMetrics && Number.isFinite(rawMetrics.firstSeen)) this.firstSeenMs = rawMetrics.firstSeen;
+    } catch {}
+    this.lastUnlockPlayTime = this.state.playTime;
     const testQuery = new URLSearchParams(window.location.search);
     const participant = testQuery.get('playtest');
     if (participant === 'human' || participant === 'bot' || participant === 'unknown') {
@@ -256,12 +296,14 @@ export class Game implements UIApi {
     }
 
     const unlockGestures = ['pointerdown', 'touchstart', 'touchend', 'click', 'keydown'] as const;
+    let audioConfigured = false;
     const unlockHandler = () => {
+      if (audioConfigured && !this.audio.needsGestureUnlock()) return;
       this.audio.unlock();
-      this.audio.setMuted(this.settings.get('muted'));
-      this.audio.setMusicEnabled(this.settings.get('music') && !this.settings.get('muted'));
-      for (const ev of unlockGestures) {
-        window.removeEventListener(ev, unlockHandler, true);
+      if (!audioConfigured) {
+        audioConfigured = true;
+        this.audio.setMuted(this.settings.get('muted'));
+        this.audio.setMusicEnabled(this.settings.get('music') && !this.settings.get('muted'));
       }
     };
     for (const ev of unlockGestures) {
@@ -302,6 +344,10 @@ export class Game implements UIApi {
 
     markDynamic(this.player.char.root);
     this.scene3d.scene.add(this.player.char.root);
+    markDynamic(this.adSpot.root);
+    this.scene3d.scene.add(this.adSpot.root);
+    markDynamic(this.padAdBeacon.root);
+    this.scene3d.scene.add(this.padAdBeacon.root);
     this.player.setPosition(this.world.loc.playerStart.x, this.world.loc.playerStart.z);
     this.applyPlayerStats();
     this.activateWorld(this.world, false);
@@ -311,15 +357,15 @@ export class Game implements UIApi {
       w.refreshAutomation();
     }
 
-    // v5.1 — satın alınmış reklam ödülleri kayıttan geri gelir; kapanan
-    // uygulama ödülü buharlaştırmaz (bkz. restoreAdBuffs / state.adBuffs).
-    this.restoreAdBuffs();
+    // Süreli reklam ödülleri gerçek duvar saatine (wall-clock) göre yüklenir;
+    // oyun kapalıyken süresi dolan bufflar 0'a iner, devam etmez.
+    const coldElapsed = data ? Math.max(0, (Date.now() - data.t) / 1000) : 0;
+    this.restoreAdBuffs(coldElapsed);
 
     if (data) {
       // Para YOK — yalnız makineler beklerken üretmiş olur. Popup ise
       // gerçekten bir şey biriktiyse açılır (bkz. applyOfflineAndReport).
-      const elapsed = (Date.now() - data.t) / 1000;
-      this.applyOfflineAndReport(elapsed);
+      this.applyOfflineAndReport(coldElapsed);
     }
   }
 
@@ -339,8 +385,8 @@ export class Game implements UIApi {
    *   • hiçbir şey birikmediyse (depolar zaten doluydu) — söyleyecek bir
    *     haber yokken kutlama penceresi açmak oyuncuyu boşuna durdurur.
    */
-  private applyOfflineAndReport(seconds: number): void {
-    if (!(seconds >= BALANCE.offline.minSeconds)) return;
+  private applyOfflineAndReport(seconds: number): boolean {
+    if (!(seconds >= BALANCE.offline.minSeconds)) return false;
     const worlds = [...this.worlds.values()];
 
     /* Önce fotoğraf: her makinenin mevcut stoğu. */
@@ -353,7 +399,6 @@ export class Game implements UIApi {
     const perItem = new Map<ItemId, number>();
     let stocked = 0;
     let machines = 0;
-    let stockValue = 0;
     for (const w of worlds) {
       for (const m of w.machines) {
         const add = m.output - (before.get(w.loc.id + '/' + m.id) ?? 0);
@@ -363,47 +408,64 @@ export class Game implements UIApi {
         const item = m.def.item;
         if (item) {
           perItem.set(item, (perItem.get(item) ?? 0) + add);
-          stockValue += Math.round(add * ITEMS[item].price * this.state.saleMultiplier);
         }
       }
     }
+    // Dönüş satışı (`comeback_sale`) aktif şubedeki stoğun `COMEBACK_SHARE` payını satar;
+    // buton vaadi ile gerçek ödeme kuruşu kuruşuna eşit olmalı.
+    const stockValue = this.world.stockTotal() >= COMEBACK_MIN_STOCK
+      ? this.world.estimateStockShareValue(COMEBACK_SHARE, 1)
+      : 0;
 
-    const hasStaff = worlds.some((w) => {
+    let hasStaff = false;
+    let bestAutomation = 0;
+    for (const w of worlds) {
       const sc = this.state.staffCountAt(w.loc.id);
-      return sc.waiter > 0 || sc.cashier > 0;
-    });
-    const offlineCash = computeOfflineEarnings(
+      if (sc.waiter > 0 && sc.cashier > 0) {
+        hasStaff = true;
+        bestAutomation = Math.max(bestAutomation, w.automation);
+      }
+    }
+    const rawOfflineCash = computeOfflineEarnings(
       seconds,
       this.rewardIncomePerSec(),
       hasStaff,
       this.state.prestigeOfflineMult,
+      this.state.offlineCapSeconds,
+      bestAutomation > 0 ? bestAutomation : 0.38,
     );
+    const offlineCash = Math.min(rawOfflineCash, this.offlineProgressionCap(worlds));
     this.lastOfflineCash = offlineCash;
     if (offlineCash > 0) {
       this.state.earn(offlineCash);
     }
 
-    if (stocked <= 0 && offlineCash <= 0) return;
+    if (this.tutorial.finished) {
+      const gift = computeComebackGift(seconds, this.rewardIncomePerSec());
+      if (gift.eligible) {
+        this.state.grant(gift.cashGift);
+        this.happyLeft = Math.min(HAPPY_HOUR_MAX_SECONDS, this.happyLeft + gift.happyHourSeconds);
+        this.ui.toast(
+          tr("🎉 Hoş geldin hediyesi: +₺{0} + {1} dk Mutlu Saat!", formatMoney(gift.cashGift), Math.round(gift.happyHourSeconds / 60)),
+          '🎁',
+          'good',
+        );
+      }
+    }
+
+    if (stocked <= 0 && offlineCash <= 0) return false;
     // Öğretici sürerken pencere açılmaz: ilk dakikadaki akışı bölmek,
     // oyuncuya anlamadığı bir raporu okutmaktan daha pahalı.
-    if (!this.tutorial.finished) return;
+    if (!this.tutorial.finished) return false;
 
     /* En çok üretilen ürün üstte — rapor tek bakışta okunmalı. */
     const lines = [...perItem.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6)
       .map(([item, n]) => ({ glyph: ITEMS[item].glyph, text: `${n} · ${ITEMS[item].name}` }));
-    if (offlineCash > 0) {
-      lines.unshift({
-        glyph: '🌙',
-        text: tr('Personel gece vardiyası: +₺{0}', formatMoney(offlineCash)),
-      });
-    }
 
     this.lastOfflineSeconds = seconds;
-    const rewardMultiplier = seconds >= BALANCE.offline.longOfflineThresholdSeconds
-      ? BALANCE.offline.rewardedLongOfflineMultiplier
-      : BALANCE.offline.rewardedMultiplier;
+    const offer = computeOfflineOfferBreakdown(seconds, offlineCash, stockValue);
 
     const report: UiOfflineReport = {
       seconds,
@@ -419,16 +481,37 @@ export class Game implements UIApi {
        * şube — satışı da `watchAd('comeback_sale')` aynı şubeden yapar).
        */
       comebackReady: adReady('comeback_sale') && (this.world.stockTotal() >= COMEBACK_MIN_STOCK || offlineCash > 0),
-      rewardMultiplier,
+      rewardMultiplier: offer.multiplier,
+      rewardedTotalCash: offer.rewardedTotalCash,
+      forfeitedBonusCash: offer.forfeitedBonusCash,
       nextGoal: GOALS[this.state.goalIndex]?.title ?? tr('Kafeyi büyütmeye devam et.'),
     };
     this.ui.showOffline(report);
+    return true;
+  }
+
+  /**
+   * Pasif çevrimdışı nakit tek dönüşte birden fazla odayı atlatmamalı:
+   * baz 1× ödeme sıradaki hedefin en fazla %55–%85'i (Depo seviyesine göre)
+   * olur; böylece ×2/×3 ödüllü reklam izleyen oyuncu tam ~1 yeni alan açar.
+   */
+  private offlineProgressionCap(worlds: World[]): number {
+    const share = Math.min(0.85, 0.55 + this.state.upgrades.vault * 0.05);
+    const activeNext = this.world.nextLockedZone();
+    if (activeNext) return Math.max(600, Math.round(activeNext.cost * share));
+    if (!this.state.unlockedLocations.has('sahil')) {
+      return Math.round(BRANCH_COSTS.sahil * share);
+    }
+    for (const w of worlds) {
+      const z = w.nextLockedZone();
+      if (z) return Math.max(1200, Math.round(z.cost * share));
+    }
+    return Number.POSITIVE_INFINITY;
   }
 
   private createWorld(id: string, saved: WorldSave | undefined): World {
     const w = new World(id, this.state, this.vfx);
     w.load(saved);
-    this.scene3d.scene.add(w.root);
     this.worlds.set(id, w);
     // Boot warms through prepareForPlay; a branch opened or rebuilt in play
     // gets the same idle preparation for its locked rooms.
@@ -438,7 +521,13 @@ export class Game implements UIApi {
 
   private activateWorld(w: World, animate: boolean): void {
     for (const other of this.worlds.values()) {
-      if (other !== w) other.setActive(false);
+      if (other !== w) {
+        other.setActive(false);
+        this.scene3d.scene.remove(other.root);
+      }
+    }
+    if (w.root.parent !== this.scene3d.scene) {
+      this.scene3d.scene.add(w.root);
     }
     w.setActive(true);
     this.world = w;
@@ -463,6 +552,7 @@ export class Game implements UIApi {
     // Gölge kamerasını bu şubenin ortasına oturt ve haritayı bir kez çiz.
     const b = w.loc.bounds;
     this.scene3d.setVenueCenter((b.x0 + b.x1) / 2, (b.z0 + b.z1) / 2);
+    this.clearWorldAdBeacons();
     this.events.reset();
     bus.emit('location:changed', { location: w.loc.id });
     bus.emit('ui:refresh', {});
@@ -512,7 +602,7 @@ export class Game implements UIApi {
      * bir de "oyun telefonumda bozuk" izlenimi bindiriyordu. Sessiz uyum
      * bu türün normudur; bildirim yalnızca oyuncunun kendi seçiminde.
      */
-    if (!auto && this.running) this.ui.toast(tr("Grafik: {0}", TIER_LABEL[tier]), '⚙️', 'info');
+    if (!auto && this.running) this.ui.toast(tr("Grafik: {0}", tierLabel(tier)), '⚙️', 'info');
   }
 
   /**
@@ -523,7 +613,8 @@ export class Game implements UIApi {
    */
   private applyGradeClass(): void {
     const app = document.getElementById('app');
-    if (app) app.classList.toggle('low-fx', this.settings.get('lowQuality'));
+    const lowFx = this.settings.get('lowQuality') || QUALITY.tier === 'low' || QUALITY.heatLevel >= 1;
+    if (app) app.classList.toggle('low-fx', lowFx);
   }
 
   /** Ayarlar panelindeki 4'lü Grafik seçicisi (ui/api.ts opsiyonel kancaları). */
@@ -640,6 +731,7 @@ export class Game implements UIApi {
           this.state.grant(Math.round(stars * 150 * this.state.saleMultiplier), x, z, 1.5);
           this.vfx.sparkle(x, 1.4, z, 0xffc84a);
           bus.emit('ui:refresh', {});
+          if (this.state.stats.served >= 12) void requestNativeAppReview(true);
         }
       }),
       bus.on('customer:happy', () => this.audio.play('customer_happy', { vol: 0.5 })),
@@ -667,16 +759,22 @@ export class Game implements UIApi {
         }
         bus.emit('ui:refresh', {});
         if (this.tutorial.finished && this.adChipTimer > 4) this.adChipTimer = 4;
-        /* goalIndex olaydan önce artar. İlk 8 tamamlanan hedefin
-         * kutlamasında geçiş yok; dokuzuncu ve sonrası doğal ara sayılır. */
-        if (this.state.goalIndex > INTERSTITIAL_GOAL_WARMUP) void this.trySmartBreak();
+        /* goalIndex olaydan önce artar. İlk INTERSTITIAL_GOAL_WARMUP hedefin
+         * kutlamasında geçiş yok; sonrasında oyuncu yürüyorsa bile ilk duraksamada açılır. */
+        if (this.state.goalIndex >= INTERSTITIAL_GOAL_WARMUP) {
+          this.requestSmartBreak('goal_complete', 28, 0.6);
+        }
       }),
       bus.on('tutorial:step', ({ complete }) => {
         this.world.syncLocks();
-        if (complete) this.adChipTimer = Math.min(this.adChipTimer, 6);
+        if (complete) {
+          this.adChipTimer = Math.min(this.adChipTimer, 3);
+          warmSecondaryAds();
+        }
       }),
 
       bus.on('zone:unlocked', ({ name, zone, location, method }) => {
+        this.lastUnlockPlayTime = this.state.playTime;
         const def = zoneDef(location, zone);
         this.telemetry?.completePurchase({
           id: zone, kind: 'zone', location, cycle: this.state.prestigeCount,
@@ -690,6 +788,9 @@ export class Game implements UIApi {
         this.scene3d.invalidateStatic();
         this.forceRender = true;
         bus.emit('ui:refresh', {});
+        // Yeni oda/makine açılışı türün en doğal geçiş reklamı anıdır (0,9 sn kurulum payı ile).
+        // Ödüllü reklamla (`zone_finish`) açıldıysa `REWARDED_TO_INTERSTITIAL_GAP` zaten susturur.
+        this.requestSmartBreak('zone_unlock', 30, 0.9);
       }),
 
       bus.on('location:unlocked', ({ name }) => {
@@ -698,6 +799,8 @@ export class Game implements UIApi {
       }),
 
       bus.on('staff:hired', ({ role, count, location, totalCost, method }) => {
+        this.lastUnlockPlayTime = this.state.playTime;
+        if (this.ui.isPanelOpen()) this.panelActionTaken = true;
         this.telemetry?.completePurchase({
           id: role + ':' + Math.max(0, count - 1), kind: 'staff',
           location: location ?? this.state.activeLocation, cycle: this.state.prestigeCount,
@@ -716,6 +819,8 @@ export class Game implements UIApi {
       }),
 
       bus.on('upgrade:bought', ({ kind }) => {
+        this.lastUnlockPlayTime = this.state.playTime;
+        if (this.ui.isPanelOpen()) this.panelActionTaken = true;
         this.audio.play('upgrade');
         if (this.settings.get('haptics')) haptic('medium');
         this.player.celebrate();
@@ -744,38 +849,36 @@ export class Game implements UIApi {
       }),
 
       bus.on('celebrate:end', () => {
-        void this.trySmartBreak();
-      }),
-
-      bus.on('ad:revenue', ({ value, currency, precision, adUnit, format }) => {
-        this.telemetry.record('ad_revenue', {
-          value,
-          currency,
-          precision,
-          adUnit,
-          format,
-        });
+        void this.trySmartBreak('celebrate_end');
       }),
 
       bus.on('pad:ad_offer', ({ zoneId, tier, remaining }) => {
+        if (!adReady('zone_finish')) return;
+        if (this.dismissedPadZoneId === zoneId) return;
+        if (this.adRewardInFlight || this.adShowing || this.ui.isPanelOpen()) return;
         const zone = this.world.loc.zones.find(z => z.id === zoneId);
         if (!zone) return;
+        const samePadOpen = this.ui.adChipOpen && this.adChipSource === 'pad' && this.activePadOfferZoneId === zoneId;
+        this.adChipSource = 'pad';
+        this.activePadOfferZoneId = zoneId;
         this.ui.showAdChip(
           'zone_finish',
-          '📺',
-          tier === 'finish' ? tr("Bölümü Reklamla Tamamla") : tr("Bölümün %50'sini Öde"),
+          '🔑',
+          tier === 'finish' ? tr("Bölümü Hemen Aç") : tr("Bölümün %50'sini Öde"),
           tier === 'finish'
-            ? tr("Tek reklamla kalan ₺{0} kapansın!", formatCompactMoney(remaining))
-            : tr("Tek reklamla ₺{0} ödensin!", formatCompactMoney(zone.cost * 0.5)),
+            ? tr("Kalan ₺{0} anında kapansın!", formatCompactMoney(remaining))
+            : tr("Anında ₺{0} ödensin!", formatCompactMoney(zone.cost * 0.5)),
         );
-        this.ui.setAdChipProgress(1);
-        this.adChipLife = 12;
-        this.adChipMaxLife = 12;
+        if (!samePadOpen) {
+          this.ui.setAdChipProgress(1);
+          this.adChipLife = 12;
+          this.adChipMaxLife = 12;
+        }
       }),
 
       bus.on('investor:spawn', () => {
         this.ui.toast(tr("Kafene bir yatırımcı girdi!"), '💰', 'info');
-        this.audio.play('clean_chime');
+        this.audio.play('vip_arrive');
       }),
 
       bus.on('influencer:lost', () => {
@@ -787,6 +890,7 @@ export class Game implements UIApi {
       }),
 
       bus.on('event:start', ({ id, title, desc, duration, glyph }) => {
+        if (id === 'influencer') this.audio.play('vip_arrive', { vol: 0.72 });
         this.ui.showEvent({
           id,
           title,
@@ -833,6 +937,11 @@ export class Game implements UIApi {
       if (!transition) return;
       this.appHidden = transition.hidden;
       if (transition.hidden) {
+        this.ui.hideBreakPrompt();
+        if (this.lastBannerVisible) {
+          this.lastBannerVisible = false;
+          setBannerVisible(false);
+        }
         this.persist();
         void flushStorage();
         this.refreshReminders();
@@ -842,11 +951,20 @@ export class Game implements UIApi {
         return;
       }
       if (!this.adShowing) {
+        const fromAdOverlay = Date.now() - this.lastAdOverlayEndedAt < 2500;
+        if (!fromAdOverlay && transition.awaySeconds > 0) {
+          this.advanceAdBuffsWallClock(transition.awaySeconds);
+        }
         this.audio.setSuspended(false);
         this.input.setEnabled(true);
         this.start();
         this.checkDaily();
-        this.applyOfflineAndReport(transition.awaySeconds);
+        if (!fromAdOverlay) {
+          const offlineOpened = this.applyOfflineAndReport(transition.awaySeconds);
+          if (!offlineOpened && transition.awaySeconds >= 45 && this.tutorial.finished && !this.ui.isPanelOpen()) {
+            void this.tryResumeAppOpen();
+          }
+        }
       }
     };
     const onVisibility = () => setVisibility('dom', document.hidden);
@@ -963,6 +1081,12 @@ export class Game implements UIApi {
   private loopTimer: ReturnType<typeof setTimeout> | 0 = 0;
   private forceRender = true;
   private lastPanelOpen = false;
+  private lastBannerVisible = false;
+  private panelActionTaken = false;
+  private pendingBreakPlacement = '';
+  private pendingBreakLeft = 0;
+  private pendingBreakDelay = 0;
+  private playerIdleSettle = 0;
   private pressureHot = false;
   private lastCamX = Number.POSITIVE_INFINITY;
   private lastCamY = 0;
@@ -990,22 +1114,37 @@ export class Game implements UIApi {
     const uiBlocked = this.paused || this.ui.isPanelOpen();
     if (this.lastPanelOpen && !uiBlocked) {
       this.forceRender = true;
+      if (this.panelActionTaken) {
+        this.panelActionTaken = false;
+        this.requestSmartBreak('panel_close', 22, 0.3);
+      }
     }
     this.lastPanelOpen = uiBlocked;
+    const wantBanner =
+      this.tutorial.finished &&
+      !uiBlocked &&
+      !this.adShowing &&
+      !this.appHidden &&
+      !this.ui.breakPromptOpen;
+    if (wantBanner !== this.lastBannerVisible) {
+      this.lastBannerVisible = wantBanner;
+      setBannerVisible(wantBanner);
+    }
     this.input.setEnabled(!uiBlocked);
     this.input.update(Math.min(rawDt, 0.05));
 
     if (uiBlocked) {
+      if (!this.adShowing) this.advanceAdBuffsWallClock(rawDt, false);
       this.updateUiFrame(rawDt);
       this.audio.setVacuum(0, 0);
       this.audio.update(rawDt);
       if(this.forceRender||this.scene3d.consumeForcePresent()){this.forceRender=false;this.scene3d.render();}
       return;
     } else if (!this.adSimPaused) {
-      this.stepSim(Math.min(rawDt, BALANCE.world.maxDelta));
+      this.stepSim(Math.min(rawDt, BALANCE.world.maxDelta), rawDt);
     }
 
-    this.stepVisual(rawDt);
+    this.stepVisual(rawDt, !this.adSimPaused);
 
     const force = this.forceRender || this.scene3d.consumeForcePresent();
     this.forceRender = false;
@@ -1014,9 +1153,12 @@ export class Game implements UIApi {
     this.scene3d.render();
   }
 
-  private stepSim(dt: number): void {
+  private stepSim(dt: number, rawDt: number): void {
     this.state.playTime += dt;
     this.player.update(dt, this.input.move, this.world.nav, this.world.loc.bounds);
+    // Kamera odak ve matrisini simülasyon görünümünden ÖNCE ilerlet ki
+    // hareket halindeki kamerada frustum kırpma 1 kare geriden gelmesin.
+    this.advanceCamera(rawDt);
     this.world.setViewFromCamera(this.scene3d.camera);
     this.world.setCameraQuat(this.scene3d.camera.quaternion);
     const goalNow = this.tutorial.finished ? this.goals.current : null;
@@ -1034,7 +1176,10 @@ export class Game implements UIApi {
     }
     // Eğitim sırasında rastgele olaylar ana döngünün üstüne binmez; olay
     // ısınma sayacı da eğitim bittikten sonra başlar.
-    if (this.tutorial.finished) this.events.update(dt, this.world, this.player, this.vfx);
+    if (this.tutorial.finished) {
+      this.events.update(dt, this.world, this.player, this.vfx);
+      this.tickPendingBreak(dt);
+    }
     this.goals.update();
     this.tutorial.update(dt, this.world, this.player);
 
@@ -1059,7 +1204,7 @@ export class Game implements UIApi {
     }
   }
 
-  private stepVisual(rawDt: number): void {
+  private advanceCamera(rawDt: number): void {
     const la = BALANCE.camera.lookAhead;
     const laMax = this.scene3d.framing.maxLead;
     let lxT = this.player.velX * la;
@@ -1111,11 +1256,21 @@ export class Game implements UIApi {
     this.world.focusX = fx;
     this.world.focusZ = fz;
     this.scene3d.update(Math.min(rawDt, 0.1));
+  }
+
+  private stepVisual(rawDt: number, cameraAdvanced = false): void {
+    if (!cameraAdvanced) {
+      this.advanceCamera(rawDt);
+    }
     if (this.adVisualTick) {
       this.adVisualTick(rawDt);
       this.forceRender = true;
     }
-    this.vfx.update(Math.min(rawDt, 0.1), this.scene3d.camera.quaternion);
+    const vDt = Math.min(rawDt, 0.1);
+    const camQuat = this.scene3d.camera.quaternion;
+    this.vfx.update(vDt, camQuat);
+    this.adSpot.update(vDt, camQuat);
+    this.padAdBeacon.update(vDt, camQuat);
     this.audio.setVacuum(this.player.hasVacuum && !this.paused ? 1 : 0, this.world.vacuumTone);
     this.audio.update(rawDt);
     this.updateUiFrame(rawDt);
@@ -1147,6 +1302,7 @@ export class Game implements UIApi {
     if (this.vfx.hasLive()) return false;
     if (this.world.hasBusyVisuals()) return false;
     if (this.robot && this.robotLeft > 0) return false;
+    if (this.adSpot.isVisible() || this.padAdBeacon.isVisible()) return false;
     return true;
   }
 
@@ -1255,6 +1411,11 @@ export class Game implements UIApi {
      * kapanınca satın alınan ödül buharlaşmaz (bkz. GameState.adBuffs +
      * restoreAdBuffs). Sigorta süresi Events'te sayılır, buradan okunur.
      */
+    this.syncAdBuffState();
+    return this.mods;
+  }
+
+  private syncAdBuffState(): void {
     const ab = this.state.adBuffs;
     ab.happy = this.happyLeft;
     ab.robot = this.robotLeft;
@@ -1262,7 +1423,6 @@ export class Game implements UIApi {
     ab.rush = this.rushLeft;
     ab.tip = this.tipLeft;
     ab.shield = this.events.breakdownShieldLeft;
-    return this.mods;
   }
 
   /**
@@ -1295,87 +1455,374 @@ export class Game implements UIApi {
     this.persist();
   }
 
-  /* Teklif çipi zamanlaması — bkz. maybeOfferAd. İlk teklif 40. saniyede. */
-  private static readonly AD_OFFER_MAX_SHOWN = 12;
-  private adOfferShownCount = 0;
-  private adChipTimer = 40;
+  /* 3D ödül istasyonu + adım-üstü reklam teklifi durumu. */
+  private readonly adSpot = createAdSpotView();
+  private readonly padAdBeacon = createAdSpotView({ groundRing: false, showLabel: false, scale: 0.78 });
+  private adSpotOffer: { k: UiAdRewardKind; g: string; t: string; d: string; v?: AdSpotVariant } | null = null;
+  private adSpotLife = 0;
+  private adSpotMaxLife = 45;
+  private adSpotArm = 0;
+  private adSpotX = 0;
+  private adSpotZ = 0;
+  private lastAdSpotPos: { x: number; z: number } | null = null;
+  private lastAdSpotKind: UiAdRewardKind | null = null;
+  private adSpotCursor = 0;
+  private adChipSource: 'spot' | 'pad' | 'investor' | 'boost' | null = null;
+  private activePadOfferZoneId: string | null = null;
+  private dismissedPadZoneId: string | null = null;
+  private dismissedInvestor = false;
+  private adChipTimer = 2.0;
   private adChipLife = 0;
-  /**
-   * Açık çipin TOPLAM ömrü (sn). Halka `adChipLife / adChipMaxLife` ile
-   * çizilir; çipi açan her yol bunu kendi ömrüyle yazar (yatırımcı 14 sn,
-   * ped teklifi 12 sn, kendiliğinden teklif 35 sn).
-   */
   private adChipMaxLife = 35;
 
-  /**
-   * ÖDÜL TEKLİFİNİ KENDİLİĞİNDEN GÖSTER.
-   *
-   * Geri bildirim: "reklamlı ödüllü şeyleri göremedim, kendiliğinden ara
-   * ara belirmesi gerekiyordu." Teklifler yalnız panellerin içindeydi;
-   * paneli açmayan oyuncu sistemin varlığını hiç öğrenmiyordu.
-   *
-   * Sıklık disiplini teklifin kendisi kadar önemli: her zaman ekranda
-   * duran bir teklif TEKLİF KÖRLÜĞÜ yaratır ve gönüllü izlenme oranını
-   * düşürür. Kurallar:
-   *  · Öğretici bitmeden hiç gösterilmez (FTUE tek seferde tek şey öğretir).
-   *  · İki teklif arası ~80 sn (±15 sn seğirtme); çip `OMUR` saniye sonra
-   *    kendiliğinden kapanır (yanıt vermeyen oyuncuyu rahatsız etmez) ve
-   *    kalan ömür simgenin çevresindeki halkada GÖRÜNÜR geri sayılır.
-   *  · Panel/dönüş ekranı açıkken gösterilmez — oyuncunun odağı orada.
-   *  · Yalnız GERÇEKTEN hazır bir yerleşim gösterilir; hazır olması
-   *    "istek anı" koşulunu da içerir (bkz. getAdOffers).
-   */
+  private clearWorldAdBeacons(): void {
+    this.adSpotOffer = null;
+    this.adSpotLife = 0;
+    this.adSpotArm = 0;
+    this.adSpot.hide();
+    this.padAdBeacon.hide();
+    this.adChipSource = null;
+    this.activePadOfferZoneId = null;
+    this.dismissedPadZoneId = null;
+    this.dismissedInvestor = false;
+    this.adChipTimer = 2.0;
+    this.ui.hideAdChip();
+  }
+
+  dismissAdChip(): void {
+    if (this.adChipSource === 'spot') {
+      this.adSpotOffer = null;
+      this.adSpotLife = 0;
+      this.adSpotArm = 0;
+      this.adSpot.hide();
+      this.adChipTimer = 3.5;
+    } else if (this.adChipSource === 'pad') {
+      this.dismissedPadZoneId = this.activePadOfferZoneId;
+      this.activePadOfferZoneId = null;
+    } else if (this.adChipSource === 'investor') {
+      this.dismissedInvestor = true;
+    }
+    this.adChipSource = null;
+  }
+
+  openBoostOffer(): void {
+    if (this.adRewardInFlight || this.adShowing || this.ui.isPanelOpen()) return;
+    if (this.happyLeft >= HAPPY_HOUR_MAX_SECONDS || !adReady('happy_hour')) return;
+    const extending = this.happyLeft > 0;
+    const stepMin = Math.round(HAPPY_HOUR_STEP_SECONDS / 60);
+    this.adChipSource = 'boost';
+    this.adChipLife = 16;
+    this.adChipMaxLife = 16;
+    this.ui.showAdChip(
+      'happy_hour',
+      '🎉',
+      extending ? tr("Mutlu Saati Uzat (×{0})", HAPPY_HOUR_MULT) : tr("Mutlu Saat (×{0} Gelir)", HAPPY_HOUR_MULT),
+      extending
+        ? tr("Mevcut 2× kazanç sürene +{0} dakika ekle!", stepMin)
+        : tr("{0} dakika boyunca bütün kazancın ×{1} olsun!", stepMin, HAPPY_HOUR_MULT),
+      'default',
+    );
+    this.ui.setAdChipProgress(1);
+  }
+
+  private urgentVipPrompted = false;
+  private hasUrgentVip(): boolean {
+    const list = this.world.customers;
+    const infEvent = this.events.isActive('influencer');
+    for (let i = 0; i < list.length; i++) {
+      const c = list[i];
+      if (!c.waiting || c.maxPatience <= 0) continue;
+      if (c.patience / c.maxPatience >= 0.38) continue;
+      if (c.arch.id === 'influencer' || c.arch.id === 'vip' || infEvent) return true;
+    }
+    return false;
+  }
+
+  private investorNearPlayer(maxDist: number): boolean {
+    const list = this.world.customers;
+    for (let i = 0; i < list.length; i++) {
+      const c = list[i];
+      if (!c.isInvestor || c.done || c.state === 'leave' || c.waving) continue;
+      if (Math.hypot(this.player.x - c.x, this.player.z - c.z) <= maxDist) return true;
+    }
+    return false;
+  }
+
+  private syncWorldAdBeacons(): void {
+    if (this.dismissedPadZoneId) {
+      const dz = zoneDef(this.world.loc.id, this.dismissedPadZoneId);
+      if (
+        !dz ||
+        this.world.zoneUnlocked(dz.id) ||
+        Math.abs(this.player.x - dz.padX) > ZONE_PURCHASE_HALF + 0.65 ||
+        Math.abs(this.player.z - dz.padZ) > ZONE_PURCHASE_HALF + 0.65
+      ) {
+        this.dismissedPadZoneId = null;
+      }
+    }
+    if (this.dismissedInvestor && (!this.world.hasInvestor() || !this.investorNearPlayer(3.5))) {
+      this.dismissedInvestor = false;
+    }
+    const padOffer = !this.ui.isPanelOpen() && adReady('zone_finish') ? this.world.getOfferedAdZone() : null;
+    if (padOffer && this.dismissedPadZoneId !== padOffer.zone.id) {
+      const z = padOffer.zone;
+      const lift = floorLiftAt(this.world.loc, z.padX, z.padZ);
+      this.padAdBeacon.show(
+        z.padX,
+        lift + 0.36,
+        z.padZ - 0.78,
+        '',
+        padOffer.tier === 'finish' ? 'default' : 'vip',
+        'zone_finish',
+      );
+    } else {
+      this.padAdBeacon.hide();
+    }
+  }
+
   private maybeOfferAd(dt: number): void {
-    const OMUR = 35;
+    const OMUR = 45;
+    this.syncWorldAdBeacons();
+
     if (this.ui.adChipOpen) {
-      this.adChipLife -= dt;
-      // Geri sayım halkası her kare tazelenir (HUD zaten küçük adımlar).
-      this.ui.setAdChipProgress(Math.max(0, this.adChipLife) / Math.max(0.001, this.adChipMaxLife));
-      if (this.adChipLife <= 0) this.ui.hideAdChip();
+      if (this.ui.isPanelOpen()) {
+        this.ui.hideAdChip();
+        this.adChipSource = null;
+        return;
+      }
+      if (this.adChipSource === 'pad') {
+        const z = this.activePadOfferZoneId ? zoneDef(this.world.loc.id, this.activePadOfferZoneId) : undefined;
+        const offPad =
+          !z ||
+          this.world.zoneUnlocked(z.id) ||
+          this.player.hasVacuum ||
+          Math.abs(this.player.x - z.padX) > ZONE_PURCHASE_HALF + 0.35 ||
+          Math.abs(this.player.z - z.padZ) > ZONE_PURCHASE_HALF + 0.35;
+        if (offPad) {
+          this.ui.hideAdChip();
+          this.adChipSource = null;
+          this.activePadOfferZoneId = null;
+          return;
+        }
+      } else if (this.adChipSource === 'investor') {
+        if (!this.investorNearPlayer(3.2)) {
+          this.ui.hideAdChip();
+          this.adChipSource = null;
+          return;
+        }
+      } else if (this.adChipSource === 'spot') {
+        const walkedAway =
+          !this.adSpotOffer ||
+          this.player.hasVacuum ||
+          Math.hypot(this.player.x - this.adSpotX, this.player.z - this.adSpotZ) > AD_SPOT_DISMISS_RADIUS;
+        if (walkedAway) {
+          this.ui.hideAdChip();
+          this.adChipSource = null;
+          this.adSpotArm = 0;
+        }
+      }
+
+      if (this.ui.adChipOpen && this.adChipSource !== 'spot' && this.adChipLife > 0) {
+        this.adChipLife -= dt;
+        this.ui.setAdChipProgress(Math.max(0, this.adChipLife) / Math.max(0.001, this.adChipMaxLife));
+        if (this.adChipLife <= 0) {
+          this.ui.hideAdChip();
+          this.adChipSource = null;
+          this.activePadOfferZoneId = null;
+        }
+      }
+    }
+
+    if (this.adSpotOffer) {
+      this.adSpotLife -= dt;
+      if (this.adSpotLife <= 0) {
+        this.adSpotOffer = null;
+        this.adSpotLife = 0;
+        this.adSpotArm = 0;
+        this.adSpot.hide();
+        if (this.adChipSource === 'spot') {
+          this.ui.hideAdChip();
+          this.adChipSource = null;
+        }
+        // Süresi dolan vitrin yerine hemen başka bir noktada yeni vitrin doğsun.
+        this.adChipTimer = 2.5;
+        return;
+      }
+
+      const lifeRatio = Math.max(0, this.adSpotLife) / Math.max(0.001, this.adSpotMaxLife);
+      const dSpot = Math.hypot(this.player.x - this.adSpotX, this.player.z - this.adSpotZ);
+      if (this.adChipSource === 'spot' && this.ui.adChipOpen) {
+        this.adSpot.setCountdown(lifeRatio, 1);
+        this.ui.setAdChipProgress(lifeRatio);
+        return;
+      }
+      if (!this.ui.adChipOpen && !this.ui.isPanelOpen() && !this.player.hasVacuum && dSpot <= AD_SPOT_TRIGGER_RADIUS) {
+        if (this.player.planarSpeed < 1.15) {
+          this.adSpotArm = Math.min(AD_SPOT_ARM_TIME, this.adSpotArm + dt);
+        } else {
+          this.adSpotArm = Math.max(0, this.adSpotArm - dt * 1.5);
+        }
+        this.adSpot.setCountdown(lifeRatio, this.adSpotArm / AD_SPOT_ARM_TIME);
+        if (this.adSpotArm >= AD_SPOT_ARM_TIME) {
+          const off = this.adSpotOffer;
+          this.adChipSource = 'spot';
+          this.adChipLife = this.adSpotLife;
+          this.adChipMaxLife = this.adSpotMaxLife;
+          this.ui.showAdChip(off.k, off.g, off.t, off.d, off.v);
+          this.ui.setAdChipProgress(lifeRatio);
+        }
+      } else {
+        this.adSpotArm = Math.max(0, this.adSpotArm - dt * 2);
+        this.adSpot.setCountdown(lifeRatio, this.adSpotArm / AD_SPOT_ARM_TIME);
+      }
       return;
     }
-    if (this.adOfferShownCount >= Game.AD_OFFER_MAX_SHOWN) return;
+
+    if (this.ui.adChipOpen) return;
     if (!this.tutorial.finished || this.ui.isPanelOpen()) return;
+    const vipLow = this.hasUrgentVip();
+    if (!vipLow) {
+      this.urgentVipPrompted = false;
+    } else if (!this.urgentVipPrompted && this.ustaLeft <= 0 && adReady('usta_mode') && this.adChipTimer > 1.0) {
+      this.urgentVipPrompted = true;
+      this.adChipTimer = 1.0;
+    }
     this.adChipTimer -= dt;
     if (this.adChipTimer > 0) return;
 
     const o = this.getAdOffers();
-    /**
-     * ÖNCELİK SIRASI (v5.1): acilden genele. Arıza sigortası en önde —
-     * makine ŞU AN duruyor; nakit desteği ve robot somut bir derdi çözer;
-     * süreli çarpanlar (akın/usta/mutlu saat/bahşiş) ortada; depo ve
-     * günlük katlama "her zaman iyi" oldukları için en sonda. comeback_sale
-     * BİLEREK listede yok: o teklif yalnız dönüş modalında yaşar.
-     */
-    const aday: { k: UiAdRewardKind; g: string; t: string; d: string }[] = [
-      { k: 'repair_shield', g: '🛡️', t: tr("Arıza Sigortası"), d: o.repairShield.ready ? o.repairShield.text : '' },
-      { k: 'cash_boost', g: '💰', t: tr("Nakit Desteği"), d: o.cashBoost.ready ? o.cashBoost.text : '' },
-      { k: 'robot_vacuum', g: '🤖', t: tr("Süpürge Robotu"), d: o.robotVacuum.ready ? o.robotVacuum.text : '' },
-      { k: 'zone_finish', g: '🚧', t: tr("Bölümü Tamamla"), d: o.zoneFinish.ready ? o.zoneFinish.text : '' },
-      { k: 'rush_hour', g: '🙌', t: tr("Müşteri Akını"), d: o.rushHour.ready ? o.rushHour.text : '' },
-      { k: 'usta_mode', g: '🛠️', t: tr("Usta Modu"), d: o.ustaMode.ready ? o.ustaMode.text : '' },
-      { k: 'happy_hour', g: '🎉', t: tr("Mutlu Saat"), d: o.happyHour.ready ? o.happyHour.text : '' },
-      { k: 'tip_rain', g: '💸', t: tr("Bahşiş Yağmuru"), d: o.tipRain.ready ? o.tipRain.text : '' },
-      { k: 'stock_refill', g: '📦', t: tr("Depoları Doldur"), d: o.stockRefill.ready ? o.stockRefill.text : '' },
-      { k: 'daily_double', g: '🎁', t: tr("Ödülü İkiye Katla"), d: o.dailyDouble.ready ? o.dailyDouble.text : '' },
-    ];
-    const secilen = aday.find((a) => a.d !== '');
+    const vipUrgentReady = vipLow && this.ustaLeft <= 0 && adReady('usta_mode');
+    const zoneSpotReady = o.zoneFinish.ready && !this.padAdBeacon.isVisible();
+    const lightDirt = this.world.grime.heavyCoverage > 0.015 || this.world.spills.list.length >= 1;
+    const robotSpotReady = this.robotLeft <= 0 && (o.robotVacuum.ready || (lightDirt && adReady('robot_vacuum')));
+    const happySpotReady = this.happyLeft <= 0 && adReady('happy_hour');
+    const cashSpotReady = adReady('cash_boost');
+    const rushSpotReady = this.rushLeft <= 0 && this.world.shelfFillRatio() >= 0.35 && adReady('rush_hour');
+    const ustaSpotReady = !vipUrgentReady && this.ustaLeft <= 0 && this.world.queueTotal() >= 2 && adReady('usta_mode');
+
+    const urgentPool: { k: UiAdRewardKind; g: string; t: string; d: string; v?: AdSpotVariant }[] = [];
+    if (vipUrgentReady) {
+      urgentPool.push({
+        k: 'usta_mode',
+        g: '🚨',
+        t: tr("🚨 VIP Sabrı Azalıyor!"),
+        d: tr("Hemen Usta Modu aç: ×1,25 hız + tüm makinelerde el ver bonusu!"),
+        v: 'urgent',
+      });
+    }
+    if (o.repairShield.ready) {
+      urgentPool.push({ k: 'repair_shield', g: '🛡️', t: tr("Arıza Sigortası"), d: o.repairShield.text, v: 'urgent' });
+    }
+
+    const regularPool: { k: UiAdRewardKind; g: string; t: string; d: string; v?: AdSpotVariant }[] = [];
+    if (robotSpotReady) {
+      regularPool.push({
+        k: 'robot_vacuum',
+        g: '🤖',
+        t: tr("Süpürge Robotu"),
+        d: tr("{0} dakika boyunca zemini robot süpürsün", Math.round(ROBOT_SECONDS / 60)),
+      });
+    }
+    if (happySpotReady) {
+      regularPool.push({
+        k: 'happy_hour',
+        g: '🎉',
+        t: tr("Mutlu Saat"),
+        d: tr("{0} dakika boyunca bütün kazancın ×{1}", Math.round(HAPPY_HOUR_STEP_SECONDS / 60), HAPPY_HOUR_MULT),
+      });
+    }
+    if (cashSpotReady) {
+      regularPool.push({
+        k: 'cash_boost',
+        g: '💰',
+        t: tr("Nakit Desteği"),
+        d: tr("Kasana anında +₺{0} girsin", formatMoney(this.cashBoostAmount())),
+        v: 'vip',
+      });
+    }
+    if (zoneSpotReady) {
+      regularPool.push({ k: 'zone_finish', g: '🚧', t: tr("Bölümü Tamamla"), d: o.zoneFinish.text, v: 'vip' });
+    }
+    if (rushSpotReady) {
+      regularPool.push({
+        k: 'rush_hour',
+        g: '🙌',
+        t: tr("Müşteri Akını"),
+        d: tr("{0} saniye: müşteri akışı ×1,6 · sabır ×1,2", RUSH_HOUR_SECONDS),
+      });
+    }
+    if (ustaSpotReady) {
+      regularPool.push({
+        k: 'usta_mode',
+        g: '🛠️',
+        t: tr("Usta Modu"),
+        d: tr("{0} dakika: el ver bonusu bütün makinelerde + hız ×1,25", Math.round(USTA_SECONDS / 60)),
+      });
+    }
+    if (o.tipRain.ready) {
+      regularPool.push({ k: 'tip_rain', g: '💸', t: tr("Bahşiş Yağmuru"), d: o.tipRain.text });
+    }
+    if (o.stockRefill.ready) {
+      regularPool.push({ k: 'stock_refill', g: '📦', t: tr("Depoları Doldur"), d: o.stockRefill.text });
+    }
+    if (o.dailyDouble.ready) {
+      regularPool.push({ k: 'daily_double', g: '🎁', t: tr("Ödülü İkiye Katla"), d: o.dailyDouble.text });
+    }
+
+    let secilen: { k: UiAdRewardKind; g: string; t: string; d: string; v?: AdSpotVariant } | undefined = urgentPool[0];
+    if (!secilen && regularPool.length > 0) {
+      const varied = regularPool.length > 1
+        ? regularPool.filter((a) => a.k !== this.lastAdSpotKind)
+        : regularPool;
+      const list = varied.length > 0 ? varied : regularPool;
+      secilen = list[this.adSpotCursor % list.length];
+      this.adSpotCursor++;
+    }
     if (!secilen) {
-      // Hazır teklif yok: kısa süre sonra tekrar bak, sayacı boşa harcama.
-      this.adChipTimer = 20;
+      // AdMob henüz bir sonraki videoyu önyüklemediyse kısa aralıkla tekrar kontrol et.
+      this.adChipTimer = 3;
       return;
     }
-    this.adOfferShownCount++;
-    this.ui.showAdChip(secilen.k, secilen.g, secilen.t, secilen.d);
-    this.ui.setAdChipProgress(1);
-    this.adChipLife = OMUR;
-    this.adChipMaxLife = OMUR;
-    /**
-     * Sonraki teklif 80 sn ± 15 seğirtme: SABİT aralık ritmi tahmin
-     * edilebilir kılıyor ve teklif körlüğünü hızlandırıyordu; ufak
-     * rastgelelik çipi "canlı" tutar ama sıklık disiplinini bozmaz.
-     */
-    this.adChipTimer = 80 + (Math.random() * 30 - 15);
+    const pos = pickAdSpotPosition(
+      this.world,
+      this.player.x,
+      this.player.z,
+      secilen.k,
+      this.lastAdSpotPos,
+    );
+    this.lastAdSpotPos = { x: pos.x, z: pos.z };
+    this.lastAdSpotKind = secilen.k;
+    const lift = floorLiftAt(this.world.loc, pos.x, pos.z);
+    this.adSpotOffer = secilen;
+    this.adSpotX = pos.x;
+    this.adSpotZ = pos.z;
+    this.adSpotMaxLife = OMUR;
+    this.adSpotLife = OMUR;
+    this.adSpotArm = 0;
+    const cleanTitle = secilen.t.replace(/^🚨\s*/, '');
+    this.adSpot.show(pos.x, lift, pos.z, cleanTitle, secilen.v ?? 'default', secilen.k);
+    this.vfx.ring(pos.x, lift + 0.08, pos.z, secilen.v === 'urgent' ? 0xff6b5b : 0xf5b942, 1.9);
+    this.vfx.sparkleBurst(pos.x, lift + 0.9, pos.z, 8, 0xffd978);
+    this.adChipTimer = 2.5;
+  }
+
+  private pushBanner(
+    id: string,
+    title: string,
+    desc: string,
+    glyph: string,
+    remaining: number,
+    duration: number,
+    tone: 'good' | 'bad' | 'info',
+  ): void {
+    _banner.id = id;
+    _banner.title = title;
+    _banner.desc = desc;
+    _banner.glyph = glyph;
+    _banner.remaining = remaining;
+    _banner.duration = duration;
+    _banner.tone = tone;
+    this.ui.showEvent(_banner);
   }
 
   private updateUiFrame(dt: number): void {
@@ -1385,88 +1832,89 @@ export class Game implements UIApi {
      * satırda tutuluyor, geçici bir çarpan için onu şişirmek gerileme olur.
      */
     if (this.happyLeft > 0) {
-      this.ui.showEvent({
-        id: HAPPY_BANNER,
-        title: tr("MUTLU SAAT"),
-        desc: tr("Bütün kazancın ×{0}", HAPPY_HOUR_MULT),
-        glyph: '🎉',
-        remaining: this.happyLeft,
-        duration: Math.max(HAPPY_HOUR_SECONDS, this.happyLeft),
-        tone: 'good',
-      });
+      this.pushBanner(
+        HAPPY_BANNER,
+        tr("MUTLU SAAT"),
+        tr("Bütün kazancın ×{0}", HAPPY_HOUR_MULT),
+        '🎉',
+        this.happyLeft,
+        Math.max(HAPPY_HOUR_SECONDS, this.happyLeft),
+        'good',
+      );
     }
     this.maybeHintVacuum();
     this.maybeOfferAd(dt);
     if (this.robotLeft > 0) {
-      this.ui.showEvent({
-        id: ROBOT_BANNER,
-        title: tr("SÜPÜRGE ROBOTU"),
-        desc: tr("Zemini o topluyor"),
-        glyph: '🤖',
-        remaining: this.robotLeft,
-        duration: ROBOT_SECONDS,
-        tone: 'good',
-      });
+      this.pushBanner(
+        ROBOT_BANNER,
+        tr("SÜPÜRGE ROBOTU"),
+        tr("Zemini o topluyor"),
+        '🤖',
+        this.robotLeft,
+        ROBOT_SECONDS,
+        'good',
+      );
     }
     /* v5.1 buff bantları — Mutlu Saat'le aynı yol: süre olay bandının
      * kendi sayacında görünür, HUD'a yeni gösterge eklenmez. */
     if (this.ustaLeft > 0) {
-      this.ui.showEvent({
-        id: USTA_BANNER,
-        title: tr("USTA MODU"),
-        // Metin kodla eşit: USTA_SPEED_MULT 1,25 (ondalık virgülle yazılır).
-        desc: tr("El ver bonusu her makinede · hız ×1,25"),
-        glyph: '🛠️',
-        remaining: this.ustaLeft,
-        duration: USTA_SECONDS,
-        tone: 'good',
-      });
+      this.pushBanner(
+        USTA_BANNER,
+        tr("USTA MODU"),
+        tr("El ver bonusu her makinede · hız ×1,25"),
+        '🛠️',
+        this.ustaLeft,
+        USTA_SECONDS,
+        'good',
+      );
     }
     if (this.rushLeft > 0) {
-      this.ui.showEvent({
-        id: RUSH_BANNER,
-        title: tr("MÜŞTERİ AKINI"),
-        desc: tr("Akış ×1,6 · sabır ×1,2"),
-        glyph: '🙌',
-        remaining: this.rushLeft,
-        duration: RUSH_HOUR_SECONDS,
-        tone: 'good',
-      });
+      this.pushBanner(
+        RUSH_BANNER,
+        tr("MÜŞTERİ AKINI"),
+        tr("Akış ×1,6 · sabır ×1,2"),
+        '🙌',
+        this.rushLeft,
+        RUSH_HOUR_SECONDS,
+        'good',
+      );
     }
     if (this.tipLeft > 0) {
-      this.ui.showEvent({
-        id: TIP_BANNER,
-        title: tr("BAHŞİŞ YAĞMURU"),
-        desc: tr("Masa bahşişleri ×{0}", TIP_RAIN_MULT),
-        glyph: '💸',
-        remaining: this.tipLeft,
-        duration: TIP_RAIN_SECONDS,
-        tone: 'good',
-      });
+      this.pushBanner(
+        TIP_BANNER,
+        tr("BAHŞİŞ YAĞMURU"),
+        tr("Masa bahşişleri ×{0}", TIP_RAIN_MULT),
+        '💸',
+        this.tipLeft,
+        TIP_RAIN_SECONDS,
+        'good',
+      );
     }
 
     // Olay bantlarının kalan süresi
     for (const b of this.events.activeBanners()) {
       const info = this.events.info(b.id as ChaosEventId);
-      this.ui.showEvent({
-        id: b.id,
-        title: info.title,
-        desc: info.desc,
-        glyph: info.glyph,
-        remaining: b.remaining,
-        duration: b.duration,
-        tone: info.tone,
-      });
+      this.pushBanner(b.id, info.title, info.desc, info.glyph, b.remaining, b.duration, info.tone);
     }
 
     // Tutorial — hedefi DOM işaretçisi yerine 3D ok/halka gösterir (tek dil).
     if (!this.tutorial.finished) {
       const text = this.player.hasVacuum ? tr('Süpürgeyi bırakmak için SÜPÜRGEYİ BIRAK düğmesine dokun; sonra işine devam et.') : this.tutorial.currentText;
-      if (text) this.ui.setTutorial({ text, index: this.tutorial.step, total: this.tutorial.total });
+      if (text) {
+        _tutStep.text = text;
+        _tutStep.index = this.tutorial.step;
+        _tutStep.total = this.tutorial.total;
+        this.ui.setTutorial(_tutStep);
+      }
       const t = this.tutorial.pointerTarget;
-      this.world.guideOverride = t
-        ? { x: t.x, z: t.z, label: this.tutorial.pointerVerb ?? tr("BURAYA GEL"), color: 0xffc84a }
-        : null;
+      if (t) {
+        _tutGuide.x = t.x;
+        _tutGuide.z = t.z;
+        _tutGuide.label = this.tutorial.pointerVerb ?? tr("BURAYA GEL");
+        this.world.guideOverride = _tutGuide;
+      } else {
+        this.world.guideOverride = null;
+      }
     } else {
       this.ui.setTutorial(null);
       this.world.guideOverride = null;
@@ -1500,6 +1948,7 @@ export class Game implements UIApi {
 
   private persist(): void {
     if (this.persistDisabled) return;
+    this.syncAdBuffState();
     const worlds: Record<string, ReturnType<World['save']>> = {};
     for (const [id, w] of this.worlds) worlds[id] = w.save();
     const ok = this.save.write({ state: this.state.save(), worlds });
@@ -1589,11 +2038,11 @@ export class Game implements UIApi {
       this.ui.celebrate(tr("7 GÜN SERİ!"), tr("Kozmetik kuponu kazandın — Dekorasyon panelinde %40 indirim"), '🎟️');
       this.persist();
     }
-    bus.emit('ui:refresh', {});
     if (r.streakBroken) {
-      // "Asla cezalandırma": seri kırıldı ama kaybedilen bir şey yok.
+      // "Asla cezalandırma": seri kırıldı ama reklamla kurtarma seçeneği sunulur.
       this.ui.toast(tr("Seri sıfırlandı — sorun değil, bugün baştan!"), '🔄', 'info');
     }
+    bus.emit('ui:refresh', {});
     const reward = dailyReward(this.state.dailyStreak, this.rewardIncomePerSec());
     this.ui.toast(tr("Günlük ödül hazır: +₺{0}", formatMoney(reward)), '🎁', 'good');
   }
@@ -1735,8 +2184,22 @@ export class Game implements UIApi {
       capacity: tr("+1 Kapasite"),
       hands: tr("+%11 El Hızı"),
       charm: tr("+%9 Kazanç"),
-      vault: '',
+      vault: tr("+2 Saat Kasa"),
     };
+    const gainMap: Record<PlayerUpgradeId, number> = {
+      speed: 14,
+      capacity: 16,
+      hands: 11,
+      charm: 13,
+      vault: 9,
+    };
+    const bestId = pickBestRoiId(
+      PLAYER_UPGRADES.map((def) => ({
+        id: def.id,
+        cost: this.state.playerUpgradeCost(def.id),
+        weight: this.state.upgrades[def.id] >= def.maxLevel ? 0 : gainMap[def.id],
+      })),
+    );
     return PLAYER_UPGRADES.map((def) => {
       const level = this.state.upgrades[def.id];
       const maxed = level >= def.maxLevel;
@@ -1754,6 +2217,7 @@ export class Game implements UIApi {
         valueText: def.format(level),
         nextText: maxed ? def.format(level) : def.format(level + 1),
         deltaBadge: maxed ? undefined : deltaMap[def.id],
+        roiBadge: !maxed && def.id === bestId ? 'best_roi' : undefined,
       };
     });
   }
@@ -1793,7 +2257,7 @@ export class Game implements UIApi {
   getStaff(): UiStaffRow[] {
     const locId = this.world.loc.id;
     const reqZoneFor = (role: StaffRole): string => {
-      if (locId === 'sahil') return role === 'busser' ? 's_t1' : role === 'barista' ? 's_a2' : 's_a1';
+      if (locId === 'sahil') return role === 'busser' ? 's_t1' : role === 'barista' ? 's_a2' : 'p1';
       if (role === 'busser') return 't1';
       if (role === 'barista') return 'a3';
       return 'a1';
@@ -1804,6 +2268,14 @@ export class Game implements UIApi {
       if (role === 'busser') return busserCapacity(lvl + 1) > busserCapacity(lvl) ? tr("+%6 Hız · +1 Bulaşık") : tr("+%6 Temizlik Hızı");
       return tr("+%6 Hazırlık Hızı");
     };
+    let shelfCapacity = 0;
+    const stations = this.world.stations;
+    for (let i = 0; i < stations.length; i++) {
+      const st = stations[i];
+      if (!st.locked && st.def.kind === 'pickup' && st.outputCap > shelfCapacity) {
+        shelfCapacity = st.outputCap;
+      }
+    }
     return STAFF_ROLES.map((def) => {
       const unlocked = this.state.staffRoleUnlocked(def.id) || this.state.staffCount[def.id] > 0;
       const count = this.state.staffCount[def.id];
@@ -1811,15 +2283,25 @@ export class Game implements UIApi {
       const activeCap = unlocked ? this.state.activeStaffCapFor(def.id) : this.state.staffCapFor(def.id);
       const hireMaxed = unlocked && count >= activeCap;
       const levelMaxed = level >= def.maxLevel;
-      const shelfCapacity = Math.max(0, ...this.world.stations.filter(st=>!st.locked && st.def.kind==='pickup').map(st=>st.outputCap));
-      const assignments = [...new Set(this.world.staff.filter(st=>st.role===def.id && st.assigned).map(st=>st.assigned!.def.name))];
-      const reqZone = zoneDef(locId, reqZoneFor(def.id));
+      const assignments: string[] = [];
+      const staffList = this.world.staff;
+      for (let i = 0; i < staffList.length; i++) {
+        const st = staffList[i];
+        if (st.role === def.id && st.assigned) {
+          const nm = st.assigned.def.name;
+          if (!assignments.includes(nm)) assignments.push(nm);
+        }
+      }
+      const reqZoneId = reqZoneFor(def.id);
+      const reqZone = !unlocked ? this.world.loc.zones.find((z) => z.id === reqZoneId) : undefined;
+      const roleLabel = tr(def.name);
+      const roleDesc = tr(def.desc);
       return {
         id: def.id,
-        name: def.name,
+        name: roleLabel,
         desc: hireMaxed && count < this.state.staffCapFor(def.id)
-          ? tr("{0} Yeni istasyon açılınca kadro büyür.", def.desc)
-          : def.desc,
+          ? tr("{0} Yeni istasyon açılınca kadro büyür.", roleDesc)
+          : roleDesc,
         glyph: def.glyph,
         color: def.color,
         count,
@@ -1830,7 +2312,7 @@ export class Game implements UIApi {
         canHire: unlocked && this.state.canHire(def.id),
         hireMaxed,
         locked: !unlocked,
-        unlockHint: !unlocked ? tr("🔒 “{0}” (₺{1}) bölümü açılınca aktif", reqZone.name, formatMoney(reqZone.cost)) : undefined,
+        unlockHint: !unlocked && reqZone ? tr("🔒 “{0}” (₺{1}) bölümü açılınca aktif", reqZone.name, formatMoney(reqZone.cost)) : undefined,
         level,
         maxLevel: def.maxLevel,
         levelCost: this.state.staffLevelCostFor(def.id),
@@ -1838,7 +2320,7 @@ export class Game implements UIApi {
         levelMaxed,
         effectText: staffEffectText(def.id, level, shelfCapacity),
         nextEffectText: staffEffectText(def.id, Math.min(def.maxLevel, level + 1), shelfCapacity),
-        deltaBadge: !hireMaxed ? tr("+1 {0}", def.name) : undefined,
+        deltaBadge: !hireMaxed ? tr("+1 {0}", roleLabel) : undefined,
         levelDeltaBadge: !levelMaxed ? levelDeltaFor(def.id, level) : undefined,
         scopeText: (assignments.length ? tr('Görev yeri: {0}', assignments.join(', ')) + ' · ' : '') + tr(PLAYER_STAFF_WORK[def.id]),
       };
@@ -1875,7 +2357,7 @@ export class Game implements UIApi {
       name: st.def.name,
       glyph: stationGlyph(st.def.kind, st.def.item),
       zoneName: zone.name,
-      deptName: DEPT_NAMES[st.def.dept ?? 'market'],
+      deptName: deptName(st.def.dept ?? 'market'),
       locked: st.locked,
       unlockHint: st.locked ? tr("🔒 “{0}” bölümü açılınca aktif", zone.name) : undefined,
       speedLevel: st.speedLevel,
@@ -1909,9 +2391,46 @@ export class Game implements UIApi {
 
   getStations(): UiStationRow[] {
     const rows: UiStationRow[] = [];
+    const unlockedPressure: UpgradePressure[] = [];
+    const roiCandidates: { id: string; cost: number; weight: number }[] = [];
     for (const st of this.world.stations) {
       if (!st.canUpgradeSpeed && !st.canUpgradeCap && st.speedLevel === 0 && st.capLevel === 0) continue;
       rows.push(this.toStationRow(st));
+      if (!st.locked) {
+        let usedSeats = 0;
+        for (let i = 0; i < st.seatTaken.length; i++) if (st.seatTaken[i]) usedSeats++;
+        unlockedPressure.push({
+          id: st.id,
+          kind: st.def.kind,
+          upgradeableSpeed: st.canUpgradeSpeed,
+          upgradeableCap: st.canUpgradeCap,
+          stock: st.output,
+          capacity: st.outputCap,
+          demand: st.def.item ? this.world.demandFor(st.def.item) : 0,
+          queue: st.queue.length,
+          seats: st.seats,
+          usedSeats,
+        });
+        const speedReady = st.canUpgradeSpeed;
+        const capReady = st.canUpgradeCap && !(st.def.kind === 'table' && usedSeats > 0);
+        if (speedReady || capReady) {
+          const minCost = speedReady && capReady
+            ? Math.min(st.speedUpgradeCost, st.capUpgradeCost)
+            : speedReady ? st.speedUpgradeCost : st.capUpgradeCost;
+          const weight = st.def.kind === 'counter' ? 14 : st.def.kind === 'table' ? 15 : 12;
+          roiCandidates.push({ id: st.id, cost: minCost, weight });
+        }
+      }
+    }
+    const pressure = this.tutorial.finished ? chooseUpgradePressure(unlockedPressure) : null;
+    const bestRoiId = pickBestRoiId(roiCandidates);
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      if (pressure && r.id === pressure.id) {
+        r.roiBadge = 'bottleneck';
+      } else if (bestRoiId && r.id === bestRoiId) {
+        r.roiBadge = 'best_roi';
+      }
     }
     return rows;
   }
@@ -2040,46 +2559,139 @@ export class Game implements UIApi {
      * DOĞAL ARA — akıllı geçiş reklamı için uygun an (bkz. core/Ads.ts).
      * Oyuncu dururken ve elleri boşken, oturum ve süre kuralı uygunsa açılır.
      */
-    this.trySmartBreak();
+    void this.trySmartBreak('branch_switch');
     return true;
   }
 
-  private getInterstitialContext(): InterstitialSafetyContext {
+  private getInterstitialContext(placement?: string): InterstitialSafetyContext {
+    const nowMs = Date.now();
+    const ageDays = Math.max(
+      0,
+      Math.floor(nowMs / 86_400_000) - Math.floor(this.firstSeenMs / 86_400_000),
+    );
+    const healthScore = computePlayerHealthScore({
+      sessionSeconds: Math.max(0, (nowMs - this.sessionStartMs) / 1000),
+      goalsCompleted: this.state.goalIndex,
+      rewardedWatched: sessionRewardedWatchedCount(),
+      dailyStreak: this.state.dailyStreak,
+      hygiene: this.world.hygiene,
+      secondsSinceLastUnlock: Math.max(0, this.state.playTime - this.lastUnlockPlayTime),
+    });
     return {
-      isPlayerIdle: this.player.planarSpeed < 0.25 && !this.player.interacting,
+      isPlayerIdle: this.player.planarSpeed < 0.45 && !this.player.interacting,
       isPlayerHandsEmpty: this.player.carryCount === 0,
       isTutorialDone: this.state.tutorialStep >= TUTORIAL_STEP_COUNT,
-      hasActiveCrisis: false,
+      hasActiveCrisis: this.events.hasUrgentCrisis() || this.hasUrgentVip(),
       goalsCompleted: this.state.goalIndex,
+      ageDays,
+      healthScore,
+      placement,
     };
   }
 
-  private async trySmartBreak(): Promise<boolean> {
-    if (this.adShowing) return false;
-    const ctx = this.getInterstitialContext();
+  /**
+   * Doğal bir dönüm noktasında (bölge açılışı, görev bitişi, satın alma paneli kapanışı)
+   * geçiş reklamı süresi dolmuşsa kuyruğa alır; oyuncu yürüyorsa veya elinde bardak varsa
+   * akışı bölmez, elini boşaltıp 0,22 sn duraksadığı ilk doğal nefeste gösterir.
+   */
+  private requestSmartBreak(placement: string, ttlSeconds = 25, delaySeconds = 0.4): void {
+    if (this.adShowing || this.ui.breakPromptOpen) return;
+    const probe = this.getInterstitialContext(placement);
+    probe.isPlayerIdle = true;
+    probe.isPlayerHandsEmpty = true;
+    if (!canShowRewardedInterstitial(probe) && !canShowInterstitial(probe)) return;
+    this.pendingBreakPlacement = placement;
+    this.pendingBreakLeft = Math.max(this.pendingBreakLeft, ttlSeconds);
+    this.pendingBreakDelay = Math.max(this.pendingBreakDelay, delaySeconds);
+  }
+
+  private tickPendingBreak(dt: number): void {
+    if (this.player.planarSpeed < 0.45 && !this.player.interacting && this.player.carryCount === 0) {
+      this.playerIdleSettle = Math.min(5, this.playerIdleSettle + dt);
+    } else {
+      this.playerIdleSettle = 0;
+    }
+    if (this.pendingBreakLeft <= 0 || this.adShowing || this.ui.breakPromptOpen) return;
+    this.pendingBreakLeft -= dt;
+    if (this.pendingBreakLeft <= 0) {
+      this.pendingBreakLeft = 0;
+      this.pendingBreakPlacement = '';
+      return;
+    }
+    if (this.pendingBreakDelay > 0) {
+      this.pendingBreakDelay -= dt;
+      return;
+    }
+    if (this.playerIdleSettle < 0.22) return;
+    const placement = this.pendingBreakPlacement || 'natural_break';
+    this.pendingBreakLeft = 0;
+    this.pendingBreakPlacement = '';
+    void this.trySmartBreak(placement);
+  }
+
+  private async trySmartBreak(placement = 'natural_break'): Promise<boolean> {
+    if (this.adShowing || this.ui.breakPromptOpen || this.ui.isPanelOpen() || this.appHidden) return false;
+    const ctx = this.getInterstitialContext(placement);
+
+    if (canShowRewardedInterstitial(ctx)) {
+      this.pendingBreakLeft = 0;
+      this.pendingBreakPlacement = '';
+      const bonus = Math.max(75, Math.round(this.rewardIncomePerSec() * 22));
+      this.ui.showBreakPrompt(
+        formatMoney(bonus),
+        () => {
+          void this.executeRewardedBreak(placement, bonus);
+        },
+        () => {
+          notifyBreakPromptSkipped();
+        },
+      );
+      return true;
+    }
+
     if (!canShowInterstitial(ctx)) return false;
 
-    const wasRunning = this.running;
-    this.adShowing = true;
-    this.audio.setSuspended(true);
-    this.input.setEnabled(false);
-    if (wasRunning) this.stop();
-    let shown = false;
-    try {
-      shown = await tryInterstitial(ctx);
-      return shown;
-    } finally {
-      this.adShowing = false;
-      this.audio.setSuspended(false);
-      this.input.setEnabled(true);
-      if (wasRunning && !this.appHidden) this.start();
-      if (shown) {
-        const bonus = Math.max(50, Math.round(this.rewardIncomePerSec() * 15));
-        this.state.grant(bonus);
-        this.ui.toast(tr("☕ Kahve Molası İkramı +₺{0}", formatMoney(bonus)), '☕', 'good');
-        bus.emit('ui:refresh', {});
+    this.pendingBreakLeft = 0;
+    this.pendingBreakPlacement = '';
+    const shown = await this.runWithAdOverlay(() => tryInterstitial(ctx));
+    if (shown) {
+      const bonus = Math.max(50, Math.round(this.rewardIncomePerSec() * 12));
+      this.state.grant(bonus);
+      this.ui.toast(tr("☕ Kahve Molası İkramı +₺{0}", formatMoney(bonus)), '☕', 'good');
+      bus.emit('ui:refresh', {});
+    }
+    return shown;
+  }
+
+  private async executeRewardedBreak(placement: string, bonus: number): Promise<void> {
+    if (this.adShowing || this.appHidden || this.ui.isPanelOpen()) return;
+    const ctx = this.getInterstitialContext(placement);
+    const res = await this.runWithAdOverlay(() => tryRewardedInterstitial(ctx));
+    if (res.rewarded) {
+      this.state.grant(bonus);
+      this.ui.toast(tr("☕ Kahve Molası İkramı +₺{0}", formatMoney(bonus)), '☕', 'good');
+      bus.emit('ui:refresh', {});
+      return;
+    }
+    if (!res.shown) {
+      const fallbackCtx = this.getInterstitialContext(placement);
+      if (canShowInterstitial(fallbackCtx)) {
+        const shown = await this.runWithAdOverlay(() => tryInterstitial(fallbackCtx));
+        if (shown) {
+          const courtesy = Math.max(50, Math.round(this.rewardIncomePerSec() * 12));
+          this.state.grant(courtesy);
+          this.ui.toast(tr("☕ Kahve Molası İkramı +₺{0}", formatMoney(courtesy)), '☕', 'good');
+          bus.emit('ui:refresh', {});
+        }
       }
     }
+  }
+
+  private async tryResumeAppOpen(): Promise<void> {
+    if (this.adShowing || this.appHidden || this.ui.isPanelOpen() || this.ui.breakPromptOpen) return;
+    const ctx = this.getInterstitialContext('app_resume');
+    if (!canShowAppOpen(ctx)) return;
+    await this.runWithAdOverlay(() => tryAppOpen(ctx));
   }
 
   getGoals(): UiGoal[] {
@@ -2200,6 +2812,7 @@ export class Game implements UIApi {
     });
     let pending = s.dailyClaimed ? 0 : 1;
     for (const m of missions) if (!m.claimed && m.current >= m.target) pending++;
+    const lost = lostStreakDays(s);
     return {
       streak: s.dailyStreak,
       ladder: 7,
@@ -2207,12 +2820,45 @@ export class Game implements UIApi {
       reward: dailyReward(s.dailyStreak, inc),
       missions,
       pending,
+      brokenStreak: lost >= 1 ? lost + 1 : undefined,
+      canRecoverStreak: canRecoverStreak(s) && adReady('streak_freeze'),
     };
+  }
+
+  async recoverDailyStreak(): Promise<boolean> {
+    if (this.adRewardInFlight || !canRecoverStreak(this.state)) return false;
+    const prevLost = lostStreakDays(this.state);
+    this.adRewardInFlight = true;
+    this.telemetry.record('ad_requested', { placement: 'streak_freeze' });
+    let rewarded = false;
+    try {
+      if (!(await this.showRewardedOrExplain('streak_freeze'))) return false;
+      if (!recoverStreak(this.state)) return false;
+      rewarded = true;
+      if (prevLost === 5 && this.state.dailyStreak === 6) {
+        this.state.coupons++;
+        this.ui.celebrate(tr("7 GÜN SERİ!"), tr("Kozmetik kuponu kazandın — Dekorasyon panelinde %40 indirim"), '🎟️');
+      }
+      this.audio.play('levelup');
+      this.ui.toast(tr("🔥 {0} günlük serin kurtarıldı!", this.state.dailyStreak + 1), '🔥', 'good');
+      this.persist();
+      bus.emit('ui:refresh', {});
+      return true;
+    } finally {
+      this.adRewardInFlight = false;
+      this.telemetry.record('ad_result', { placement: 'streak_freeze', rewarded });
+    }
+  }
+
+  dismissDailyStreakRecovery(): void {
+    dismissStreakRecovery(this.state);
+    bus.emit('ui:refresh', {});
   }
 
   claimDaily(): void {
     const s = this.state;
     if (s.dailyClaimed) return;
+    dismissStreakRecovery(s);
     s.dailyClaimed = true;
     const amount = dailyReward(s.dailyStreak, this.rewardIncomePerSec());
     s.grant(amount);
@@ -2680,7 +3326,7 @@ export class Game implements UIApi {
     const doluluk = acik.length
       ? acik.reduce((a, m) => a + m.output, 0) / Math.max(1, acik.reduce((a, m) => a + m.outputCap, 0))
       : 1;
-    const bosDepo = doluluk < 0.6;
+    const bosDepo = doluluk < 0.72;
     const s = this.state;
     return {
       happyHour: {
@@ -2724,9 +3370,9 @@ export class Game implements UIApi {
         text: tr("Kasana anında +₺{0} girsin", formatMoney(this.cashBoostAmount())),
       },
       ustaMode: {
-        // Kuyruk gerçekten kabarıkken: boş kafede "her makinede el ver"
+        // Kuyruk gerçekten kabarıkken veya VIP sabrı azalırken: boş kafede
         // bonusu hiçbir şey hızlandırmaz, teklif değersizleşirdi.
-        ready: this.ustaLeft <= 0 && this.world.queueTotal() >= USTA_MIN_QUEUE && adReady('usta_mode'),
+        ready: this.ustaLeft <= 0 && (this.world.queueTotal() >= USTA_MIN_QUEUE || this.hasUrgentVip()) && adReady('usta_mode'),
         // Metin kodla eşit: USTA_SPEED_MULT 1,25 (ondalık virgülle yazılır).
         text: tr("{0} dakika: el ver bonusu bütün makinelerde + hız ×1,25", Math.round(USTA_SECONDS / 60)),
       },
@@ -2765,23 +3411,25 @@ export class Game implements UIApi {
    * veya sıradaki kilitli alanın kalan maliyetinin %55'i (cash_boost × 3.2 tavanlı).
    */
   private investorCashAmount(): number {
-    const mult = BALANCE.events.investorCashMultiplier ?? 1.5;
-    const base = this.cashBoostAmount();
-    const z = this.world.nextLockedZone();
-    const rem = z ? Math.max(0, z.cost - this.world.padPaid(z.id)) : 0;
-    return Math.max(1000, Math.min(Math.round(base * 3.2), Math.max(Math.round(base * mult), Math.round(rem * 0.55))));
+    const w = this.world;
+    const z = w.nextLockedZone();
+    const rem = z ? Math.max(0, z.cost - w.padPaid(z.id)) : 0;
+    const mult = BALANCE.events.investorCashMultiplier ?? 1.8;
+    return computeInvestorOfferAmount(w.realizedIncome, w.estimateIncomePerSecond(), rem, mult);
   }
 
   private investorOfferActive = false;
   private handleInvestorProximity(inv: Customer): void {
-    if (this.investorOfferActive || this.adRewardInFlight || this.adShowing) return;
+    if (this.dismissedInvestor || this.investorOfferActive || this.adRewardInFlight || this.adShowing) return;
     this.investorOfferActive = true;
+    this.adChipSource = 'investor';
     const amount = this.investorCashAmount();
     this.ui.showAdChip(
       'investor',
       '💰',
       tr("Zengin Yatırımcı"),
       tr("Kafene +₺{0} teklif ediyor!", formatCompactMoney(amount)),
+      'vip',
     );
     this.ui.setAdChipProgress(1);
     this.adChipLife = 14;
@@ -2804,8 +3452,9 @@ export class Game implements UIApi {
    */
   private cashBoostAmount(): number {
     const w = this.world;
-    const inc = w.realizedIncome > 0 ? w.realizedIncome : w.estimateIncomePerSecond() * 0.25;
-    return Math.max(CASH_BOOST_FLOOR, Math.round(inc * CASH_BOOST_INCOME_SECONDS));
+    const z = w.nextLockedZone();
+    const rem = z ? Math.max(0, z.cost - w.padPaid(z.id)) : 0;
+    return computeCashBoostAmount(w.realizedIncome, w.estimateIncomePerSecond(), rem);
   }
 
   /**
@@ -2818,36 +3467,77 @@ export class Game implements UIApi {
    * bu arada yuvayı yeniden doldurur (bkz. AdMobProvider yükleme zinciri).
    */
   private adShowing = false;
+  private lastAdOverlayEndedAt = 0;
   private lastOfflineSeconds = 0;
   private lastOfflineCash = 0;
   private adRewardInFlight = false;
 
-  private async showRewardedOrExplain(p: UiAdRewardKind): Promise<boolean> {
+  isComebackAdReady(): boolean {
+    return adReady('comeback_sale') && (this.world.stockTotal() >= COMEBACK_MIN_STOCK || this.lastOfflineCash > 0);
+  }
+
+  private async runWithAdOverlay<T>(fn: () => Promise<T>): Promise<T> {
     const wasRunning = this.running;
+    this.ui.hideBreakPrompt();
+    if (this.lastBannerVisible) {
+      this.lastBannerVisible = false;
+      setBannerVisible(false);
+    }
     this.adShowing = true;
     this.audio.setSuspended(true);
     this.input.setEnabled(false);
     if (wasRunning) this.stop();
     try {
-      if (await showRewarded(p)) return true;
-      this.ui.toast(tr("Reklam şu an hazır değil"), '📺', 'info');
-      this.adChipTimer = 30;
-      return false;
+      return await fn();
     } finally {
       this.adShowing = false;
+      this.lastAdOverlayEndedAt = Date.now();
       this.audio.setSuspended(false);
       this.input.setEnabled(true);
+      this.framePacer.reset(performance.now());
+      this.fpsMeter.reset();
+      this.forceRender = true;
       if (wasRunning && !this.appHidden) this.start();
     }
   }
 
+  private async showRewardedOrExplain(p: UiAdRewardKind): Promise<boolean> {
+    return this.runWithAdOverlay(async () => {
+      if (await showRewarded(p)) {
+        this.pendingBreakLeft = 0;
+        this.pendingBreakPlacement = '';
+        this.panelActionTaken = false;
+        return true;
+      }
+      this.ui.toast(tr("Reklam şu an hazır değil"), '🎬', 'info');
+      this.adChipTimer = 4;
+      return false;
+    });
+  }
+
   async watchAd(kind: UiAdRewardKind): Promise<boolean> {
-    if(this.adRewardInFlight)return false;
-    this.adRewardInFlight=true;
-    this.telemetry.record('ad_requested',{placement:kind});
-    let rewarded=false;
-    try {rewarded=await this.applyAdReward(kind);return rewarded;}
-    finally {this.adRewardInFlight=false;this.telemetry.record('ad_result',{placement:kind,rewarded});}
+    if (this.adRewardInFlight) return false;
+    this.adRewardInFlight = true;
+    this.telemetry.record('ad_requested', { placement: kind });
+    let rewarded = false;
+    try {
+      rewarded = await this.applyAdReward(kind);
+      if (rewarded) {
+        if (this.adSpotOffer?.k === kind || this.adChipSource === 'spot') {
+          this.adSpotOffer = null;
+          this.adSpotLife = 0;
+          this.adSpotArm = 0;
+          this.adSpot.hide();
+          this.adChipTimer = 4;
+        }
+        this.adChipSource = null;
+        this.activePadOfferZoneId = null;
+      }
+      return rewarded;
+    } finally {
+      this.adRewardInFlight = false;
+      this.telemetry.record('ad_result', { placement: kind, rewarded });
+    }
   }
 
   private async applyAdReward(kind: UiAdRewardKind): Promise<boolean> {
@@ -2867,6 +3557,7 @@ export class Game implements UIApi {
         this.ui.toast(tr("Mutlu Saat başladı — kazancın ×{0}!", HAPPY_HOUR_MULT), '🎉', 'good');
       }
       bus.emit('ui:refresh', {});
+      this.persist();
       return true;
     }
 
@@ -2879,6 +3570,7 @@ export class Game implements UIApi {
       this.audio.play('levelup');
       this.ui.toast(tr("Süpürge robotu işbaşında!"), '🤖', 'good');
       bus.emit('ui:refresh', {});
+      this.persist();
       return true;
     }
 
@@ -2938,6 +3630,7 @@ export class Game implements UIApi {
       this.audio.play('goal');
       this.ui.toast(tr('Usta modu! El ver bonusu her makinede.'), '🛠️', 'good');
       bus.emit('ui:refresh', {});
+      this.persist();
       return true;
     }
 
@@ -2948,6 +3641,7 @@ export class Game implements UIApi {
       this.audio.play('goal');
       this.ui.toast(tr("Müşteri akını başladı!"), '🙌', 'good');
       bus.emit('ui:refresh', {});
+      this.persist();
       return true;
     }
 
@@ -2966,6 +3660,7 @@ export class Game implements UIApi {
         'good',
       );
       bus.emit('ui:refresh', {});
+      this.persist();
       return true;
     }
 
@@ -2975,6 +3670,8 @@ export class Game implements UIApi {
       this.tipLeft = TIP_RAIN_SECONDS;
       this.audio.play('goal');
       this.ui.toast(tr("Bahşiş yağmuru — masa bahşişleri ×{0}!", TIP_RAIN_MULT), '💸', 'good');
+      bus.emit('ui:refresh', {});
+      this.persist();
       return true;
     }
 
@@ -3031,7 +3728,7 @@ export class Game implements UIApi {
 
     if (!(await this.showRewardedOrExplain('zone_finish'))) return false;
 
-    if (remaining <= zone.cost * 0.5) {
+    if (remaining <= zone.cost * 0.65 || activeOffer?.tier === 'finish') {
       this.world.unlockZone(zone.id, 'pad');
       this.audio.play('levelup');
       this.ui.toast(tr("“{0}” reklamla açıldı!", zone.name), '🎉', 'good');
@@ -3039,7 +3736,7 @@ export class Game implements UIApi {
       const pay50 = zone.cost * 0.5;
       this.world.payZoneAd(zone.id, pay50);
       this.audio.play('levelup');
-      this.ui.toast(tr("“{0}” ödemesinin %50’si tamamlandı!", zone.name), '📺', 'good');
+      this.ui.toast(tr("“{0}” ödemesinin %50’si tamamlandı!", zone.name), '🔑', 'good');
     }
     bus.emit('ui:refresh', {});
     this.persist();
@@ -3047,18 +3744,13 @@ export class Game implements UIApi {
   }
 
   /**
-   * KAYITTAN BUFF GERİ YÜKLEME — "bilinen açık" kapanır: uygulama tam
-   * kapanınca satın alınmış süreli ödüller buharlaşıyordu. `state.adBuffs`
-   * her kare tickMods'ta yazılır (tek yazıcı), burada tek seferlik okunur.
-   *
-   * Robot yeniden YARATILIR: kayda mesh değil yalnız süre girer; canlı
-   * örnek watchAd('robot_vacuum') ile aynı yoldan kurulur. Sigorta süresi
-   * Events'e devredilir, usta modu hız çarpanı applyPlayerStats ile döner.
-   * Bantlar ayrıca kurulmaz — updateUiFrame kalan süresi olan her buffın
-   * bandını zaten her kare gösterir.
+   * KAYITTAN BUFF GERİ YÜKLEME — süreli reklam ödülleri gerçek duvar saatine
+   * (wall-clock) bağlıdır: oyun kapalıyken geçen süre düşülür, süresi dolmuş
+   * hiçbir buff kaldığı yerden devam etmez.
    */
-  private restoreAdBuffs(): void {
-    const ab = this.state.adBuffs;
+  private restoreAdBuffs(elapsedSeconds = 0): void {
+    const ab = decayAdBuffMap(this.state.adBuffs, elapsedSeconds);
+    this.state.adBuffs = ab;
     this.happyLeft = Math.max(0, ab.happy ?? 0);
     this.robotLeft = Math.max(0, ab.robot ?? 0);
     this.ustaLeft = Math.max(0, ab.usta ?? 0);
@@ -3071,6 +3763,61 @@ export class Game implements UIApi {
       this.robot = new RobotVacuum(this.world);
     }
     if (this.ustaLeft > 0) this.applyPlayerStats();
+  }
+
+  /**
+   * Uygulama arka planda, kilit ekranında veya menüde beklerken geçen gerçek
+   * süreyi aktif reklam bufflarından düşer; süresi bitenleri anında temizler.
+   */
+  private advanceAdBuffsWallClock(awaySeconds: number, persistNow = true): void {
+    const dt = Number.isFinite(awaySeconds) ? Math.max(0, awaySeconds) : 0;
+    if (dt <= 0) return;
+
+    let changed = false;
+    if (this.happyLeft > 0) {
+      this.happyLeft = Math.max(0, this.happyLeft - dt);
+      changed = true;
+      if (this.happyLeft === 0) this.ui.hideEvent(HAPPY_BANNER);
+    }
+    if (this.robotLeft > 0) {
+      this.robotLeft = Math.max(0, this.robotLeft - dt);
+      changed = true;
+      if (this.robotLeft === 0) {
+        this.robot?.dispose();
+        this.robot = null;
+        this.ui.hideEvent(ROBOT_BANNER);
+      }
+    }
+    if (this.ustaLeft > 0) {
+      this.ustaLeft = Math.max(0, this.ustaLeft - dt);
+      changed = true;
+      if (this.ustaLeft === 0) {
+        this.world.ustaMode = false;
+        this.ui.hideEvent(USTA_BANNER);
+        this.applyPlayerStats();
+      }
+    }
+    if (this.rushLeft > 0) {
+      this.rushLeft = Math.max(0, this.rushLeft - dt);
+      changed = true;
+      if (this.rushLeft === 0) this.ui.hideEvent(RUSH_BANNER);
+    }
+    if (this.tipLeft > 0) {
+      this.tipLeft = Math.max(0, this.tipLeft - dt);
+      changed = true;
+      if (this.tipLeft === 0) this.ui.hideEvent(TIP_BANNER);
+    }
+    if (this.events.breakdownShieldLeft > 0) {
+      this.events.decayBreakdownShield(dt);
+      changed = true;
+    }
+
+    if (!changed) return;
+    this.syncAdBuffState();
+    if (persistNow) {
+      this.persist();
+      bus.emit('ui:refresh', {});
+    }
   }
 
   skipTutorial(): void {
@@ -3096,6 +3843,10 @@ export class Game implements UIApi {
   /* ================================================================ */
 
   dispose(): void {
+    if (this.lastBannerVisible) {
+      this.lastBannerVisible = false;
+      setBannerVisible(false);
+    }
     this.telemetry?.dispose();
     this.stop();
     for (const u of this.unsubs) u();
@@ -3106,6 +3857,8 @@ export class Game implements UIApi {
     for (const w of this.worlds.values()) w.dispose();
     this.worlds.clear();
     this.player.dispose();
+    this.adSpot.dispose();
+    this.padAdBeacon.dispose();
     this.vfx.dispose();
     this.ui.dispose();
     this.input.dispose();
@@ -3115,11 +3868,16 @@ export class Game implements UIApi {
   }
 }
 
-const TIER_LABEL: Record<QualityTier, string> = {
-  high: tr("Yüksek"),
-  medium: tr("Orta"),
-  low: tr("Düşük"),
-};
+function tierLabel(tier: QualityTier): string {
+  switch (tier) {
+    case 'high':
+      return tr("Yüksek");
+    case 'medium':
+      return tr("Orta");
+    default:
+      return tr("Düşük");
+  }
+}
 
 /** Mutlu Saat bandının kimliği — HUD olay bandıyla aynı yolu kullanır. */
 const HAPPY_BANNER = 'happy_hour';
@@ -3137,11 +3895,12 @@ const TIP_BANNER = 'tip_rain';
  */
 const PRESTIGE_TEASE = 0.7;
 
-const DEPT_NAMES: Record<string, string> = {
-  bar: 'Bar',
-  salon: tr("Salon"),
-  servis: tr("Servis"),
-};
+function deptName(dept: string): string {
+  if (dept === 'bar') return 'Bar';
+  if (dept === 'salon') return tr("Salon");
+  if (dept === 'servis') return tr("Servis");
+  return '';
+}
 
 function stationGlyph(kind: string, item: ItemId | undefined): string {
   switch (kind) {

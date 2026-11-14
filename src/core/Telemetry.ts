@@ -1,7 +1,35 @@
 import { bus } from './EventBus';
 import { APP_VERSION } from './version';
+import { analytics } from './Analytics';
+import { hasNativeFirebaseAnalytics } from './Native';
 import { PurchaseMetrics, type PurchaseObservation, type PurchaseCompletion, type PurchaseMetricState, type PurchaseMetric } from './PurchaseMetrics';
 export type { PurchaseObservation, PurchaseCompletion } from './PurchaseMetrics';
+
+export interface PlayerHealthInput {
+  sessionSeconds: number;
+  goalsCompleted: number;
+  rewardedWatched: number;
+  dailyStreak: number;
+  hygiene: number;
+  secondsSinceLastUnlock?: number;
+}
+
+/**
+ * Cihaz içi Oyuncu Sağlık Puanı (0–100) — bkz. MONETIZASYON-VE-RETENTION.md §5.1.
+ * Puan < 35 ise geçiş reklamı susturulur; puan >= 70 ise D2+ doğal mola geçişi güvenlidir.
+ */
+export function computePlayerHealthScore(input: PlayerHealthInput): number {
+  let score = 50;
+  score += Math.min(18, Math.max(0, input.sessionSeconds) / 40);
+  score += Math.min(14, Math.max(0, input.goalsCompleted) * 1.5);
+  score += Math.min(12, Math.max(0, input.rewardedWatched) * 6);
+  score += Math.min(10, Math.max(0, input.dailyStreak) * 2);
+  if (input.hygiene < 35) score -= (35 - input.hygiene) * 0.5;
+  if (input.secondsSinceLastUnlock !== undefined && input.secondsSinceLastUnlock > 180) {
+    score -= Math.min(28, (input.secondsSinceLastUnlock - 180) / 10);
+  }
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
 
 export const TELEMETRY_KEY = 'fincan-sokagi:metrics:v1';
 export const METRICS_CONSENT_KEY = 'fincan-sokagi:metrics-sharing:v1';
@@ -231,6 +259,8 @@ export class MetricsBuffer {
     if (typeof requestIdleCallback === 'function') requestIdleCallback(run, { timeout: 2000 });
     else setTimeout(run, 500);
   }
+  get firstSeenMs(): number { return this.data.firstSeen; }
+  hasMilestone(name: MetricName): boolean { return this.data.first.includes(name); }
   get purchaseState(): PurchaseMetricState[] { return new PurchaseMetrics(this.data.purchases).snapshot(); }
   setPurchaseState(state: PurchaseMetricState[]): void { this.data.purchases = state; }
   setTestContext(context: TestContext): void {
@@ -242,14 +272,15 @@ export class MetricsBuffer {
     for (const event of this.data.events) if (event.session === this.session) event.context = { ...clean };
     this.persist();
   }
-  markDay(share = false, force = false): void {
+  markDay(share = false, force = false): boolean {
     const day = new Date(this.now()).toISOString().slice(0, 10);
     const known = this.data.days.includes(day);
-    if (known && !force) return;
+    if (known && !force) return false;
     if (!known) this.data.days.push(day);
     this.data.days = this.data.days.slice(-90);
     const age = Math.floor(this.now() / 86400000) - Math.floor(this.data.firstSeen / 86400000);
     this.record('active_day', { day, age_days: age }, share);
+    return !known;
   }
   get foregroundMs(): number {
     return this.activeMs + (this.activeStart === null ? 0 : Math.max(0, this.now() - this.activeStart));
@@ -326,6 +357,17 @@ export function validMetricsEndpoint(value: string): string {
     return '';
   }
 }
+const ACTIVE_SESSION_KEY = 'fincan-sokagi:active-session:v1';
+
+interface ActiveSessionSnapshot {
+  startedAt: number;
+  lastHeartbeatAt: number;
+  location: string;
+  playSeconds: number;
+  served: number;
+  orders: number;
+}
+
 export class GameplayTelemetry {
   private buffer: MetricsBuffer;
   private consent = false;
@@ -334,6 +376,7 @@ export class GameplayTelemetry {
   private timer: ReturnType<typeof setInterval>;
   private sending: AbortController | null = null;
   private ended = false;
+  private sliceStartForegroundMs = 0;
   private purchases: PurchaseMetrics;
   private snapshot: () => Props;
   constructor(snapshot: () => Props) {
@@ -346,48 +389,145 @@ export class GameplayTelemetry {
       storage = { getItem: () => null, setItem: () => {} };
     }
     this.buffer = new MetricsBuffer(storage, Date.now, true);
+    this.sliceStartForegroundMs = this.buffer.foregroundMs;
     this.purchases = new PurchaseMetrics(this.buffer.purchaseState);
-    this.buffer.markDay(this.sharing);
-    this.record('session_start', snapshot());
-    const first = (name: MetricName) => () => this.buffer.record(name, snapshot(), this.sharing, true);
+
+    this.recoverPreviousNativeSession();
+    const bootSnap = snapshot();
+    const isNewDay = this.buffer.markDay(this.sharing);
+    this.syncAnalyticsContext(bootSnap, isNewDay);
+    this.record('session_start', bootSnap);
+    analytics.trackSessionStart(String(bootSnap.location ?? 'kose'), false);
+    this.saveActiveSessionSnapshot(bootSnap, true);
+
+    const first = (name: MetricName) => () => {
+      const wasRecorded = this.buffer.hasMilestone(name);
+      const snap = snapshot();
+      this.buffer.record(name, snap, this.sharing, true);
+      if (!wasRecorded) {
+        analytics.trackEvent(name, {
+          location: String(snap.location ?? 'kose'),
+          play_seconds: Number(snap.play_seconds ?? 0),
+        });
+      }
+    };
     this.unsubs.push(
       bus.on('order:placed', first('first_order')),
       bus.on('item:served', first('first_serve')),
       bus.on('counter:collected', first('first_cash')),
       bus.on('table:cleaned', first('first_table_clean')),
-      bus.on('tutorial:step', ({ index, skipped, complete }) =>
-        this.record(skipped ? 'tutorial_skip' : complete ? 'tutorial_complete' : 'tutorial_step', {
-          step: index,
-        }),
+      bus.on('tutorial:step', ({ index, skipped, complete }) => {
+        const evName = skipped ? 'tutorial_skip' : complete ? 'tutorial_complete' : 'tutorial_step';
+        this.record(evName, { step: index });
+        analytics.trackEvent(evName, { step: index });
+      }),
+      bus.on('zone:unlocked', ({ zone, location }) => {
+        this.record('zone_unlock', { zone, location });
+        analytics.trackProgression('Complete', location, zone);
+      }),
+      bus.on('staff:hired', ({ role, count }) => {
+        this.record('staff_hire', { role, count });
+        analytics.trackEvent('staff_hire', { role, count });
+      }),
+      bus.on('upgrade:bought', ({ kind, id, level }) => {
+        this.record('upgrade', { kind, id, level });
+        analytics.trackEvent('upgrade_bought', { kind, id, level });
+      }),
+      bus.on('ad:revenue', ({ value, currency, precision, adUnit, format }) =>
+        this.record('ad_revenue', { value, currency, precision, adUnit, format }),
       ),
-      bus.on('zone:unlocked', ({ zone, location }) => this.record('zone_unlock', { zone, location })),
-      bus.on('staff:hired', ({ role, count }) => this.record('staff_hire', { role, count })),
-      bus.on('upgrade:bought', ({ kind, id, level }) => this.record('upgrade', { kind, id, level })),
     );
     const visibility = () => {
-      if (document.visibilityState === 'hidden') this.end();
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') this.end();
       else {
         this.ended = false;
         this.buffer.resume();
-        this.buffer.markDay(this.sharing);
-        this.record('session_start', { ...snapshot(), resumed: true });
+        this.sliceStartForegroundMs = this.buffer.foregroundMs;
+        const resumeSnap = snapshot();
+        const marked = this.buffer.markDay(this.sharing);
+        this.syncAnalyticsContext(resumeSnap, marked);
+        this.record('session_start', { ...resumeSnap, resumed: true });
+        analytics.trackSessionStart(String(resumeSnap.location ?? 'kose'), true);
+        this.saveActiveSessionSnapshot(resumeSnap, true);
       }
       void this.flush();
     };
     const end = () => this.end();
-    document.addEventListener('visibilitychange', visibility);
-    window.addEventListener('pagehide', end);
+    if (typeof document !== 'undefined') document.addEventListener('visibilitychange', visibility);
+    if (typeof window !== 'undefined') window.addEventListener('pagehide', end);
     this.unsubs.push(
-      () => document.removeEventListener('visibilitychange', visibility),
-      () => window.removeEventListener('pagehide', end),
+      () => { if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', visibility); },
+      () => { if (typeof window !== 'undefined') window.removeEventListener('pagehide', end); },
     );
     this.timer = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        this.buffer.markDay(this.sharing);
-        this.record('performance', snapshot());
+      if (typeof document === 'undefined' || document.visibilityState === 'visible') {
+        const tickSnap = snapshot();
+        const marked = this.buffer.markDay(this.sharing);
+        this.syncAnalyticsContext(tickSnap, marked);
+        this.record('performance', tickSnap);
+        this.saveActiveSessionSnapshot(tickSnap, false);
       }
       void this.flush();
     }, 60000);
+  }
+  private syncAnalyticsContext(snap: Props, reportActiveDay: boolean): void {
+    const now = Date.now();
+    const ageDays = Math.max(0, Math.floor(now / 86400000) - Math.floor(this.buffer.firstSeenMs / 86400000));
+    analytics.syncPlayerSegments({
+      language: String(snap.language ?? 'tr'),
+      branch: String(snap.location ?? 'kose'),
+      ageDays,
+    });
+    if (reportActiveDay) {
+      analytics.trackActiveDay(new Date(now).toISOString().slice(0, 10), ageDays);
+    }
+  }
+  private recoverPreviousNativeSession(): void {
+    if (!hasNativeFirebaseAnalytics()) return;
+    try {
+      const raw = localStorage.getItem(ACTIVE_SESSION_KEY);
+      if (!raw) return;
+      localStorage.removeItem(ACTIVE_SESSION_KEY);
+      const prev = JSON.parse(raw) as Partial<ActiveSessionSnapshot>;
+      if (typeof prev.startedAt !== 'number' || typeof prev.lastHeartbeatAt !== 'number') return;
+      const elapsedSec = Math.max(0, Math.round((prev.lastHeartbeatAt - prev.startedAt) / 1000));
+      analytics.trackSessionEnd(
+        elapsedSec,
+        Number(prev.playSeconds ?? 0),
+        typeof prev.location === 'string' ? prev.location : 'kose',
+        true,
+        Number(prev.served ?? 0),
+        Number(prev.orders ?? 0),
+      );
+    } catch {}
+  }
+  private saveActiveSessionSnapshot(snap: Props, resetStart: boolean): void {
+    if (!hasNativeFirebaseAnalytics()) return;
+    try {
+      const now = Date.now();
+      let startedAt = now;
+      if (!resetStart) {
+        const existing = JSON.parse(localStorage.getItem(ACTIVE_SESSION_KEY) ?? 'null') as Partial<ActiveSessionSnapshot> | null;
+        if (existing && typeof existing.startedAt === 'number' && Number.isFinite(existing.startedAt)) {
+          startedAt = existing.startedAt;
+        }
+      }
+      const next: ActiveSessionSnapshot = {
+        startedAt,
+        lastHeartbeatAt: now,
+        location: String(snap.location ?? 'kose'),
+        playSeconds: Number(snap.play_seconds ?? 0),
+        served: Number(snap.served ?? 0),
+        orders: Number(snap.orders ?? 0),
+      };
+      localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify(next));
+    } catch {}
+  }
+  private clearActiveSessionSnapshot(): void {
+    if (!hasNativeFirebaseAnalytics()) return;
+    try {
+      localStorage.removeItem(ACTIVE_SESSION_KEY);
+    } catch {}
   }
   get available() {
     return this.endpoint !== '';
@@ -399,8 +539,9 @@ export class GameplayTelemetry {
     const wasSharing = this.sharing;
     this.consent = value && this.available;
     try {
-      localStorage.setItem(METRICS_CONSENT_KEY, this.consent ? 'yes' : 'no');
+      localStorage.setItem(METRICS_CONSENT_KEY, value ? 'yes' : 'no');
     } catch {}
+    analytics.setConsent(value);
     if (this.consent && !wasSharing) this.buffer.markDay(true, true);
     if (!this.consent) {
       this.sending?.abort();
@@ -465,8 +606,19 @@ export class GameplayTelemetry {
   private end() {
     if (this.ended) return;
     this.ended = true;
+    const endSnap = this.snapshot();
+    const sliceSec = Math.max(0, (this.buffer.foregroundMs - this.sliceStartForegroundMs) / 1000);
     this.buffer.setPurchaseState(this.purchases.snapshot());
-    this.record('session_end', this.snapshot());
+    this.record('session_end', endSnap);
+    analytics.trackSessionEnd(
+      sliceSec,
+      Number(endSnap.play_seconds ?? 0),
+      String(endSnap.location ?? 'kose'),
+      false,
+      Number(endSnap.served ?? 0),
+      Number(endSnap.orders ?? 0),
+    );
+    this.clearActiveSessionSnapshot();
     this.buffer.pause();
     this.buffer.flushWrites();
     void this.flush();

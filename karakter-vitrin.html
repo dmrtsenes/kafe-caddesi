@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kafe Caddesi — 3B Karakter Vitrini (fincan-current)</title>
+  <style>
+    :root {
+      --bg: #f3ece1;
+      --panel: rgba(255, 250, 243, 0.92);
+      --panel-border: rgba(74, 52, 35, 0.14);
+      --ink: #2a1d14;
+      --muted: #6c5748;
+      --accent: #2f5a4c;
+      --accent-soft: #e4efe9;
+      --gold: #d99b26;
+      --shadow: 0 10px 30px rgba(42, 29, 20, 0.14);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    #stage {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+    .topbar {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .top-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .brand-card, .info-pill, .dock {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      pointer-events: auto;
+    }
+    .brand-card {
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge {
+      background: var(--gold);
+      color: #24180c;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+    }
+    .btn, .game-link {
+      appearance: none;
+      border: 1px solid var(--panel-border);
+      background: #fffcf7;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover, .game-link:hover {
+      background: #f8f1e6;
+    }
+    .btn:active, .game-link:active {
+      transform: scale(0.97);
+    }
+    .btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    .game-link {
+      background: var(--gold);
+      border-color: rgba(42, 29, 20, 0.2);
+      color: #22160a;
+    }
+    .game-link:hover {
+      background: #e5a730;
+    }
+    .info-pill {
+      border-radius: 12px;
+      padding: 9px 13px;
+      font-size: 12px;
+      line-height: 1.45;
+      max-width: min(380px, calc(100vw - 24px));
+    }
+    .info-pill strong {
+      font-size: 13px;
+    }
+    .info-meta {
+      color: var(--muted);
+      font-size: 11.5px;
+      margin-top: 2px;
+    }
+    .dock {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      border-radius: 16px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+      max-height: 44vh;
+      overflow-y: auto;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .row-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      min-width: 78px;
+    }
+    .cast-grid {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .cast-card {
+      appearance: none;
+      border: 1px solid var(--panel-border);
+      background: #fffcf7;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 7px 10px;
+      text-align: left;
+      cursor: pointer;
+      flex: 0 0 auto;
+      min-width: 124px;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .cast-card.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent);
+    }
+    .cast-card .c-name {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .cast-card .c-note {
+      display: block;
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .swatch-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+    }
+    #statusBanner {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(243, 236, 225, 0.9);
+      z-index: 30;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 24px;
+      text-align: center;
+    }
+    #statusBanner.hidden {
+      display: none;
+    }
+    @media (max-width: 720px) {
+      .info-pill {
+        top: auto;
+        bottom: calc(44vh + 20px);
+        display: none;
+      }
+      .row-label {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stage"></canvas>
+
+  <div class="topbar">
+    <div class="top-left">
+      <div class="brand-card">
+        <span class="badge">fincan-current</span>
+        <div>
+          <div class="brand-title">Kafe Caddesi — 3B Karakter Vitrini</div>
+          <div class="brand-sub">Sürükle: 360° Döndür · Kaydır: Yakınlaş · Sağ Tık: Kaydır</div>
+        </div>
+      </div>
+      <div id="infoPill" class="info-pill">
+        <strong id="infoTitle">Kadro Görünümü (9 Karakter)</strong>
+        <div id="infoMeta" class="info-meta">current-cast rigi (PlayerS01, CustomerMan, CustomerWoman) + Kafe Caddesi üniforma, önlük ve aksesuar varyasyonları · Yakın incelemek için alttan bir karakter seçin.</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="btnAllView" class="btn active" type="button">Tümü Sahada (9 Karakter)</button>
+      <button id="btnAutoSpin" class="btn active" type="button">Otomatik Döndür: Açık</button>
+      <a class="game-link" href="./">Oyunu Canlı Aç (Kafe Caddesi)</a>
+    </div>
+  </div>
+
+  <div class="dock">
+    <div class="row">
+      <span class="row-label">Karakterler</span>
+      <div id="castList" class="cast-grid"></div>
+    </div>
+    <div class="row">
+      <span class="row-label">Animasyon</span>
+      <div id="animList" class="row"></div>
+    </div>
+    <div class="row">
+      <span class="row-label">Üniforma</span>
+      <div id="uniformList" class="row"></div>
+    </div>
+  </div>
+
+  <div id="statusBanner">3B karakter paketi (fincan-current) yükleniyor…</div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+    import { loadCharacterPack, createCharacter } from './src/chars/index';
+    import { UNIFORM_SKINS } from './src/data/cosmetics';
+
+    const LINEUP = [
+      { key: 'player', title: 'Kafe Sahibi (Oyuncu)', role: 'player', modelLabel: 'PlayerS01', seed: 417, note: 'Önlük + Barista Kepi + Atkı', x: 0, z: 1.05 },
+      { key: 'barista', title: 'Barista', role: 'barista', modelLabel: 'PlayerS01', seed: 1, note: 'Bordo Önlük + Kep', x: -2.05, z: 0.95 },
+      { key: 'waiter', title: 'Garson', role: 'waiter', modelLabel: 'PlayerS01', seed: 2, note: 'Yeşil Önlük + Servis Kepi', x: 2.05, z: 0.95 },
+      { key: 'cashier', title: 'Kasiyer', role: 'cashier', modelLabel: 'PlayerS01', seed: 3, note: 'Nane Yelek + Kupa Rozeti', x: -4.1, z: 0.75 },
+      { key: 'busser', title: 'Komi', role: 'busser', modelLabel: 'PlayerS01', seed: 5, note: 'Mavi Önlük + Temizlik Kepi', x: 4.1, z: 0.75 },
+      { key: 'investor', title: 'VIP Yatırımcı', role: 'investor', modelLabel: 'CustomerWoman', seed: 7, note: 'Kafe Ziyaretçisi + İkonik Görünüm', x: -3.05, z: -1.45 },
+      { key: 'dasher', title: 'Kaçak Müşteri', role: 'dasher', modelLabel: 'CustomerMan', seed: 0, note: 'Askılı Çanta + Hızlı Kaçış', x: -1.0, z: -1.55 },
+      { key: 'cust-scarf', title: 'Müşteri (Erkek)', role: 'customer', modelLabel: 'CustomerMan', seed: 2, note: 'Kafe Kıyafeti / Aksesuar', x: 1.0, z: -1.55 },
+      { key: 'cust-woman', title: 'Müşteri (Kadın)', role: 'customer', modelLabel: 'CustomerWoman', seed: 5, note: 'Kafe Şapka / Çanta Görünümü', x: 3.05, z: -1.45 },
+    ];
+
+    const ANIMS = [
+      { key: 'idle', label: 'Durma', state: 'idle', speed: 0, carry: 0, carryMode: 'none', push: false, sweep: false, workKind: 'generic' },
+      { key: 'walk', label: 'Yürüme', state: 'walk', speed: 1.35, carry: 0, carryMode: 'none', push: false, sweep: false, workKind: 'generic' },
+      { key: 'run', label: 'Koşma', state: 'walk', speed: 2.9, carry: 0, carryMode: 'none', push: false, sweep: false, workKind: 'generic' },
+      { key: 'tray', label: 'Tepsi Taşıma', state: 'walk', speed: 1.35, carry: 3, carryMode: 'tray', push: false, sweep: false, workKind: 'generic' },
+      { key: 'sweep', label: 'Süpürge İtme', state: 'walk', speed: 1.2, carry: 0, carryMode: 'none', push: true, sweep: true, workKind: 'generic' },
+      { key: 'work', label: 'İstasyon İşi', state: 'work', speed: 0, carry: 0, carryMode: 'none', push: false, sweep: false, workKind: 'generic' },
+      { key: 'sit', label: 'Oturma', state: 'sit', speed: 0, carry: 0, carryMode: 'none', push: false, sweep: false, workKind: 'generic' },
+      { key: 'cheer', label: 'El Sallama', state: 'cheer', speed: 0, carry: 0, carryMode: 'none', push: false, sweep: false, workKind: 'generic' },
+    ];
+
+    const canvas = document.getElementById('stage');
+    const statusBanner = document.getElementById('statusBanner');
+    const infoTitle = document.getElementById('infoTitle');
+    const infoMeta = document.getElementById('infoMeta');
+    const castList = document.getElementById('castList');
+    const animList = document.getElementById('animList');
+    const uniformList = document.getElementById('uniformList');
+    const btnAllView = document.getElementById('btnAllView');
+    const btnAutoSpin = document.getElementById('btnAutoSpin');
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.NeutralToneMapping;
+    renderer.toneMappingExposure = 1.1;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf3ece1);
+    scene.fog = new THREE.Fog(0xf3ece1, 18, 42);
+
+    {
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.35;
+      pmrem.dispose();
+    }
+
+    const hemi = new THREE.HemisphereLight(0xb4dcf5, 0xb08a5c, 0.72);
+    scene.add(hemi);
+    const rim = new THREE.DirectionalLight(0xbcd8ff, 0.55);
+    rim.position.set(-18, 20, -26);
+    scene.add(rim);
+    const sun = new THREE.DirectionalLight(0xffd9a8, 2.15);
+    sun.position.set(24, 40, 18);
+    scene.add(sun);
+
+    const floorGeo = new THREE.CircleGeometry(14, 48);
+    const floorMat = new THREE.MeshStandardMaterial({ color: 0xebe2d4, roughness: 0.92, metalness: 0 });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -0.04;
+    scene.add(floor);
+
+    const grid = new THREE.GridHelper(18, 18, 0xd4c6b2, 0xe2d7c5);
+    grid.position.y = -0.035;
+    scene.add(grid);
+
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 80);
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.minDistance = 1.3;
+    controls.maxDistance = 18;
+    controls.maxPolarAngle = Math.PI * 0.485;
+
+    const pedestalGeo = new THREE.CylinderGeometry(0.68, 0.74, 0.06, 32);
+    const pedestalMatDefault = new THREE.MeshStandardMaterial({ color: 0xdccbb4, roughness: 0.8, metalness: 0.04 });
+    const pedestalMatActive = new THREE.MeshStandardMaterial({ color: 0x2f5a4c, roughness: 0.65, metalness: 0.06 });
+    const shadowGeo = new THREE.CircleGeometry(0.42, 24);
+    const shadowMat = new THREE.MeshBasicMaterial({ color: 0x2a1d14, transparent: true, opacity: 0.2, depthWrite: false });
+    const trayMeshGeo = new THREE.BoxGeometry(0.38, 0.03, 0.28);
+    const trayMeshMat = new THREE.MeshStandardMaterial({ color: 0x4f765f, roughness: 0.7 });
+    const cupGeo = new THREE.CylinderGeometry(0.05, 0.042, 0.09, 12);
+    const cupMat = new THREE.MeshStandardMaterial({ color: 0xfffaf2, roughness: 0.4 });
+
+    const entries = [];
+    let selectedKey = null;
+    let activeAnim = ANIMS[0];
+    let activeUniform = UNIFORM_SKINS[0].id;
+    let autoSpin = true;
+
+    const desiredCamPos = new THREE.Vector3(0, 4.9, 12.6);
+    const desiredTarget = new THREE.Vector3(0, 0.55, -0.15);
+    let flyActive = false;
+
+    controls.addEventListener('start', () => {
+      flyActive = false;
+    });
+
+    function resize() {
+      const w = Math.max(1, window.innerWidth);
+      const h = Math.max(1, window.innerHeight);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function spawnWithModel(role, uniform, preferredSeed) {
+      return createCharacter(role, { seed: preferredSeed, uniform });
+    }
+
+    function createTrayVisual() {
+      const group = new THREE.Group();
+      const board = new THREE.Mesh(trayMeshGeo, trayMeshMat);
+      group.add(board);
+      const c1 = new THREE.Mesh(cupGeo, cupMat);
+      c1.position.set(-0.08, 0.06, 0);
+      const c2 = new THREE.Mesh(cupGeo, cupMat);
+      c2.position.set(0.08, 0.06, 0.03);
+      group.add(c1, c2);
+      group.visible = false;
+      return group;
+    }
+
+    function applyAnimationToHandle(handle, trayVisual, anim) {
+      if (anim.state === 'cheer' && handle.getState() === 'cheer') {
+        handle.setState('idle');
+        handle.update(0.016, 0, 0);
+      }
+      handle.setState(anim.state);
+      handle.setWorkKind(anim.workKind);
+      handle.setWorkPhase(-1);
+      handle.setCarryCount(anim.carry);
+      handle.setCarryMode(anim.carryMode);
+      handle.setPush(anim.push, anim.sweep);
+      trayVisual.visible = anim.carry > 0 && !['customer', 'dasher', 'investor'].includes(handle.root.userData.characterRole);
+    }
+
+    function rebuildCast() {
+      for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        entry.handle.dispose();
+        scene.remove(entry.stage);
+      }
+      entries.length = 0;
+
+      for (let i = 0; i < LINEUP.length; i++) {
+        const spec = LINEUP[i];
+        const stage = new THREE.Group();
+        stage.position.set(spec.x, 0, spec.z);
+
+        const pedestal = new THREE.Mesh(pedestalGeo, spec.key === selectedKey ? pedestalMatActive : pedestalMatDefault);
+        pedestal.position.y = -0.03;
+        stage.add(pedestal);
+
+        const contact = new THREE.Mesh(shadowGeo, shadowMat);
+        contact.rotation.x = -Math.PI / 2;
+        contact.position.y = 0.004;
+        stage.add(contact);
+
+        const handle = spawnWithModel(spec.role, activeUniform, spec.seed);
+        const trayVisual = createTrayVisual();
+        handle.carryAnchor.add(trayVisual);
+        stage.add(handle.root);
+
+        applyAnimationToHandle(handle, trayVisual, activeAnim);
+        handle.update(0.016, activeAnim.speed, 0);
+
+        scene.add(stage);
+        entries.push({ spec, stage, pedestal, handle, trayVisual });
+      }
+      updateInfoPill();
+    }
+
+    function updateInfoPill() {
+      if (!selectedKey) {
+        infoTitle.textContent = 'Kadro Görünümü (9 Karakter)';
+        infoMeta.textContent = '3 özel Blender GLB rigi + rol bazlı kafe kıyafet/aksesuar varyasyonları · Yakın incelemek için alttan bir karakter seçin.';
+        return;
+      }
+      const found = entries.find((e) => e.spec.key === selectedKey);
+      if (!found) return;
+      const u = found.handle.root.userData;
+      infoTitle.textContent = `${found.spec.title} — ${found.spec.note}`;
+      infoMeta.textContent = `Rol: ${u.characterRole} · Model: ${u.characterModel}.glb · Paket: ${u.characterPack}`;
+    }
+
+    function setFocus(key) {
+      selectedKey = key;
+      btnAllView.classList.toggle('active', !selectedKey);
+      const cards = castList.querySelectorAll('.cast-card');
+      cards.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.key === selectedKey);
+      });
+      for (let i = 0; i < entries.length; i++) {
+        entries[i].pedestal.material = entries[i].spec.key === selectedKey ? pedestalMatActive : pedestalMatDefault;
+      }
+      if (!selectedKey) {
+        desiredTarget.set(0, 0.55, -0.15);
+        desiredCamPos.set(0, 4.9, 12.6);
+      } else {
+        const found = entries.find((e) => e.spec.key === selectedKey);
+        if (found) {
+          desiredTarget.set(found.spec.x, 0.88, found.spec.z);
+          desiredCamPos.set(found.spec.x + 1.0, 1.65, found.spec.z + 2.55);
+        }
+      }
+      flyActive = true;
+      updateInfoPill();
+    }
+
+    function renderUI() {
+      castList.innerHTML = '';
+      for (let i = 0; i < LINEUP.length; i++) {
+        const spec = LINEUP[i];
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'cast-card';
+        card.dataset.key = spec.key;
+        card.innerHTML = `<span class="c-name">${spec.title}</span><span class="c-note">${spec.modelLabel}.glb · ${spec.note}</span>`;
+        card.addEventListener('click', () => setFocus(spec.key));
+        castList.appendChild(card);
+      }
+
+      animList.innerHTML = '';
+      for (let i = 0; i < ANIMS.length; i++) {
+        const anim = ANIMS[i];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn' + (anim.key === activeAnim.key ? ' active' : '');
+        btn.textContent = anim.label;
+        btn.addEventListener('click', () => {
+          activeAnim = anim;
+          animList.querySelectorAll('.btn').forEach((b, idx) => b.classList.toggle('active', ANIMS[idx].key === anim.key));
+          for (let j = 0; j < entries.length; j++) {
+            applyAnimationToHandle(entries[j].handle, entries[j].trayVisual, anim);
+          }
+        });
+        animList.appendChild(btn);
+      }
+
+      uniformList.innerHTML = '';
+      for (let i = 0; i < UNIFORM_SKINS.length; i++) {
+        const skin = UNIFORM_SKINS[i];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn' + (skin.id === activeUniform ? ' active' : '');
+        const hex = '#' + (skin.swatch[0] >>> 0).toString(16).padStart(6, '0');
+        btn.innerHTML = `<span class="swatch-dot" style="background:${hex}"></span>${skin.name}`;
+        btn.addEventListener('click', () => {
+          activeUniform = skin.id;
+          uniformList.querySelectorAll('.btn').forEach((b, idx) => b.classList.toggle('active', UNIFORM_SKINS[idx].id === skin.id));
+          rebuildCast();
+        });
+        uniformList.appendChild(btn);
+      }
+
+      btnAllView.addEventListener('click', () => setFocus(null));
+      btnAutoSpin.addEventListener('click', () => {
+        autoSpin = !autoSpin;
+        btnAutoSpin.classList.toggle('active', autoSpin);
+        btnAutoSpin.textContent = autoSpin ? 'Otomatik Döndür: Açık' : 'Otomatik Döndür: Kapalı';
+      });
+    }
+
+    const clock = new THREE.Clock();
+    function tick() {
+      requestAnimationFrame(tick);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      const spinStep = autoSpin ? dt * 0.55 : 0;
+
+      for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        entry.handle.update(dt, activeAnim.speed, 0);
+        if (spinStep !== 0) {
+          entry.stage.rotation.y += spinStep;
+        }
+      }
+
+      if (flyActive) {
+        const alpha = 1 - Math.exp(-8 * dt);
+        camera.position.lerp(desiredCamPos, alpha);
+        controls.target.lerp(desiredTarget, alpha);
+        if (camera.position.distanceTo(desiredCamPos) < 0.01 && controls.target.distanceTo(desiredTarget) < 0.01) {
+          camera.position.copy(desiredCamPos);
+          controls.target.copy(desiredTarget);
+          flyActive = false;
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    renderUI();
+    try {
+      await loadCharacterPack();
+      rebuildCast();
+      camera.position.copy(desiredCamPos);
+      controls.target.copy(desiredTarget);
+      controls.update();
+      statusBanner.classList.add('hidden');
+      tick();
+    } catch (err) {
+      statusBanner.textContent = 'Karakter paketi yüklenemedi: ' + (err && err.message ? err.message : String(err));
+    }
+  </script>
+</body>
+</html>

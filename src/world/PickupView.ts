@@ -110,8 +110,8 @@ export function createPickupVisual(def: StationDef, palette: LocationPalette): P
   frame.userData.openPickup = true;
   batchPremium(frame);
   const settledShell = new SettledVisual([frame]);
-  const stockCaption = createSurfaceLabel(.98, .42, false);
-  stockCaption.mesh.position.set(0, .62, .525); inner.add(stockCaption.mesh);
+  const stockCaption = createSurfaceLabel(.98, .38, false);
+  stockCaption.mesh.position.set(0, .64, .528); inner.add(stockCaption.mesh);
 
 
 
@@ -190,6 +190,7 @@ export function createPickupVisual(def: StationDef, palette: LocationPalette): P
   let count = 0;
   let lastCapacity = -1;
   let contentsDirty = true;
+  const used = new Map<ItemId, number>();
 
   function setContents(contents: readonly ItemId[], cap: number): void {
     let changed = contentsDirty || contents.length !== count || cap !== lastCapacity;
@@ -199,7 +200,7 @@ export function createPickupVisual(def: StationDef, palette: LocationPalette): P
     lastCapacity = cap;
     count = contents.length;
     stockCaption.setText(`${count} / ${cap}`);
-    const used = new Map<ItemId, number>();
+    used.clear();
     for (let i = 0; i < SLOTS; i++) {
       const it = i < contents.length ? contents[i] : null;
       const im = it && !locked ? ensurePack(it) : null;

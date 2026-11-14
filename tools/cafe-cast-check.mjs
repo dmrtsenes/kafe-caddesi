@@ -65,10 +65,10 @@ try {
   await page.screenshot({path:output+'/cast-front.png'});
   console.log(JSON.stringify(await page.evaluate(()=>({preparation:window.__fincan.scene3d.preparation,boot:performance.getEntriesByType('measure').map(e=>({name:e.name,duration:e.duration}))}))));
   const animationMatrix=await page.evaluate(async()=>{
-   const c=window.__presentation,T=c.T,{createPackCharacter}=await import('/src/chars/PackCharacters.ts');
+   const c=window.__presentation,T=c.T,{createCharacter}=await import('/src/chars/index.ts');
    const rows=[];
    for(const role of ['player','waiter','cashier','barista','busser','customer']) {
-    const actor=createPackCharacter(role,{seed:417,level:10});let meshes=0;actor.root.traverse(o=>{if(o.isSkinnedMesh)meshes++;});
+    const actor=createCharacter(role,{seed:417,level:10});let meshes=0;actor.root.traverse(o=>{if(o.isSkinnedMesh)meshes++;});
     for(const fps of [30,60])for(const level of [0,5,10])for(const state of ['idle','walk','work','sit','angry','cheer','panic']) {
      actor.setLocomotionLevel(level);actor.setState(state);actor.setCarryCount(0);actor.setPush(false);actor.setWorkKind('reach');
      for(let frame=0;frame<fps;frame++){actor.setWorkPhase(state==='work'?(frame%12)/12:-1);actor.update(1/fps,state==='walk'||state==='panic'?3.8+level*.47:0,Math.sin(frame)*3);}

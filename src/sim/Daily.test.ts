@@ -3,7 +3,16 @@ import { describe, it } from 'node:test';
 import { setLanguage } from '../core/I18n.ts';
 import { GameState } from './GameState.ts';
 import type { GameStateSave } from './GameState.ts';
-import { missionProgress, missionsFor, rollDay, todayKey } from './Daily.ts';
+import {
+  canRecoverStreak,
+  dismissStreakRecovery,
+  lostStreakDays,
+  missionProgress,
+  missionsFor,
+  recoverStreak,
+  rollDay,
+  todayKey,
+} from './Daily.ts';
 import type { DailyMissionSave } from './Daily.ts';
 
 const today = new Date(2026, 8, 5, 12);
@@ -223,5 +232,30 @@ describe('offline daily missions', () => {
     } finally {
       setLanguage('tr');
     }
+  });
+
+  it('supports RV Streak Freeze recovery for 1-2 missed days without altering rollDay shape', () => {
+    const state = new GameState();
+    rollDay(state, new Date(2026, 8, 1, 12));
+    rollDay(state, new Date(2026, 8, 2, 12));
+    rollDay(state, new Date(2026, 8, 3, 12));
+    assert.equal(state.dailyStreak, 2);
+
+    // Miss Sept 4 -> log in Sept 5 (gap = 2 days -> 1 missed day):
+    const res = rollDay(state, new Date(2026, 8, 5, 12));
+    assert.deepEqual(res, { newDay: true, streakBroken: true });
+    assert.equal(state.dailyStreak, 0);
+    assert.equal(canRecoverStreak(state), true);
+    assert.equal(lostStreakDays(state), 2);
+
+    assert.equal(recoverStreak(state), true);
+    assert.equal(state.dailyStreak, 3);
+    assert.equal(canRecoverStreak(state), false);
+
+    // Gap > 3 days (e.g. 5 days later) is not eligible for Streak Freeze:
+    const resFar = rollDay(state, new Date(2026, 8, 10, 12));
+    assert.deepEqual(resFar, { newDay: true, streakBroken: true });
+    assert.equal(canRecoverStreak(state), false);
+    dismissStreakRecovery(state);
   });
 });

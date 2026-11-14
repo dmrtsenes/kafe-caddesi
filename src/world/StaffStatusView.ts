@@ -16,6 +16,11 @@ const cache = new Map<StaffStatus, THREE.SpriteMaterial>();
 function material(status: StaffStatus): THREE.SpriteMaterial {
   const hit = cache.get(status);
   if (hit) return hit;
+  if (typeof document === 'undefined') {
+    const out = new THREE.SpriteMaterial({ transparent: true, depthTest: true, depthWrite: false });
+    cache.set(status, out);
+    return out;
+  }
   const c = document.createElement('canvas');
   c.width = 128;
   c.height = 128;

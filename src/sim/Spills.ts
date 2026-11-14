@@ -97,9 +97,13 @@ export interface SpillSave {
  * Temizleme yakınlık tabanlıdır (oyunun geri kalanı gibi): lekenin üstünde
  * durursan silinir.
  */
+const SNAP_RADII = [0.5, 1.0, 1.6] as const;
+const MAGNETIC_SNAP_RATIO = 0.12;
+
 export class SpillField {
   readonly list: Spill[] = [];
   private seq = 1;
+  private readonly snapOut = { x: 0, z: 0 };
   /** Bu karede yeni leke doğdu mu / silindi mi — görsel katman bunu dinler */
   dirtyVisual = true;
 
@@ -131,14 +135,23 @@ export class SpillField {
    */
   private snapToWalkable(x: number, z: number): { x: number; z: number } | null {
     const ok = this.walkable;
-    if (!ok || ok(x, z)) return { x, z };
+    if (!ok || ok(x, z)) {
+      this.snapOut.x = x;
+      this.snapOut.z = z;
+      return this.snapOut;
+    }
     // Genişleyen halkalar hâlinde ara: 8 yön × 3 yarıçap.
-    for (const r of [0.5, 1.0, 1.6]) {
+    for (let ri = 0; ri < SNAP_RADII.length; ri++) {
+      const r = SNAP_RADII[ri];
       for (let i = 0; i < 8; i++) {
         const a = (i / 8) * Math.PI * 2;
         const nx = x + Math.cos(a) * r;
         const nz = z + Math.sin(a) * r;
-        if (ok(nx, nz)) return { x: nx, z: nz };
+        if (ok(nx, nz)) {
+          this.snapOut.x = nx;
+          this.snapOut.z = nz;
+          return this.snapOut;
+        }
       }
     }
     return null;
@@ -232,6 +245,21 @@ export class SpillField {
   }
 
   /**
+   * Clean It! hissi: lekenin son ~%12'si kaldığında kenarda tek hücre avlatmaz,
+   * vakum/paspas son kırıntıları manyetik olarak toplar.
+   */
+  private snapTail(s: Spill): number {
+    if (s.cellsLeft <= 0) return 0;
+    const snapLimit = Math.max(2, Math.ceil(s.cellsTotal * MAGNETIC_SNAP_RATIO));
+    if (s.cellsLeft > snapLimit) return 0;
+    const remaining = s.cellsLeft;
+    s.cells.fill(0);
+    s.cellsLeft = 0;
+    this.refresh(s);
+    return remaining;
+  }
+
+  /**
    * FIRÇA. Dünya koordinatındaki bir daireye denk gelen hücreleri siler —
    * oyuncunun temizliği budur: süpürge başlığının GEÇTİĞİ yer temizlenir.
    * Temizlenen hücre sayısını döner (0 = fırça boşa geçti).
@@ -245,12 +273,14 @@ export class SpillField {
     if (Math.hypot(lx, lz) > 1 + br) return 0; // fırça lekeye hiç değmiyor
     const br2 = br * br;
     // Yalnız fırçanın kapsadığı hücre aralığını tara.
-    const lo = (v: number): number => Math.max(0, Math.floor(((v - br + 1) / 2) * CELLS));
-    const hi = (v: number): number => Math.min(CELLS - 1, Math.ceil(((v + br + 1) / 2) * CELLS));
+    const rLo = Math.max(0, Math.floor(((lz - br + 1) / 2) * CELLS));
+    const rHi = Math.min(CELLS - 1, Math.ceil(((lz + br + 1) / 2) * CELLS));
+    const cLo = Math.max(0, Math.floor(((lx - br + 1) / 2) * CELLS));
+    const cHi = Math.min(CELLS - 1, Math.ceil(((lx + br + 1) / 2) * CELLS));
     let cleared = 0;
-    for (let r = lo(lz); r <= hi(lz); r++) {
+    for (let r = rLo; r <= rHi; r++) {
       const dz = cellCenter(r) - lz;
-      for (let c = lo(lx); c <= hi(lx); c++) {
+      for (let c = cLo; c <= cHi; c++) {
         const i = r * CELLS + c;
         if (s.cells[i] === 0) continue;
         const dx = cellCenter(c) - lx;
@@ -281,6 +311,7 @@ export class SpillField {
       const t = i / steps;
       cleared += this.carveAt(s, x0 + (x1 - x0) * t, z0 + (z1 - z0) * t, radius);
     }
+    if (cleared > 0) cleared += this.snapTail(s);
     return cleared;
   }
 
@@ -339,7 +370,10 @@ export class SpillField {
       cleared++;
       n--;
     }
-    if (cleared > 0) this.refresh(s);
+    if (cleared > 0) {
+      this.refresh(s);
+      cleared += this.snapTail(s);
+    }
     return cleared;
   }
 

@@ -13,8 +13,8 @@ import { Voice, createImpulseResponse, createNoiseBuffer, env, glide, midiToFreq
 import type { SynthBus } from './Synth';
 
 export type SfxId =
-  | 'pickup' | 'drop' | 'stock' | 'sell' | 'coin' | 'cashout'
-  | 'upgrade' | 'hire' | 'goal' | 'unlock' | 'levelup'
+  | 'pickup' | 'drop' | 'stock' | 'sell' | 'coin' | 'cashout' | 'pad_tick'
+  | 'upgrade' | 'hire' | 'goal' | 'unlock' | 'levelup' | 'vip_arrive'
   | 'ui_click' | 'ui_open' | 'ui_close' | 'error' | 'chip'
   | 'event_alarm' | 'thief' | 'catch' | 'repair' | 'wipe'
   | 'step' | 'customer_happy' | 'customer_angry' | 'produce'
@@ -23,6 +23,8 @@ export type SfxId =
 export interface AudioManager {
   /** İlk kullanıcı etkileşiminde çağrılır (autoplay politikası). Tekrar çağrılması zararsız. */
   unlock(): void;
+  /** iOS/WKWebView arka plan veya reklam dönüşünde bağlam yeniden dokunuş bekliyor mu? */
+  needsGestureUnlock(): boolean;
   play(id: SfxId, opts?: { vol?: number; rate?: number; pan?: number }): void;
   setMuted(m: boolean): void;
   isMuted(): boolean;
@@ -74,13 +76,14 @@ const MAX_VOICES = 18;
 const SCHED_AHEAD = 0.3;
 const STUCK_AFTER = 6;
 
-/** Hızlı tekrarda tırmanılan pentatonik merdiven (yarım ton). */
-const LADDER_STEPS = [0, 2, 4, 7, 9, 12, 14, 16];
+/** Hızlı tekrarda tırmanılan 12 basamaklı parlak pentatonik merdiven (yarım ton). */
+const LADDER_STEPS = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26];
 const LADDER_RATIO = LADDER_STEPS.map(semitoneRatio);
-const LADDER_RESET = 0.6;
+const LADDER_RESET = 0.85;
 
 const MAJ3 = [0, 4, 7];
 const MAJ4 = [0, 4, 7, 12];
+const FANFARE5 = [0, 4, 7, 11, 12];
 const RUN6 = [0, 4, 7, 12, 16, 19];
 const CHORD4 = [0, 7, 12, 16];
 
@@ -93,8 +96,8 @@ interface SfxDef {
   send: number;
   /** Minimum tetikleme aralığı (sn) — spam kırpma. */
   gap: number;
-  /** Hızlı tekrarda perde merdiveni. */
-  ladder: boolean;
+  /** Hızlı tekrarda perde merdiveni (true = kendi kimliği, string = ortak aile). */
+  ladder: boolean | string;
   /** Rastgele perde sapması (oran). */
   jitter: number;
   make: (v: Voice, t: number, r: number) => void;
@@ -105,72 +108,81 @@ function def(
   send: number,
   make: SfxDef['make'],
   gap = 0,
-  ladder = false,
+  ladder: boolean | string = false,
   jitter = 0,
 ): SfxDef {
   return { gain, send, gap, ladder, jitter, make };
 }
 
 const SFX: Record<SfxId, SfxDef> = {
-  // Ahşap "tok": filtreli gürültü + alçak sinüs vuruş
-  pickup: def(0.5, 0.1, (v, t, r) => {
-    const f = v.hiss(t, 0.05, 0.6, 'bandpass', 1500 * r, 3.2, 0.002);
-    glide(f.frequency, t, 1500 * r, 780 * r, 0.05);
-    const o = v.tone(t, 200 * r, 0.09, 0.5, 'sine', 0.003);
-    glide(o.frequency, t, 200 * r, 128 * r, 0.08);
-  }, 0.06, false, 0.05),
+  // Ahşap "tok" + sıcak marimba gövdesi: yığın alırken harmonik merdiven çıkar
+  pickup: def(0.52, 0.12, (v, t, r) => {
+    const f = v.hiss(t, 0.042, 0.52, 'bandpass', 1650 * r, 3.4, 0.002);
+    glide(f.frequency, t, 1650 * r, 860 * r, 0.042);
+    const o = v.tone(t, 220 * r, 0.085, 0.46, 'sine', 0.003);
+    glide(o.frequency, t, 220 * r, 142 * r, 0.075);
+    v.tone(t + 0.003, 587.33 * r, 0.075, 0.18, 'triangle', 0.002);
+  }, 0.05, 'carry', 0.015),
 
-  // Daha alçak, yuvarlak "tunk" + minicik klik transiyenti
-  drop: def(0.52, 0.12, (v, t, r) => {
-    v.hiss(t, 0.018, 0.35, 'highpass', 2400 * r, 0.8, 0.001);
-    const o = v.tone(t, 150 * r, 0.16, 0.6, 'sine', 0.004);
-    glide(o.frequency, t, 150 * r, 88 * r, 0.14);
-    const b = v.tone(t + 0.005, 300 * r, 0.07, 0.16, 'triangle', 0.003);
-    glide(b.frequency, t + 0.005, 300 * r, 210 * r, 0.06);
-  }, 0.05),
+  // Yumuşak bırakma "tunk" + harmonik klik: masaya/rafa dizdikçe merdiven sürer
+  drop: def(0.52, 0.13, (v, t, r) => {
+    v.hiss(t, 0.018, 0.34, 'highpass', 2500 * r, 0.9, 0.001);
+    const o = v.tone(t, 165 * r, 0.14, 0.56, 'sine', 0.003);
+    glide(o.frequency, t, 165 * r, 96 * r, 0.13);
+    v.tone(t + 0.004, 523.25 * r, 0.08, 0.2, 'triangle', 0.002);
+  }, 0.045, 'carry', 0.015),
 
-  // Vitrine dizme — drop'un kardeşi, tekrarda merdiven çıkar
-  stock: def(0.48, 0.14, (v, t, r) => {
-    v.hiss(t, 0.016, 0.3, 'highpass', 3000 * r, 0.8, 0.001);
-    const o = v.tone(t, 190 * r, 0.13, 0.5, 'sine', 0.004);
-    glide(o.frequency, t, 190 * r, 110 * r, 0.12);
-    v.tone(t + 0.004, 520 * r, 0.06, 0.12, 'triangle', 0.003);
-  }, 0.07, true),
+  // Vitrine dizme — parlak raf oturuşu + merdiven tırmanışı
+  stock: def(0.5, 0.15, (v, t, r) => {
+    v.hiss(t, 0.016, 0.3, 'highpass', 3100 * r, 0.9, 0.001);
+    const o = v.tone(t, 196 * r, 0.12, 0.48, 'sine', 0.003);
+    glide(o.frequency, t, 196 * r, 116 * r, 0.11);
+    v.tone(t + 0.003, 659.25 * r, 0.075, 0.18, 'triangle', 0.002);
+  }, 0.055, 'carry', 0.01),
 
-  // İstasyon ürün bitirdi — küçük sıcak "ding"
+  // İstasyon ürün bitirdi — sıcak "ding"
   produce: def(0.42, 0.3, (v, t, r) => {
     v.tone(t, 784 * r, 0.42, 0.34, 'sine', 0.008);
     v.tone(t, 1176 * r, 0.3, 0.12, 'sine', 0.01);
     v.tone(t, 392 * r, 0.28, 0.1, 'triangle', 0.008);
-  }, 0.09, true),
+  }, 0.09, 'work'),
 
-  // Satış — parlak, yükselen iki nota
-  sell: def(0.5, 0.18, (v, t, r) => {
-    v.tone(t, 660 * r, 0.08, 0.34, 'triangle', 0.004);
-    v.tone(t + 0.07, 988 * r, 0.13, 0.3, 'triangle', 0.004);
-    v.hiss(t, 0.02, 0.1, 'bandpass', 4200 * r, 6, 0.001);
-  }, 0.04),
+  // Satış — parlak yükselen beşli + merdiven uyumu
+  sell: def(0.52, 0.2, (v, t, r) => {
+    v.tone(t, 659.25 * r, 0.08, 0.34, 'triangle', 0.003);
+    v.tone(t + 0.06, 987.77 * r, 0.14, 0.32, 'triangle', 0.003);
+    v.tone(t + 0.06, 1975.5 * r, 0.09, 0.09, 'sine', 0.002);
+    v.hiss(t, 0.018, 0.11, 'bandpass', 4400 * r, 5.5, 0.001);
+  }, 0.04, 'cash'),
+
+  // Alan açma karesine para akışı — bağımlılık yapan marimba + madeni para tıkı
+  pad_tick: def(0.46, 0.16, (v, t, r) => {
+    v.hiss(t, 0.012, 0.24, 'bandpass', 3800 * r, 3.8, 0.001);
+    v.tone(t, 587.33 * r, 0.09, 0.3, 'triangle', 0.002);
+    v.tone(t + 0.004, 1174.66 * r, 0.065, 0.14, 'sine', 0.002);
+  }, 0.042, 'cash', 0.008),
 
   // Bozuk para / cüzdan teması — parlak kristal çan tınısı + merdiven tırmanışı
-  coin: def(0.48, 0.22, (v, t, r) => {
-    v.tone(t, 1480 * r, 0.18, 0.28, 'triangle', 0.002);
+  coin: def(0.5, 0.22, (v, t, r) => {
+    v.tone(t, 1480 * r, 0.18, 0.29, 'triangle', 0.002);
     const d = v.tone(t, 1480 * r, 0.14, 0.2, 'sine', 0.002);
-    d.detune.value = 16;
-    v.tone(t, 2960 * r, 0.09, 0.1, 'sine', 0.001);
-    v.tone(t, 4440 * r, 0.05, 0.06, 'triangle', 0.001);
-    v.hiss(t, 0.012, 0.16, 'highpass', 6200 * r, 2.5, 0.001);
-  }, 0.015, true),
+    d.detune.value = 14;
+    v.tone(t, 2960 * r, 0.095, 0.11, 'sine', 0.001);
+    v.tone(t, 4440 * r, 0.055, 0.06, 'triangle', 0.001);
+    v.hiss(t, 0.012, 0.16, 'highpass', 6400 * r, 2.5, 0.001);
+  }, 0.015, 'cash'),
 
-  // Tezgâh — mekanik klak + çan akoru ("ka-çing")
-  cashout: def(0.62, 0.34, (v, t, r) => {
-    v.hiss(t, 0.03, 0.35, 'bandpass', 1100 * r, 2.2, 0.001);
-    const th = v.tone(t, 160, 0.09, 0.3, 'sine', 0.003);
-    glide(th.frequency, t, 160, 95, 0.08);
-    const t2 = t + 0.045;
-    v.tone(t2, 784 * r, 0.7, 0.22, 'sine', 0.006);
-    v.tone(t2 + 0.01, 1046 * r, 0.65, 0.18, 'sine', 0.006);
-    v.tone(t2 + 0.02, 1568 * r, 0.55, 0.12, 'sine', 0.006);
-    v.tone(t2, 2093 * r, 0.35, 0.05, 'sine', 0.004);
+  // Tezgâh — mekanik kasa mandalı + çift pirinç çan ("ka-çing!")
+  cashout: def(0.66, 0.36, (v, t, r) => {
+    v.hiss(t, 0.026, 0.42, 'bandpass', 1450 * r, 2.6, 0.001);
+    v.hiss(t + 0.018, 0.016, 0.28, 'highpass', 5200 * r, 1.8, 0.001);
+    const th = v.tone(t, 175, 0.08, 0.32, 'sine', 0.002);
+    glide(th.frequency, t, 175, 98, 0.075);
+    const t2 = t + 0.042;
+    v.tone(t2, 1046.5 * r, 0.62, 0.25, 'sine', 0.003);
+    v.tone(t2 + 0.032, 1567.98 * r, 0.68, 0.24, 'sine', 0.003);
+    v.tone(t2 + 0.032, 2093 * r, 0.52, 0.14, 'triangle', 0.003);
+    v.tone(t2 + 0.05, 3135.96 * r, 0.42, 0.09, 'sine', 0.003);
   }, 0.08),
 
   // Yükseltme — yükselen majör arpej + parıltı kuyruğu
@@ -210,15 +222,32 @@ const SFX: Record<SfxId, SfxDef> = {
     v.tone(t + 0.16, base * 2, 0.6, 0.09, 'sine', 0.02);
   }, 0.1),
 
-  // Kilit açıldı — 4 nota + reverb kabarması
-  unlock: def(0.64, 0.55, (v, t, r) => {
-    const sw = v.hiss(t, 0.35, 0.1, 'bandpass', 500, 1.2, 0.25);
-    glide(sw.frequency, t, 500, 3000, 0.35);
-    const base = 440 * r;
-    for (let i = 0; i < 4; i++) {
-      v.tone(t + 0.1 + i * 0.09, base * semitoneRatio(MAJ4[i]), 0.7, 0.2, 'triangle', 0.008);
+  // Kilit açıldı — yükselen 5 notalı bölge fanfarı + sıcak akor çözülüşü
+  unlock: def(0.68, 0.56, (v, t, r) => {
+    const sw = v.hiss(t, 0.32, 0.11, 'bandpass', 520, 1.3, 0.2);
+    glide(sw.frequency, t, 520, 3200, 0.32);
+    const base = 523.25 * r;
+    for (let i = 0; i < FANFARE5.length; i++) {
+      const f = base * semitoneRatio(FANFARE5[i]);
+      const at = t + 0.07 + i * 0.072;
+      v.tone(at, f, i === 4 ? 0.85 : 0.42, 0.22, 'triangle', 0.006);
+      v.tone(at, f * 2, 0.26, 0.06, 'sine', 0.005);
     }
+    const bloom = t + 0.07 + 4 * 0.072;
+    v.tone(bloom, base, 0.9, 0.12, 'sine', 0.02);
+    v.tone(bloom, base * semitoneRatio(7), 0.9, 0.11, 'sine', 0.02);
   }, 0.12),
+
+  // VIP / Gurme / Yatırımcı gelişi — kadife kapı çanı + altın maj9 parıltısı
+  vip_arrive: def(0.58, 0.46, (v, t, r) => {
+    const notes = [587.33, 739.99, 880, 1174.66];
+    for (let i = 0; i < notes.length; i++) {
+      const at = t + i * 0.065;
+      v.tone(at, notes[i] * r, 0.58, 0.2 - i * 0.015, 'sine', 0.005);
+      v.tone(at, notes[i] * 2 * r, 0.28, 0.06, 'triangle', 0.004);
+    }
+    v.hiss(t + 0.18, 0.04, 0.12, 'highpass', 6800 * r, 2.2, 0.002);
+  }, 0.25),
 
   // Seviye — büyük gösteri: koşu + akor + parıltı
   levelup: def(0.68, 0.6, (v, t, r) => {
@@ -346,7 +375,7 @@ const SFX: Record<SfxId, SfxDef> = {
     const t2 = t + 0.034;
     v.hiss(t2, 0.016, 0.3, 'bandpass', 3800 * r, 3.2, 0.001);
     v.tone(t2, 2240 * r, 0.09, 0.22, 'triangle', 0.002);
-  }, 0.04, false, 0.07),
+  }, 0.04, 'carry', 0.025),
 
   // Kauçuk / ıslak bez gıcırtısı (squeaky clean scrub)
   squeak: def(0.48, 0.22, (v, t, r) => {
@@ -356,16 +385,15 @@ const SFX: Record<SfxId, SfxDef> = {
     v.hiss(t, 0.03, 0.24, 'highpass', 4600 * r, 2.2, 0.002);
   }, 0.08, false, 0.1),
 
-  // Temizlik tamamlandı — kristal kadeh çınlaması ve parıltı zili (clean chime)
-  clean_chime: def(0.68, 0.52, (v, t, r) => {
-    const f0 = 2093 * r; // C7
-    v.tone(t, f0, 0.95, 0.42, 'sine', 0.002);
-    v.tone(t, f0 * 1.5, 0.72, 0.28, 'sine', 0.003);
-    v.tone(t, f0 * 2.0, 0.52, 0.18, 'sine', 0.002);
-    v.tone(t + 0.02, 3136 * r, 0.65, 0.24, 'triangle', 0.003);
-    v.tone(t + 0.06, 2637 * r, 0.45, 0.18, 'sine', 0.002);
-    v.tone(t + 0.11, 4186 * r, 0.55, 0.16, 'sine', 0.002);
-    v.hiss(t, 0.045, 0.22, 'highpass', 7500 * r, 2.5, 0.001);
+  // Temizlik tamamlandı — 4 notalı yükselen kristal parıltı (Clean It! hissi)
+  clean_chime: def(0.68, 0.54, (v, t, r) => {
+    const arp = [2093, 2637, 3136, 4186];
+    for (let i = 0; i < arp.length; i++) {
+      const at = t + i * 0.048;
+      v.tone(at, arp[i] * r, 0.72 - i * 0.08, 0.28 - i * 0.03, 'sine', 0.002);
+      v.tone(at, arp[i] * 0.5 * r, 0.45, 0.12, 'triangle', 0.003);
+    }
+    v.hiss(t + 0.04, 0.05, 0.2, 'highpass', 7600 * r, 2.4, 0.001);
   }, 0.12),
 
   // Adım — çok kısık, ucuz, ±%8 perde savrulmalı
@@ -815,6 +843,7 @@ class AudioManagerImpl implements AudioManager {
   private voices: Voice[] = [];
   private lastAt = new Map<string, number>();
   private ladderIdx = new Map<string, number>();
+  private ladderAt = new Map<string, number>();
 
   private muted = false;
   private musicOn = true;
@@ -859,7 +888,8 @@ class AudioManagerImpl implements AudioManager {
         const ctx = new Ctor({ latencyHint: 'interactive' });
         made = ctx;
         ctx.onstatechange = () => {
-          if (!this.disposed && !this.suspended && this.ctx === ctx && ctx.state === 'suspended') {
+          const st = ctx.state as string;
+          if (!this.disposed && !this.suspended && this.ctx === ctx && (st === 'suspended' || st === 'interrupted')) {
             this.reconcileContextState();
           }
         };
@@ -882,7 +912,7 @@ class AudioManagerImpl implements AudioManager {
       }
     }
     // iOS WKWebView donanım ses kilidini aşmak için 1 karelik sessiz buffer çal
-    if (this.ctx && this.ctx.state !== 'closed' && this.ctx.state !== 'running') {
+    if (this.ctx && (this.ctx.state as string) !== 'closed' && this.ctx.state !== 'running') {
       try {
         const buf = this.ctx.createBuffer(1, 1, 22050);
         const src = this.ctx.createBufferSource();
@@ -894,6 +924,11 @@ class AudioManagerImpl implements AudioManager {
       }
     }
     this.reconcileContextState();
+  }
+
+  needsGestureUnlock(): boolean {
+    if (this.disposed || this.failed || this.suspended) return false;
+    return !this.ctx || this.ctx.state !== 'running';
   }
 
   play(id: SfxId, opts?: { vol?: number; rate?: number; pan?: number }): void {
@@ -1019,9 +1054,10 @@ class AudioManagerImpl implements AudioManager {
   /** Native suspend/resume resolves later; always settle on the latest request. */
   private reconcileContextState(): void {
     const ctx = this.ctx;
-    if (!ctx || this.disposed || this.contextChange || ctx.state === 'closed') return;
+    const st = ctx ? (ctx.state as string) : 'closed';
+    if (!ctx || this.disposed || this.contextChange || st === 'closed') return;
     const requested = this.suspended;
-    if (requested ? ctx.state === 'suspended' : ctx.state === 'running') {
+    if (requested ? st === 'suspended' : st === 'running') {
       if (!requested && this.master) {
         const now = ctx.currentTime;
         this.music?.resume(now);
@@ -1079,6 +1115,7 @@ class AudioManagerImpl implements AudioManager {
     this.sfxBusNode = null;
     this.lastAt.clear();
     this.ladderIdx.clear();
+    this.ladderAt.clear();
     if (ctx) {
       try {
         void ctx.close().catch(() => undefined);
@@ -1163,11 +1200,14 @@ class AudioManagerImpl implements AudioManager {
     // Spam kırpma: aynı id çok sık gelirse fazlasını at
     if (d.gap > 0 && now - last < d.gap) return;
 
-    // Perde merdiveni: hızlı tekrarlar pentatonik olarak tırmanır, sessizlikte sıfırlanır
+    // Perde merdiveni: hızlı tekrarlar (ve ortak eylem aileleri) pentatonik tırmanır
     if (d.ladder) {
-      const prev = this.ladderIdx.get(id) ?? 0;
-      const s = now - last > LADDER_RESET ? 0 : Math.min(prev + 1, LADDER_RATIO.length - 1);
-      this.ladderIdx.set(id, s);
+      const fam = typeof d.ladder === 'string' ? d.ladder : id;
+      const prevAt = this.ladderAt.get(fam) ?? -999;
+      const prev = this.ladderIdx.get(fam) ?? 0;
+      const s = now - prevAt > LADDER_RESET ? 0 : Math.min(prev + 1, LADDER_RATIO.length - 1);
+      this.ladderIdx.set(fam, s);
+      this.ladderAt.set(fam, now);
       rate *= LADDER_RATIO[s];
     }
     this.lastAt.set(id, now);

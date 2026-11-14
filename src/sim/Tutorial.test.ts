@@ -142,3 +142,44 @@ it('does not send an empty-handed player to clean an occupied table', () => {
   const player = { x: 0, z: 0, carryCount: 0, hasItem: () => false } as unknown as Player;
   assert.equal(TUTORIAL_STEPS[5].pointAt!(world, new GameState(), player), null);
 });
+
+import { setLanguage } from '../core/I18n';
+it('localizes all 3D tutorial verbs and HUD texts in English without leaking Turkish', () => {
+  try {
+    setLanguage('en');
+    const state = new GameState();
+    const tutorial = new Tutorial(state);
+    const table = new StationEntity({ ...ALL_STATIONS.find(st => st.kind === 'table')!, x: 0, z: 0 });
+    table.locked = false;
+    table.dishes = 1;
+    const world = {
+      byId: new Map(),
+      nav: { solidBlocked: () => false, interactionLineClear: () => true },
+      tables: [table],
+      bins: [],
+      counters: [],
+      pendingOrders: 0,
+      loc: { zones: [{ id: 'a1' }, { id: 't1', padX: 2, padZ: 2 }] },
+      zoneUnlocked: (id: string) => id === 'a1',
+      padPaid: () => 0,
+    } as unknown as World;
+    const player = {
+      x: 0,
+      z: 0,
+      hasVacuum: false,
+      carryCount: 0,
+      hasItem: () => false,
+      distinctItems: () => [],
+    } as unknown as Player;
+
+    for (let s = 0; s < TUTORIAL_STEPS.length; s++) {
+      state.tutorialStep = s;
+      tutorial.update(0.016, world, player);
+      assert.ok(tutorial.currentText && !/[ğüşıöçĞÜŞİÖÇ]/.test(tutorial.currentText), `step ${s} text leaked TR: ${tutorial.currentText}`);
+      assert.ok(tutorial.pointerVerb && !/[ğüşıöçĞÜŞİÖÇ]/.test(tutorial.pointerVerb), `step ${s} verb leaked TR: ${tutorial.pointerVerb}`);
+    }
+    tutorial.dispose();
+  } finally {
+    setLanguage('tr');
+  }
+});

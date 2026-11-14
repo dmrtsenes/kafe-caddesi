@@ -1,6 +1,8 @@
 import {PREMIUM, premiumFloorTexture, batchPremium, disposePremium} from './PremiumDesign';
 import {createPremiumBackbar, addPremiumGlazing, createPremiumLoungeLamp, createPremiumPlanter, addPremiumWallArt} from './PremiumArchitecture';
-import { tr, localeTag } from "../core/I18n";
+import { tr } from "../core/I18n";
+import { QUALITY } from "../core/Quality";
+import { isNative } from "../core/Native";
 import * as THREE from 'three';
 import { VisibilityRoot } from './VisibilityRoot';
 import { StaticTransformRoot } from './StaticTransformRoot';
@@ -19,6 +21,7 @@ import { stationGlyph } from './StationView';
 import { createStaticBatch, type StaticBatch } from './staticBatch';
 import { markDynamic } from './layers';
 import { createZonePurchasePad, type ZonePurchasePad } from './ZonePurchasePad';
+import { createWallMenuBoard, type MenuBoardEntry, type WallMenuBoardView } from './MenuBoard';
 
 /* ==================================================================== *
  *  MEKÂN
@@ -394,94 +397,6 @@ function tileTexture(base: number, alt: number, grout: number): THREE.CanvasText
   return t;
 }
 
-/**
- * BARIN ARKASINDAKİ TEBEŞİR MENÜSÜ.
- *
- * Eski sürüm "MENÜ" başlığının altına ANLAMSIZ ÇİZGİLER koyuyordu:
- * uzaktan bakıldığında tahta bir menü değil, üstü çizilmiş boş bir pano
- * gibi duruyordu. Artık gerçek satırlar yazılır — şubenin kendi ürünleri,
- * gerçek fiyatlarıyla, noktalı dolgu ve sağa dayalı tutarla. Oyuncu bara
- * yaklaşınca okuyabilir; uzaktan da "burası bir menü" olarak okunur.
- *
- * Doku 1024 × 384: pano dünyada 4,8 × 1,8 birim, yani 43°lik portre
- * kamerada yaklaşık 250 piksel genişlik. 512'de başlık bulanıklaşıyordu.
- */
-function menuTexture(accent: number, rows: { name: string; price: number }[]): THREE.CanvasTexture {
-  const W = 1024;
-  const H = 384;
-  const cv = document.createElement('canvas');
-  cv.width = W;
-  cv.height = H;
-  const ctx = cv.getContext('2d');
-  if (ctx) {
-    ctx.fillStyle = '#202b27';
-    ctx.fillRect(0, 0, W, H);
-    /** Tebeşir tozu: düz siyah bir dikdörtgen "tahta" değil "delik" okunur. */
-    for (let i = 0; i < 90; i++) {
-      const x = Math.sin(i * 12.9898) * 43758.5453;
-      const y = Math.sin(i * 78.233) * 12345.6789;
-      const bx = (x - Math.floor(x)) * W;
-      const by = (y - Math.floor(y)) * H;
-      const br = 18 + (x - Math.floor(x)) * 60;
-      const g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
-      g.addColorStop(0, 'rgba(226,238,232,0.05)');
-      g.addColorStop(1, 'rgba(226,238,232,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(bx - br, by - br, br * 2, br * 2);
-    }
-    // ince çerçeve
-    ctx.strokeStyle = 'rgba(240,232,210,0.22)';
-    ctx.lineWidth = 5;
-    ctx.strokeRect(16, 16, W - 32, H - 32);
-
-    const cream = '#f3ead3';
-    ctx.textBaseline = 'middle';
-    // başlık
-    ctx.textAlign = 'center';
-    ctx.fillStyle = hex(mixSrgb(accent, 0xfff3d8, 0.55));
-    ctx.font = '700 62px "Segoe UI", system-ui, sans-serif';
-    ctx.fillText(tr("M E N Ü"), W / 2, 64);
-    ctx.strokeStyle = 'rgba(243,234,211,0.45)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(W * 0.3, 104);
-    ctx.lineTo(W * 0.7, 104);
-    ctx.stroke();
-
-    /**
-     * Satır sayısı 5'te sabit tutulur: şube ürün eklendikçe punto
-     * küçülmesin, taşan ürünler alta yazılmasın. Beşten azsa satır
-     * aralığı korunur — menü "eksik" değil "az çeşitli" görünür.
-     */
-    const show = rows.slice(0, 5);
-    const top = 148;
-    const step = 46;
-    ctx.font = '600 40px "Segoe UI", system-ui, sans-serif';
-    for (let i = 0; i < show.length; i++) {
-      const y = top + i * step;
-      const r = show[i];
-      const priceText = '₺' + r.price.toLocaleString(localeTag());
-      ctx.textAlign = 'left';
-      ctx.fillStyle = cream;
-      ctx.fillText(r.name, 92, y);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = hex(mixSrgb(accent, 0xfff3d8, 0.62));
-      ctx.fillText(priceText, W - 92, y);
-      // noktalı dolgu — ad ile fiyat arasını bağlar
-      const nameW = ctx.measureText(r.name).width;
-      ctx.textAlign = 'left';
-      const dotStart = 92 + nameW + 18;
-      const dotEnd = W - 92 - ctx.measureText(priceText).width - 18;
-      ctx.fillStyle = 'rgba(243,234,211,0.3)';
-      for (let dx = dotStart; dx < dotEnd; dx += 16) ctx.fillRect(dx, y - 2, 4, 4);
-    }
-  }
-  const t = new THREE.CanvasTexture(cv);
-  t.colorSpace = THREE.SRGBColorSpace;
-  t.anisotropy = 8;
-  return t;
-}
-
 /* ---------------------------------------------- ödeme pedi levhası */
 
 /**
@@ -511,6 +426,8 @@ export interface EnvironmentView {
    * çağrılabilir; oyuncu seçtiği anda mekân değişsin diye böyle kuruldu.
    */
   setCosmetics(wall: WallSkin, floor: FloorSkin): void;
+  /** Duvar menüsü ve canlı fiyat panosunu günceller (imza önbellekli). */
+  updateMenuBoard(rows: readonly MenuBoardEntry[], boostActive?: boolean): void;
   /** Ped yalnız SIRADAKİ bölüm için görünür; uzaktakiler mekânı doldurmasın. */
   setPadVisible(zoneId: string, visible: boolean): void;
   /** Bekleyen ped yazılarını hemen boyar (yükleme ekranı, ilk kareden önce). */
@@ -546,6 +463,21 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
   /** Birleştirilmiş (pişirilmiş) geometriler — önbellekten gelmez, burada ölür. */
   const ownGeometries: THREE.BufferGeometry[] = [];
   let staticBatch: StaticBatch | null = null;
+  let menuBoardCtrl: WallMenuBoardView | null = null;
+
+  const defaultMenuEntries: MenuBoardEntry[] = locationStations(loc.id)
+    .filter((st) => st.item !== undefined && st.menuOrder !== undefined)
+    .sort((a, b) => (a.menuOrder ?? 0) - (b.menuOrder ?? 0))
+    .map((st) => {
+      const item = st.item as ItemId;
+      const z = loc.zones.find((zn) => zn.id === st.zone);
+      return {
+        item,
+        name: ITEMS[item].name,
+        price: Math.max(1, Math.round(ITEMS[item].price * loc.valueMult)),
+        unlocked: (z?.cost ?? 0) === 0,
+      };
+    });
 
   const track = <T extends THREE.Material>(m: T): T => {
     ownMaterials.push(m);
@@ -554,6 +486,14 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
   const trackTex = <T extends THREE.Texture>(t: T): T => {
     ownTextures.push(t);
     return t;
+  };
+  let sharedOakSource: THREE.CanvasTexture | null = null;
+  const createOakTexture = (): THREE.CanvasTexture => {
+    if (!sharedOakSource) {
+      sharedOakSource = premiumFloorTexture('oak');
+      return sharedOakSource;
+    }
+    return sharedOakSource.clone();
   };
 
   /* ---------------------------------------------------- boyanabilir sıva
@@ -1242,9 +1182,8 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
      * dünya matrisi köklere kadar uygulanır (build bağımsız durduğundan
      * matrixWorld = sokağa göre yerel dönüşümdür).
      */
-    // Keep each street block independently culled. A single merged mesh around
-    // the entire map forced every offscreen facade through the GPU.
-    const streetBatch = createStaticBatch(build, {cellSize:8, compact:true, bakeInstances:true});
+    // Keep each street block independently culled without over-splitting adjacent facades.
+    const streetBatch = createStaticBatch(build, {cellSize:28, compact:true, bakeInstances:true});
     streetBatch.setActive(true);
     ownGeometries.push(...streetBatch.geometries);
     street.add(build);
@@ -1741,7 +1680,7 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
     const roomFloorTex = trackTex(
       (z.room?.style ?? 'oda') === 'teras'
         ? tileTexture(0xeae4d6, 0xe2dbca, 0xc3b8a4)
-        : loc.id === 'kose' ? premiumFloorTexture('oak') : plankTexture(roomPlankBase, roomPlankAlt, mix(pal.floorAlt, 0x2a2118, 0.5)),
+        : loc.id === 'kose' ? createOakTexture() : plankTexture(roomPlankBase, roomPlankAlt, mix(pal.floorAlt, 0x2a2118, 0.5)),
     );
     roomFloorTex.wrapS = THREE.RepeatWrapping;
     roomFloorTex.wrapT = THREE.RepeatWrapping;
@@ -1905,53 +1844,18 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
     back.add(detail(box(panelW + 0.3, 0.14, 0.16), woodWarm, 0, 2.79, 0.02));
 
     /* ------------------------------------------------ menü panosu ---- */
-    /**
-     * Menü satırları ŞUBENİN GERÇEK ÜRÜNLERİNDEN gelir: `menuOrder`
-     * verilmiş makineler menüdedir, sırası da odur. Sahte satır yazmak
-     * yerine veriyi okumak, şube değişince menünün de değişmesi demek.
-     */
-    const menuRows = locationStations(loc.id)
-      .filter((st) => st.item !== undefined && st.menuOrder !== undefined)
-      .sort((a, b) => (a.menuOrder ?? 0) - (b.menuOrder ?? 0))
-      .map((st) => ({ name: ITEMS[st.item as ItemId].name, price: ITEMS[st.item as ItemId].price }));
-    const menuTex = trackTex(menuTexture(pal.accent, menuRows));
-    const menuMat = track(new THREE.MeshBasicMaterial({ map: menuTex, toneMapped: false }));
-
     /** Pano genişliği: rafların arasında kalan boşluğa göre sabit. */
     const MW = Math.min(4.4, panelW * 0.4);
-    /**
-     * Yükseklik dokunun oranından türer (bozulma yok) ve DİKEY BÜTÇEYE
-     * sığar: lambri 0,1–2,7, üst kuşak 2,72–2,86, raflar 1,5 ve 2,22.
-     * İlk denemede pano 2,09 birim yüksekti; hem üst kuşağı deliyor hem
-     * alt rafın hizasına iniyordu.
-     */
     const MH = MW * (384 / 1024);
     const MY = 1.78;
-    const menuBoard = new THREE.Group();
-    // Bar merkezine göre değil PANEL merkezine göre: iki yandaki raflar
-    // panoya simetrik olsun (bar hattı panelin ortasında olmayabilir).
-    menuBoard.position.set(0, MY, 0.16);
-    back.add(menuBoard);
-    menuBoard.add(mesh(roundBox(MW + 0.22, MH + 0.22, 0.12, 0.05), mat(mix(pal.wallTrim, 0x140f0a, 0.55), { rough: 0.8 }), 0, 0, 0));
-    /**
-     * Yazı düzlemi panonun ön yüzünden 0,03 birim ÖNDE (yüz 0,06'da).
-     * Eskiden 0,01'di; derinlik tamponu o mesafeyi bu uzaklıkta hâlâ
-     * ayırıyor ama pay bedava, kapatalım.
-     */
-    menuBoard.add(detail(plane(MW, MH), menuMat, 0, 0, 0.09));
-    /**
-     * Pirinç okuma lambası — panoyu "asılı levha" yapan detay.
-     * Küçük denendi (huni yarıçapı 0,13) ve ekranda tanımsız turuncu bir
-     * ÜÇGEN olarak okunuyordu: 3B'de bir nesne ya okunacak kadar büyük
-     * olmalı ya da hiç olmamalı.
-     */
-    const brass = mat(mix(0xc9973f, pal.accent, 0.2), { rough: 0.34, metal: 0.62 });
-    menuBoard.add(detail(box(0.055, 0.3, 0.055), brass, 0, MH / 2 + 0.16, 0.02));
-    menuBoard.add(detail(box(0.055, 0.055, 0.3), brass, 0, MH / 2 + 0.3, 0.16));
-    const hood = detail(cyl(0.07, 0.24, 0.2, 12), brass, 0, MH / 2 + 0.22, 0.3);
-    hood.rotation.x = Math.PI;
-    menuBoard.add(hood);
-    menuBoard.add(detail(cyl(0.19, 0.19, 0.02, 12), basic(0xfff0c8, 0.95, true), 0, MH / 2 + 0.13, 0.3));
+    menuBoardCtrl = createWallMenuBoard({
+      width: MW,
+      height: MH,
+      accent: pal.accent,
+      initialRows: defaultMenuEntries,
+    });
+    menuBoardCtrl.group.position.set(0, MY, 0.16);
+    back.add(menuBoardCtrl.group);
 
     /* ------------------------------------------------ yan raflar ---- */
     /**
@@ -2025,6 +1929,14 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
     backbar.scale.set(.925,1,.23);
     backbar.position.z=-18.05+11.58*.23;
     root.add(backbar);
+    menuBoardCtrl = createWallMenuBoard({
+      width: 6.76,
+      height: 0.78,
+      accent: pal.accent,
+      initialRows: defaultMenuEntries,
+    });
+    menuBoardCtrl.group.position.set(0.2, 1.49, -17.72);
+    root.add(menuBoardCtrl.group);
     // Every glass bay stands on a real partition; the garden and room doorways stay open.
     const glazing=new THREE.Group();glazing.name='premiumStorefront';root.add(glazing);
     for(const part of loc.partitions ?? []) {
@@ -2035,16 +1947,18 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
     // +0,003 taş zemine yapışıktı; tahta ile taş aynı pikseli paylaşıp titriyordu.
     // Duvar karartısı 1,6 birimlik kaba bir ızgarada bitiyor; bankın yanında
     // dikey bir ton sıçraması kalıyor ve kamera kımıldayınca titriyordu.
-    const lounge=floorSlab(loungeDeck!.x0,loungeDeck!.z0,loungeDeck!.x1,loungeDeck!.z1,trackTex(premiumFloorTexture('oak')),9.33,FLOOR_Y+.016,false);
+    const lounge=floorSlab(loungeDeck!.x0,loungeDeck!.z0,loungeDeck!.x1,loungeDeck!.z1,trackTex(createOakTexture()),9.33,FLOOR_Y+.016,false);
     lounge.name='premiumLoungeFloor';
     root.add(detail(box(17.68,.016,.06),mat(0xd4af67,{rough:.4,metal:.35}),0,.04,8.2));
-    const barGlow = new THREE.PointLight(0xffcf8b, 2.8, 14, 1.6);
-    barGlow.position.set(1.2, 3.2, -5.2);
-    // Every render pass must collect the same lights: a light missing from one
-    // pass changes three's light-state version and re-resolves every lit
-    // material's program on each frame.
-    barGlow.layers.enableAll();
-    root.add(barGlow);
+    if (!isNative && QUALITY.tier === 'high') {
+      const barGlow = new THREE.PointLight(0xffcf8b, 2.8, 14, 1.6);
+      barGlow.position.set(1.2, 3.2, -5.2);
+      // Every render pass must collect the same lights: a light missing from one
+      // pass changes three's light-state version and re-resolves every lit
+      // material's program on each frame.
+      barGlow.layers.enableAll();
+      root.add(barGlow);
+    }
   }
 
   // Landscaped conservatories occupy the sealed wings, clear of all room portals.
@@ -2060,7 +1974,10 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
     if (cutawayRoom && (d0.kind === 'neon' || d0.kind === 'wallart')) continue;
     if(loc.id==='kose' && !cutawayRoom && ['neon','wallart','chalkboard'].includes(d0.kind) && d0.z < -16) continue;
     const g = loc.id==='kose' && d0.kind==='plant' ? createPremiumPlanter() : createDecor(d0.kind, pal, decorSeed++);
-    if (d0.zone) g.userData.batchExclude = true;
+    if (d0.zone) {
+      batchPremium(g);
+      g.userData.batchExclude = true;
+    }
     let decorY = floorLiftAt(loc, d0.x, d0.z);
     // Yükseltilmiş ceviz döşemenin içine gömülmesin (bank, saksı).
     if (loungeDeck && decorY === 0 && d0.x >= loungeDeck.x0 && d0.x <= loungeDeck.x1 && d0.z >= loungeDeck.z0 && d0.z <= loungeDeck.z1) decorY = 0.027;
@@ -2249,8 +2166,12 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
       setFloorSkin(floor);
     },
 
+    updateMenuBoard(rows: readonly MenuBoardEntry[], boostActive = false): void {
+      menuBoardCtrl?.update(rows, boostActive);
+    },
+
     optimizeStatic(): { before: number; after: number } {
-      if (!staticBatch) staticBatch = createStaticBatch(root, {cellSize:8, compact:true, bakeInstances:true});
+      if (!staticBatch) staticBatch = createStaticBatch(root, {cellSize:28, compact:true, bakeInstances:true});
       // Zone-toggled objects are excluded; unlocking needs only cache invalidation.
       if (!staticBatch.active) staticBatch.setActive(true);
       return { before: staticBatch.callsBefore, after: staticBatch.callsAfter };
@@ -2272,6 +2193,8 @@ export function createEnvironment(loc: LocationDef): EnvironmentView {
     dispose(): void {
       staticBatch?.dispose();
       staticBatch = null;
+      menuBoardCtrl?.dispose();
+      menuBoardCtrl = null;
       disposePremium(root);
       root.removeFromParent();
       root.traverse((o) => {

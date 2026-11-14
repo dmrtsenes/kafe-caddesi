@@ -43,6 +43,7 @@ public class MainActivity extends BridgeActivity {
   public void onCreate(Bundle savedInstanceState) {
     SplashScreen.installSplashScreen(this);
     registerPlugin(DeviceThermalPlugin.class);
+    registerPlugin(FirebaseAnalyticsPlugin.class);
     super.onCreate(savedInstanceState);
 
     // 1. Pencere düzeyinde donanım hızlandırmasını garantiye al

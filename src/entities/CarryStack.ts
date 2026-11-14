@@ -8,6 +8,26 @@ import { box, cyl, detail, mat, roundBox } from '../world/Materials';
 
 /** One shared, three-draw-call carrier per size, reused by the whole staff. */
 const trayGeometryCache = new Map<string, readonly THREE.BufferGeometry[]>();
+let sharedTrayMaterials: readonly THREE.MeshStandardMaterial[] | null = null;
+let sharedCartWheelMaterial: THREE.MeshStandardMaterial | null = null;
+
+function getTrayMaterials(): readonly THREE.MeshStandardMaterial[] {
+  if (!sharedTrayMaterials) {
+    sharedTrayMaterials = [
+      mat(0x96633f, { rough: 0.58 }),
+      mat(0x234c41, { rough: 0.92 }),
+      mat(0xc9a365, { rough: 0.36, metal: 0.55 }),
+    ];
+  }
+  return sharedTrayMaterials;
+}
+
+function getCartWheelMaterial(): THREE.MeshStandardMaterial {
+  if (!sharedCartWheelMaterial) {
+    sharedCartWheelMaterial = mat(0x252b30, { rough: 0.75 });
+  }
+  return sharedCartWheelMaterial;
+}
 
 function roundedOutline(path: THREE.Path, width: number, depth: number, radius: number): void {
   const x = width / 2, z = depth / 2, r = Math.min(radius, x, z);
@@ -72,8 +92,7 @@ function makeServiceTray(width: number, depth: number, handHeld = true): THREE.G
   }
   const tray = new THREE.Group();
   tray.name = handHeld ? 'walnutServiceTray' : 'walnutServiceShelf';
-  const materials = [mat(0x96633f, { rough: 0.58 }),
-    mat(0x234c41, { rough: 0.92 }), mat(0xc9a365, { rough: 0.36, metal: 0.55 })];
+  const materials = getTrayMaterials();
   for (let i = 0; i < geometries.length; i++) {
     const part = detail(geometries[i], materials[i]);
     part.name = ['walnutFrame', 'nonslipLiner', 'brassRimAndHandles'][i];
@@ -160,6 +179,11 @@ const countBadgeCache = new Map<number, THREE.SpriteMaterial>();
 function countBadgeMaterial(count: number): THREE.SpriteMaterial {
   let hit = countBadgeCache.get(count);
   if (hit) return hit;
+  if (typeof document === 'undefined') {
+    hit = new THREE.SpriteMaterial({ transparent: true, depthWrite: false });
+    countBadgeCache.set(count, hit);
+    return hit;
+  }
   const c = document.createElement('canvas');
   c.width = 128;
   c.height = 128;
@@ -245,9 +269,21 @@ export class CarryStack {
 
     this.root.name = 'serviceCarry';
     this.smallTray.add(makeServiceTray(1.04, 0.74));
-    this.wideTray.add(makeServiceTray(1.3, 0.9));
+    this.root.add(this.smallTray);
+    markDynamic(this.root);
+    this.syncCarrierVisibility();
+  }
 
-    const cartMetal = mat(0xc9a365, { rough: 0.36, metal: 0.55 });
+  private ensureWideTray(): void {
+    if (this.wideTray.children.length > 0) return;
+    this.wideTray.add(makeServiceTray(1.3, 0.9));
+    markDynamic(this.wideTray);
+  }
+
+  private ensureCart(): void {
+    if (this.cart.children.length > 0) return;
+    const cartMetal = getTrayMaterials()[2];
+    const wheelMat = getCartWheelMaterial();
     this.cart.add(makeServiceTray(1.04, 0.94, false));
     const lowerShelf = makeServiceTray(0.96, 0.8, false);
     lowerShelf.position.y = -0.58;
@@ -267,14 +303,12 @@ export class CarryStack {
     }
     const wheelGeo = cyl(0.085, 0.085, 0.045, 10);
     for (const x of [-0.34, 0.34]) for (const z of [-0.36, 0.36]) {
-      const wheel = detail(wheelGeo, mat(0x252b30, { rough: 0.75 }), x, -0.75, z);
+      const wheel = detail(wheelGeo, wheelMat, x, -0.75, z);
       wheel.rotation.z = Math.PI / 2;
       this.cart.add(wheel);
       this.cartWheels.push(wheel);
     }
-    this.root.add(this.smallTray, this.wideTray, this.cart);
-    markDynamic(this.root);
-    this.syncCarrierVisibility();
+    markDynamic(this.cart);
   }
 
   get usesCart(): boolean {
@@ -285,6 +319,8 @@ export class CarryStack {
     const next: 0 | 1 | 2 = level >= 8 ? 2 : level >= 4 ? 1 : 0;
     if (next === this.stage) return;
     this.stage = next;
+    if (next === 1) this.ensureWideTray();
+    else if (next === 2) this.ensureCart();
     this.setSlots(this.sourceItems);
     this.layoutMeshes();
     this.syncCarrierVisibility();

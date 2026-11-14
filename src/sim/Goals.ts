@@ -53,7 +53,7 @@ export class GoalTracker {
      * kalır; ama kazancın büyük bir payı olursa hedefler ekonomiyi ele
      * geçirir (zincirin son beş ödülü tam da bunu yapıyordu).
      */
-    const reward = Math.max(500, Math.round(this.state.revenueEarned * 0.015));
+    const reward = Math.max(1500, Math.round(this.state.revenueEarned * 0.018));
     if (this.endless && this.endlessIndex === i) {
       this.endless.reward = reward;
       return this.endless;
@@ -94,14 +94,12 @@ export class GoalTracker {
   currentValue(): number {
     const g = this.current;
     if (!g) return 0;
-    /**
-     * Sonsuz hedefler KÜMÜLATİF sayaçlar üzerine kurulur (toplam servis,
-     * toplam bulaşık…). Taban çıkarılmazsa "400 ürün servis et" hedefi,
-     * oyuncu zaten 50.000 servis yapmış olduğu için doğar doğmaz tamamlanır
-     * ve zincir saniyede bir ödül basar.
-     */
-    if (this.isEndless) return Math.max(0, this.rawValue(g) - this.state.goalBase);
-    return this.rawValue(g);
+    const raw = this.rawValue(g);
+    if (this.isEndless) {
+      if (this.state.goalBase > raw) this.state.goalBase = raw;
+      return Math.max(0, raw - this.state.goalBase);
+    }
+    return raw;
   }
 
   /**

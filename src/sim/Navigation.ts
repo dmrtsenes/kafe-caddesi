@@ -487,11 +487,12 @@ export class NavGrid {
     // Crowd contact may place a .30 body in the planner's .04 safety margin.
     // Walk out of that margin first; never teleport or give up on a usable route.
     if (this.solidBlocked(sx, sz, .34) && !this.solidBlocked(sx, sz, .3)) {
-      const start = { x: sx, z: sz };
-      this.resolve(start, .34);
-      if (!this.bodyLineClear(sx, sz, start.x, start.z, .3) ||
-          !this.findClearPath(start.x, start.z, tx, tz, out)) return false;
-      out.unshift(start.x, start.z);
+      FIND_START.x = sx;
+      FIND_START.z = sz;
+      this.resolve(FIND_START, .34);
+      if (!this.bodyLineClear(sx, sz, FIND_START.x, FIND_START.z, .3) ||
+          !this.findClearPath(FIND_START.x, FIND_START.z, tx, tz, out)) return false;
+      out.unshift(FIND_START.x, FIND_START.z);
       return true;
     }
     return this.findClearPath(sx, sz, tx, tz, out);
@@ -505,19 +506,27 @@ export class NavGrid {
     // A usable aisle can lie entirely between grid samples. Its exact midpoint
     // joins the regular grid on either side without shrinking any obstacle.
     if (!this.solidBlocked(tx, tz, .34)) {
-      const candidates = this.passageBridges().filter(p => p.toX !== undefined || this.bodyLineClear(p.x, p.z, tx, tz));
-      candidates.sort((a, b) => Math.hypot(sx - a.x, sz - a.z) + Math.hypot(tx - a.x, tz - a.z)
-        - Math.hypot(sx - b.x, sz - b.z) - Math.hypot(tx - b.x, tz - b.z));
-      for (const p of candidates) {
-        if (!this.search(sx, sz, p.x, p.z, out, this.padded) ||
-            Math.hypot(out[out.length - 2] - p.x, out[out.length - 1] - p.z) > 1e-4) continue;
-        if (p.toX !== undefined && p.toZ !== undefined) {
-          const tail: number[] = [];
-          if (!this.search(p.toX, p.toZ, tx, tz, tail, this.padded) ||
-              Math.hypot(tail[tail.length - 2] - tx, tail[tail.length - 1] - tz) > 1e-4) continue;
-          out.push(p.toX, p.toZ, ...tail); return true;
+      const bridges = this.passageBridges();
+      if (bridges.length > 0) {
+        BRIDGE_CANDIDATES.length = 0;
+        for (let i = 0; i < bridges.length; i++) {
+          const p = bridges[i];
+          if (p.toX !== undefined || this.bodyLineClear(p.x, p.z, tx, tz)) BRIDGE_CANDIDATES.push(p);
         }
-        out.push(tx, tz); return true;
+        BRIDGE_CANDIDATES.sort((a, b) => Math.hypot(sx - a.x, sz - a.z) + Math.hypot(tx - a.x, tz - a.z)
+          - Math.hypot(sx - b.x, sz - b.z) - Math.hypot(tx - b.x, tz - b.z));
+        for (let i = 0; i < BRIDGE_CANDIDATES.length; i++) {
+          const p = BRIDGE_CANDIDATES[i];
+          if (!this.search(sx, sz, p.x, p.z, out, this.padded) ||
+              Math.hypot(out[out.length - 2] - p.x, out[out.length - 1] - p.z) > 1e-4) continue;
+          if (p.toX !== undefined && p.toZ !== undefined) {
+            BRIDGE_TAIL.length = 0;
+            if (!this.search(p.toX, p.toZ, tx, tz, BRIDGE_TAIL, this.padded) ||
+                Math.hypot(BRIDGE_TAIL[BRIDGE_TAIL.length - 2] - tx, BRIDGE_TAIL[BRIDGE_TAIL.length - 1] - tz) > 1e-4) continue;
+            out.push(p.toX, p.toZ, ...BRIDGE_TAIL); return true;
+          }
+          out.push(tx, tz); return true;
+        }
       }
     }
     // Only relax the final approach when the target itself is inside the
@@ -580,10 +589,11 @@ export class NavGrid {
       if (bestCol < 0) return false;
       goalCol = bestCol; goalRow = bestRow;
     } else if (grid[this.idx(goalCol, goalRow)] === 1) {
-      const tmp = { x: 0, z: 0 };
-      if (!this.nearestFreeIn(tx, tz, tmp, grid)) return false;
-      goalCol = this.colOf(tmp.x);
-      goalRow = this.rowOf(tmp.z);
+      SEARCH_TMP.x = 0;
+      SEARCH_TMP.z = 0;
+      if (!this.nearestFreeIn(tx, tz, SEARCH_TMP, grid)) return false;
+      goalCol = this.colOf(SEARCH_TMP.x);
+      goalRow = this.rowOf(SEARCH_TMP.z);
     }
     let goal = this.idx(goalCol, goalRow);
     if (grid === this.padded && this.componentsReady && !grid[start] &&
@@ -919,6 +929,10 @@ export class NavGrid {
 }
 
 const RAW: number[] = [];
+const FIND_START = { x: 0, z: 0 };
+const SEARCH_TMP = { x: 0, z: 0 };
+const BRIDGE_CANDIDATES: { x: number; z: number; toX?: number; toZ?: number }[] = [];
+const BRIDGE_TAIL: number[] = [];
 const RANGE_X: [number, number] = [0, 0];
 const RANGE_Z: [number, number] = [0, 0];
 // sağ, sol, aşağı, yukarı, sonra çaprazlar

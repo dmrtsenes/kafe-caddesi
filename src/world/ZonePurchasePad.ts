@@ -72,21 +72,27 @@ export function createZonePurchasePad(zone: ZoneDef, glyph: string, benefit: str
     const inset = 15, side = TEX - inset * 2, radius = 25;
     const path = new Path2D();
     path.roundRect(inset, inset, side, side, radius);
-    // An unfilled outline belongs to the real floor, not a separate card.
+    // Subtle translucent floor backing keeps white/gold typography legible over bright stone tiles.
+    ctx.fillStyle = unlocked
+      ? 'rgba(28, 78, 56, 0.38)'
+      : active
+        ? 'rgba(28, 56, 46, 0.34)'
+        : 'rgba(22, 38, 33, 0.22)';
+    ctx.fill(path);
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     ctx.setLineDash([]);
-    ctx.strokeStyle = 'rgba(35,54,46,0.48)';
-    ctx.lineWidth = 6;
+    ctx.strokeStyle = 'rgba(24,40,34,0.62)';
+    ctx.lineWidth = 7;
     ctx.stroke(path);
     ctx.strokeStyle = active ? '#ffdc86' : '#fffdf4';
-    ctx.lineWidth = 3.5;
+    ctx.lineWidth = 3.8;
     ctx.stroke(path);
     if (progress > 0 || unlocked) {
       const perimeter = 4 * (side - radius * 2) + Math.PI * 2 * radius;
       ctx.setLineDash([perimeter * (unlocked ? 1 : progress), perimeter]);
-      ctx.strokeStyle = '#7dd4a1';
-      ctx.lineWidth = 4.5;
+      ctx.strokeStyle = '#6ee7a8';
+      ctx.lineWidth = 5.5;
       ctx.stroke(path);
       ctx.setLineDash([]);
     }
@@ -114,18 +120,38 @@ export function createZonePurchasePad(zone: ZoneDef, glyph: string, benefit: str
     text(label, 151, 43);
     if (progress > 0) text(tr('KALAN'), 186, 12);
     if (adOffer && (active || near)) {
-      const pillW = 212, pillH = 32, pillX = (TEX - pillW) / 2, pillY = 200, pillR = 10;
+      const pillW = 216, pillH = 34, pillX = (TEX - pillW) / 2, pillY = 198, pillR = 11;
       const pillPath = new Path2D();
       pillPath.roundRect(pillX, pillY, pillW, pillH, pillR);
-      ctx.fillStyle = adOffer === 'finish' ? 'rgba(16, 185, 129, 0.95)' : 'rgba(217, 119, 6, 0.95)';
+      ctx.fillStyle = adOffer === 'finish' ? 'rgba(16, 185, 129, 0.96)' : 'rgba(217, 119, 6, 0.96)';
       ctx.fill(pillPath);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = '#fffdf4';
+      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = '#fff3c4';
       ctx.stroke(pillPath);
-      const badgeText = adOffer === 'finish' ? tr('📺 REKLAMLA TAMAMLA') : tr('📺 %50 ÖDE');
+
+      // Özel çizim altın anahtar sembolü (YouTube/TV ekranı ikonu yerine)
+      const kx = pillX + 20, ky = pillY + 17;
+      ctx.save();
+      ctx.strokeStyle = '#ffe89e';
+      ctx.fillStyle = '#ffe89e';
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.arc(kx - 4, ky, 4.6, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(kx + 0.5, ky);
+      ctx.lineTo(kx + 11.5, ky);
+      ctx.moveTo(kx + 7.5, ky);
+      ctx.lineTo(kx + 7.5, ky + 4);
+      ctx.moveTo(kx + 11, ky);
+      ctx.lineTo(kx + 11, ky + 4);
+      ctx.stroke();
+      ctx.restore();
+
+      const badgeText = adOffer === 'finish' ? tr('ANAHTARLA AÇ') : tr('%50 HIZLI AÇ');
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#1e293b';
-      drawSurfaceText(ctx, badgeText, TEX / 2, pillY + 16, pillW - 12, pillH, 16, 1.2, 1.0);
+      ctx.strokeStyle = '#152621';
+      drawSurfaceText(ctx, badgeText, TEX / 2 + 11, pillY + 17, pillW - 42, pillH, 16.5, 1.2, 1.05);
     } else if (active) text(instruction || tr('Üzerinde dur'), 216, 20);
     else if (near) {
       // Show one concrete purchase benefit while approaching. The action hint

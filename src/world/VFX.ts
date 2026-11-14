@@ -62,6 +62,14 @@ function buildAtlas(): void {
     ctx.beginPath();
     ctx.arc(64, 64, 46, 0, TAU);
     ctx.fill();
+    ctx.strokeStyle = '#fff5c0';
+    ctx.lineWidth = 3.5;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(244,114,106,0.45)';
+    ctx.beginPath();
+    ctx.arc(40, 68, 7.5, 0, TAU);
+    ctx.arc(88, 68, 7.5, 0, TAU);
+    ctx.fill();
     ctx.fillStyle = '#2b1d10';
     ctx.beginPath();
     ctx.arc(50, 54, 7, 0, TAU);
@@ -79,26 +87,38 @@ function buildAtlas(): void {
     // 1 — kızgın (sağ üst)
     ctx.fillStyle = '#e2453a';
     star(ctx, 64 + CELL, 64, 50, 0.72);
+    ctx.strokeStyle = '#fff5f2';
+    ctx.lineWidth = 3;
+    ctx.stroke();
     ctx.fillStyle = '#ffffff';
-    ctx.font = '700 68px system-ui, sans-serif';
+    ctx.font = '800 68px system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('!', 64 + CELL, 66);
 
     // 2 — para (sol alt)
-    ctx.fillStyle = '#ffc84a';
+    ctx.fillStyle = '#f59e0b';
     ctx.beginPath();
-    ctx.arc(64, 64 + CELL, 46, 0, TAU);
+    ctx.arc(64, 64 + CELL, 47, 0, TAU);
     ctx.fill();
-    ctx.fillStyle = '#8a5a12';
-    ctx.font = '700 66px system-ui, sans-serif';
+    ctx.fillStyle = '#ffd859';
+    ctx.beginPath();
+    ctx.arc(64, 64 + CELL, 40, 0, TAU);
+    ctx.fill();
+    ctx.strokeStyle = '#fff7d1';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = '#78470a';
+    ctx.font = '800 64px system-ui, sans-serif';
     ctx.fillText('₺', 64, 66 + CELL);
 
     // 3 — yıldız (sağ alt)
-    ctx.fillStyle = '#ffe38a';
-    star(ctx, 64 + CELL, 64 + CELL, 54, 0.45);
-    ctx.fillStyle = '#fffdf0';
-    star(ctx, 64 + CELL, 64 + CELL, 30, 0.45);
+    ctx.fillStyle = '#fbbf24';
+    star(ctx, 64 + CELL, 64 + CELL, 55, 0.45);
+    ctx.fillStyle = '#ffe999';
+    star(ctx, 64 + CELL, 64 + CELL, 44, 0.45);
+    ctx.fillStyle = '#ffffff';
+    star(ctx, 64 + CELL, 64 + CELL, 25, 0.42);
   }
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.SRGBColorSpace;

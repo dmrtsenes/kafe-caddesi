@@ -502,11 +502,14 @@ function buildLatteCup(g: THREE.Group, d: ItemDef): void {
   saucer(g, 0.175, d.color);
   const porcelain = mat(d.color, { rough: 0.2 });
   g.add(detail(cyl(0.125, 0.095, 0.17, 14), porcelain, 0, 0.115, 0));
-  // süt köpüğü + latte art yaprağı
-  g.add(detail(cyl(0.115, 0.115, 0.014, 14), mat(0xf7ecdc, { rough: 0.55 }), 0, 0.197, 0));
-  const leaf = detail(sph(0.06, 8, 6), mat(d.accent, { rough: 0.6 }), 0, 0.204, 0);
+  // süt köpüğü + latte art rozet
+  g.add(detail(cyl(0.115, 0.115, 0.014, 14), mat(0xf7ecdc, { rough: 0.52 }), 0, 0.197, 0));
+  const leaf = detail(sph(0.06, 8, 6), mat(d.accent, { rough: 0.58 }), 0, 0.204, 0);
   leaf.scale.set(0.5, 0.08, 1.5);
   g.add(leaf);
+  const cremaHeart = detail(sph(0.036, 7, 5), mat(0xfffaf0, { rough: 0.5 }), 0, 0.206, -0.015);
+  cremaHeart.scale.set(0.85, 0.08, 0.75);
+  g.add(cremaHeart);
   handle(g, 0.07, 0.12, d.color);
 }
 
@@ -540,6 +543,9 @@ function buildSandwich(g: THREE.Group, d: ItemDef): void {
   const slice = cyl(0.19, 0.19, 0.05, 3);
   const m = mat(d.color, { rough: 0.85, flatShading: true });
   g.add(detail(slice, m, 0, 0.025, 0));
+  const cheeseMelt = detail(box(0.22, 0.016, 0.22), mat(0xf4b942, { rough: 0.48 }), 0.01, 0.058, 0.01);
+  cheeseMelt.rotation.y = 0.42;
+  g.add(cheeseMelt);
   const fill = detail(cyl(0.168, 0.168, 0.055, 3), mat(d.accent, { rough: 0.7 }), 0, 0.075, 0);
   fill.rotation.y = 0.3;
   g.add(fill);
@@ -547,9 +553,10 @@ function buildSandwich(g: THREE.Group, d: ItemDef): void {
   top.rotation.y = -0.24;
   g.add(top);
   // ızgara çizgileri
-  const grill = makeInstanced(box(0.26, 0.008, 0.02), mat(shade(d.color, 0.62), { rough: 0.9 }), 2);
-  setInstance(grill, 0, 0.012, 0.154, 0.03, 0, -0.24, 0);
-  setInstance(grill, 1, 0.012, 0.154, -0.03, 0, -0.24, 0);
+  const grill = makeInstanced(box(0.26, 0.008, 0.02), mat(shade(d.color, 0.62), { rough: 0.9 }), 3);
+  setInstance(grill, 0, 0.012, 0.154, 0.042, 0, -0.24, 0);
+  setInstance(grill, 1, 0.012, 0.154, 0, 0, -0.24, 0);
+  setInstance(grill, 2, 0.012, 0.154, -0.042, 0, -0.24, 0);
   flushInstances(grill);
   g.add(grill);
 }
@@ -620,23 +627,31 @@ function buildFrappe(g: THREE.Group, d: ItemDef): void {
 function buildSmoothie(g: THREE.Group, d: ItemDef): void {
   const glass = mat(0xeef2f4, GLASS);
   g.add(detail(cyl(0.11, 0.095, 0.32, 12), glass, 0, 0.16, 0));
-  g.add(detail(cyl(0.104, 0.09, 0.27, 12), mat(d.color, { rough: 0.4 }), 0, 0.145, 0));
+  g.add(detail(cyl(0.104, 0.09, 0.26, 12), mat(d.color, { rough: 0.36 }), 0, 0.14, 0));
+  g.add(detail(cyl(0.104, 0.104, 0.024, 12), mat(0xfff3f6, { rough: 0.5 }), 0, 0.282, 0));
   const straw = detail(cyl(0.013, 0.013, 0.3, 6), mat(d.accent, { rough: 0.45 }), 0.035, 0.4, 0.01);
   straw.rotation.z = -0.18;
   g.add(straw);
-  // kenarda meyve
-  g.add(detail(sph(0.05, 7, 6), mat(shade(d.color, 0.85), { rough: 0.5 }), -0.09, 0.33, 0.03));
+  // kenarda meyve + taze nane yaprağı
+  g.add(detail(sph(0.05, 7, 6), mat(shade(d.color, 0.82), { rough: 0.45 }), -0.09, 0.33, 0.03));
+  const mint = detail(sph(0.034, 6, 5), mat(0x4ca66b, { rough: 0.65 }), -0.02, 0.305, -0.03);
+  mint.scale.set(1.25, 0.32, 0.72);
+  mint.rotation.set(0.2, 0.5, -0.25);
+  g.add(mint);
 }
 
 /* --- dondurma külahı --- */
 function buildCone(g: THREE.Group, d: ItemDef): void {
-  const k = detail(cone(0.125, 0.3, 8), mat(mix(d.color, 0x9a6b43, 0.86), { rough: 0.95, flatShading: true }), 0, 0.15, 0);
+  const waffleMat = mat(mix(d.color, 0x9a6b43, 0.86), { rough: 0.92, flatShading: true });
+  const k = detail(cone(0.125, 0.3, 8), waffleMat, 0, 0.15, 0);
   k.rotation.x = Math.PI;
   g.add(k);
-  const s1 = detail(sph(0.115, 9, 7), mat(d.color, { rough: 0.55 }), 0, 0.33, 0);
+  g.add(detail(torus(0.118, 0.014, 5, 12), waffleMat, 0, 0.295, 0));
+  const s1 = detail(sph(0.115, 9, 7), mat(d.color, { rough: 0.5 }), 0, 0.335, 0);
   s1.scale.set(1, 0.92, 1);
   g.add(s1);
-  g.add(detail(sph(0.095, 8, 6), mat(d.accent, { rough: 0.55 }), 0.012, 0.46, 0));
+  g.add(detail(sph(0.095, 8, 6), mat(d.accent, { rough: 0.5 }), 0.012, 0.465, 0));
+  g.add(detail(sph(0.028, 6, 5), mat(0xd83b56, { rough: 0.32 }), 0.008, 0.555, 0));
 }
 
 /* --- milkshake --- */

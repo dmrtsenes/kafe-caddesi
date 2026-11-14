@@ -1,5 +1,6 @@
 import { build, preview } from 'vite';
-import { chromium } from 'playwright';
+import { loadPlaywright } from './load-playwright.mjs';
+const { chromium } = loadPlaywright();
 import { mkdir, writeFile } from 'node:fs/promises';
 import { assertReleaseAssets } from './release-assets.mjs';
 import assert from 'node:assert/strict';

@@ -573,7 +573,7 @@ export const KOSE: LocationDef = {
        * a4 3400 · t3 4800. Ölçüm: temiz 50 dk bot koşusu.
        */
       id: 't1', name: tr("MASA 2"), dept: 'salon', cost: ZONE_COSTS.t1, requires: 'a1', accent: 0x376152,
-      padX: 0.0, padZ: 4.1,
+      padX: 0.0, padZ: 0.1,
       blurb: tr("İkinci masa. İlk açılımın yarım dakika sürer."),
     },
     {
@@ -583,7 +583,7 @@ export const KOSE: LocationDef = {
     },
     {
       id: 't2', name: tr("MASA 3"), dept: 'salon', cost: ZONE_COSTS.t2, requires: 't1', accent: 0x376152,
-      padX: 5.2, padZ: 4.1,
+      padX: 2.4, padZ: 4.1,
       blurb: tr("Dört kişilik ilk büyük masa."),
     },
     {
@@ -593,7 +593,7 @@ export const KOSE: LocationDef = {
     },
     {
       id: 't3', name: tr("MASA 4"), dept: 'salon', cost: ZONE_COSTS.t3, requires: 't2', accent: 0x376152,
-      padX: -5.2, padZ: 8.2,
+      padX: -2.85, padZ: 8.45,
       blurb: tr("İlk kare masa — dört kişilik."),
     },
     {
@@ -603,12 +603,12 @@ export const KOSE: LocationDef = {
     },
     {
       id: 't4', name: tr("MASA 5"), dept: 'salon', cost: ZONE_COSTS.t4, requires: 't3', accent: 0x376152,
-      padX: 0.0, padZ: 8.2,
+      padX: 0.0, padZ: 8.68,
       blurb: tr("İki kişilik kare masa."),
     },
     {
       id: 'a6', name: tr("LAVABOLAR"), dept: 'servis', cost: ZONE_COSTS.a6, requires: 'a5', accent: 0xb69a60,
-      padX: 7.45, padZ: -9.85,
+      padX: 7.4, padZ: -8.5,
       room: RESTROOM_SUITE,
       blurb: tr("Kafe lavaboları uzun oturan misafirleri rahatlatır; peçeteyi tam, zemini pırıl pırıl tutarsan memnuniyet ve bahşiş artar."),
     },
@@ -627,7 +627,7 @@ export const KOSE: LocationDef = {
      */
     {
       id: 't5', name: tr("MASA 6"), dept: 'salon', cost: ZONE_COSTS.t5, requires: 'a6', accent: 0x376152,
-      padX: 5.2, padZ: 8.2,
+      padX: 5.2, padZ: 8.68,
       blurb: tr("Ön salonun son masası."),
     },
     {
@@ -669,23 +669,23 @@ export const KOSE: LocationDef = {
     },
     {
       id: 'a7', name: tr("VAFIL"), dept: 'bar', cost: ZONE_COSTS.a7, requires: 'r1', accent: 0xd8567a,
-      padX: 5.0, padZ: -11.6,
+      padX: 3.3, padZ: -13.4,
       blurb: tr("Vafıl makinesi ve vafıl rafı. Menünün tatlı yıldızı."),
     },
     {
       id: 't6', name: tr("MASA 8"), dept: 'salon', cost: ZONE_COSTS.t6, requires: 'r1', accent: 0x376152,
-      padX: 10.4, padZ: 11.5,
+      padX: 11.9, padZ: 12.1,
       blurb: tr("Salon odasının orta masası."),
     },
 
     {
       id: 'a8', name: tr("BUZLU KAHVE"), dept: 'bar', cost: ZONE_COSTS.a8, requires: 'a7', accent: 0x6aa84f,
-      padX: 5.4, padZ: -14.4,
+      padX: 6.5, padZ: -13.4,
       blurb: tr("Buzlu kahve blenderi ve rafı. Menünün zirvesi."),
     },
     {
       id: 't7', name: tr("MASA 9"), dept: 'salon', cost: ZONE_COSTS.t7, requires: 't6', accent: 0x376152,
-      padX: 12.7, padZ: 13.8,
+      padX: 11.4, padZ: 12.9,
       blurb: tr("Salon odası tamamlanır."),
     },
     /* ================= YAN DAL — ARA-HEDEF BANDI (v5.1 §3) ================= *
@@ -782,7 +782,7 @@ export const KOSE: LocationDef = {
      */
     {
       id: 'v1', name: tr("VIP MASA 2"), dept: 'salon', cost: ZONE_COSTS.v1, requires: 'r2', accent: 0xd4a017,
-      padX: -10.6, padZ: 11.5,
+      padX: -11.9, padZ: 12.2,
       blurb: tr("İkinci VIP masa. Zenginler sıra beklemesin."),
     },
     {
@@ -793,7 +793,7 @@ export const KOSE: LocationDef = {
        * gelirde ~5 dakikaya denk gelir.
        */
       id: 'v2', name: tr("VIP LOCA"), dept: 'salon', cost: ZONE_COSTS.v2, requires: 'v1', accent: 0xd4a017,
-      padX: -13.0, padZ: 13.7,
+      padX: -11.6, padZ: 12.8,
       blurb: tr("Dört kişilik loca — kafenin en pahalı ve en kârlı masası."),
     },
   ],
@@ -1055,7 +1055,7 @@ export const SAHIL: LocationDef = {
     },
     {
       id: 'p3', name: tr("TERAS"), dept: 'salon', cost: ZONE_COSTS.p3, requires: 'p2', accent: 0x6aa84f,
-      padX: 4.0, padZ: 2.0,
+      padX: 4.5, padZ: 1.5,
       blurb: tr("Sütlü kokteyl barı ve iki büyük teras masası."),
     },
     {
@@ -1065,12 +1065,12 @@ export const SAHIL: LocationDef = {
     },
     {
       id: 'p5', name: tr("İSKELE VIP LOCA"), dept: 'salon', cost: ZONE_COSTS.p5, requires: 'p4', accent: 0xd4a017,
-      padX: 6.2, padZ: 7.2,
+      padX: 3.9, padZ: 10.6,
       blurb: tr("Sahilin en özel mermer VIP masası — hesap ve bahşiş 2,4 katı."),
     },
     {
       id: 'p6', name: tr("SAHİL MÜZİĞİ"), dept: 'salon', cost: ZONE_COSTS.p6, requires: 'p2', accent: 0xa8743f,
-      padX: 0.4, padZ: -3.8,
+      padX: 8.0, padZ: -3.8,
       blurb: tr("Akustik sahil müziği ve ışıklar — sabır, değer ve müşteri akışı artar."),
     },
   ],

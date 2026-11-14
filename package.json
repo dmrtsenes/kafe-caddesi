@@ -1,7 +1,7 @@
 {
   "name": "fincan-sokagi",
   "private": true,
-  "version": "1.0.6",
+  "version": "1.1.0",
   "type": "module",
   "description": "Fincan Sokagi - 3D idle arcade cafe tycoon for the web",
   "scripts": {

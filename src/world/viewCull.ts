@@ -120,9 +120,11 @@ export function extractCullPlanes(
   return out;
 }
 
+const _rawPlanes = new Float64Array(24);
+
 /**
  * Directly extracts the 6 normalized frustum planes from a projection * view matrix (column-major).
- * Avoids Three.js Frustum object instantiation.
+ * Avoids Three.js Frustum object instantiation and per-frame temporary arrays.
  */
 export function extractCullPlanesFromMatrix(
   matrix: { readonly elements: ArrayLike<number> },
@@ -136,18 +138,16 @@ export function extractCullPlanesFromMatrix(
 
   const out = target ?? [];
   // 6 planes: right, left, bottom, top, far, near (matching Three.js Frustum plane indexing)
-  const raw = [
-    m3 - m0, m7 - m4, m11 - m8, m15 - m12,
-    m3 + m0, m7 + m4, m11 + m8, m15 + m12,
-    m3 + m1, m7 + m5, m11 + m9, m15 + m13,
-    m3 - m1, m7 - m5, m11 - m9, m15 - m13,
-    m3 - m2, m7 - m6, m11 - m10, m15 - m14,
-    m3 + m2, m7 + m6, m11 + m10, m15 + m14,
-  ];
+  _rawPlanes[0] = m3 - m0; _rawPlanes[1] = m7 - m4; _rawPlanes[2] = m11 - m8; _rawPlanes[3] = m15 - m12;
+  _rawPlanes[4] = m3 + m0; _rawPlanes[5] = m7 + m4; _rawPlanes[6] = m11 + m8; _rawPlanes[7] = m15 + m12;
+  _rawPlanes[8] = m3 + m1; _rawPlanes[9] = m7 + m5; _rawPlanes[10] = m11 + m9; _rawPlanes[11] = m15 + m13;
+  _rawPlanes[12] = m3 - m1; _rawPlanes[13] = m7 - m5; _rawPlanes[14] = m11 - m9; _rawPlanes[15] = m15 - m13;
+  _rawPlanes[16] = m3 - m2; _rawPlanes[17] = m7 - m6; _rawPlanes[18] = m11 - m10; _rawPlanes[19] = m15 - m14;
+  _rawPlanes[20] = m3 + m2; _rawPlanes[21] = m7 + m6; _rawPlanes[22] = m11 + m10; _rawPlanes[23] = m15 + m14;
 
   for (let i = 0; i < 6; i++) {
     const o = i * 4;
-    let x = raw[o], y = raw[o + 1], z = raw[o + 2], w = raw[o + 3];
+    let x = _rawPlanes[o], y = _rawPlanes[o + 1], z = _rawPlanes[o + 2], w = _rawPlanes[o + 3];
     const len = Math.hypot(x, y, z);
     const inv = len > 1e-6 ? 1 / len : 0;
     x *= inv;

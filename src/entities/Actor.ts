@@ -1,7 +1,41 @@
 import * as THREE from 'three';
-import type { CharacterHandle } from '../chars/types';
+import { createCharacter } from '../chars/index';
+import type { AnimState, CharacterHandle, CharacterOpts, CharRole } from '../chars/types';
 import type { NavGrid } from '../sim/Navigation';
 import { angleTowards, damp, dist, wrapAngle } from '../core/MathUtils';
+
+export function safeCreateCharacter(role: CharRole, opts?: CharacterOpts): CharacterHandle {
+  try {
+    return createCharacter(role, opts);
+  } catch (err) {
+    if (typeof document !== 'undefined') throw err;
+    const root = new THREE.Group();
+    const carryAnchor = new THREE.Group();
+    const handAnchor = new THREE.Group();
+    const headTop = new THREE.Group();
+    root.add(carryAnchor, handAnchor, headTop);
+    let state: AnimState = 'idle';
+    return {
+      root,
+      carryAnchor,
+      handAnchor,
+      headTop,
+      height: 1.7,
+      setState(s) { state = s; },
+      getState() { return state; },
+      setWorkKind() {},
+      setWorkPhase() {},
+      setCarryCount() {},
+      setCarryMode() {},
+      setLocomotionLevel() {},
+      setPush() {},
+      handMidLocal(out) { return out.set(0, 0.9, 0.3); },
+      handSpanLocal(out) { return out.set(0.3, 0, 0); },
+      update() {},
+      dispose() {},
+    };
+  }
+}
 
 const _tmp = { x: 0, z: 0 };
 

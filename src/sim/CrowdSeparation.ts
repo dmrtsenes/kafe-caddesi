@@ -8,6 +8,8 @@ export interface SeparationResult {
   contacts: number;
   remaining: number;
 }
+const SEPARATION_OUT: SeparationResult = { contacts: 0, remaining: 0 };
+
 export function separateCrowd(
   bodies: readonly CrowdBody[],
   project: (body: CrowdBody, fromX: number, fromZ: number) => void,
@@ -18,15 +20,15 @@ export function separateCrowd(
   let contacts = 0;
   // A queue gives way to the controlled character, with body-sized clearance.
   // Keep normal spacing between NPCs; do not turn busy queues into player walls.
-  const spacing = (a: CrowdBody, b: CrowdBody): number =>
-    a === priority || b === priority ? Math.min(diameter, 0.7) : diameter;
+  const prioSpacing = Math.min(diameter, 0.7);
   for (let pass = 0; pass < iterations; pass++) {
     let changed = false;
     for (let i = 0; i < bodies.length; i++) {
       for (let j = i + 1; j < bodies.length; j++) {
         const a = bodies[i],
           b = bodies[j];
-        const minimum = spacing(a, b), minimumSquared = minimum * minimum;
+        const minimum = a === priority || b === priority ? prioSpacing : diameter;
+        const minimumSquared = minimum * minimum;
         const dx = b.x - a.x,
           dz = b.z - a.z;
         const squared = dx * dx + dz * dz;
@@ -59,12 +61,14 @@ export function separateCrowd(
       const a = bodies[i];
       for (let j = i + 1; j < bodies.length; j++) {
         const b = bodies[j];
-        const min = spacing(a, b) - 0.01;
+        const min = (a === priority || b === priority ? prioSpacing : diameter) - 0.01;
         const dx = b.x - a.x;
         const dz = b.z - a.z;
         if (dx * dx + dz * dz < min * min) remaining++;
       }
     }
   }
-  return { contacts, remaining };
+  SEPARATION_OUT.contacts = contacts;
+  SEPARATION_OUT.remaining = remaining;
+  return SEPARATION_OUT;
 }

@@ -480,6 +480,9 @@ export class StationEntity {
          */
         this.rotate(0, 1.6, out);
         break;
+      case 'vacuum':
+        this.rotate(0, 1.15, out);
+        break;
       default:
         this.rotate(0, 2.15, out);
         break;

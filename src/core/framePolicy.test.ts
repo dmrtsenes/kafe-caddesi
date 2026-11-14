@@ -101,11 +101,13 @@ describe("playFps", () => {
     assert.equal(defaultFpsPreference(false, false, "low"), 60);
   });
 
-  it("reduces automatic mobile FPS before the first image-resolution reduction", () => {
-    assert.equal(playFps({native:true,mobile:true,heat:1,tier:'medium'}),60);
-    assert.equal(playFps({native:true,mobile:true,heat:2,tier:'medium'}),30);
+  it("holds 60 FPS through light/moderate load on medium/high mobile while scaling 3D pixels, dropping to 30 at heat 3", () => {
     assert.equal(playFps({native:true,mobile:true,heat:0,tier:'medium'}),60);
-    assert.equal(playFps({native:true,mobile:true,heat:1,tier:'medium',preference:60}),60);
+    assert.equal(playFps({native:true,mobile:true,heat:1,tier:'medium'}),60);
+    assert.equal(playFps({native:true,mobile:true,heat:2,tier:'medium'}),60);
+    assert.equal(playFps({native:true,mobile:true,heat:3,tier:'medium'}),30);
+    assert.equal(playFps({native:true,mobile:true,heat:2,tier:'high'}),60);
+    assert.equal(playFps({native:true,mobile:true,heat:1,tier:'low'}),30);
     assert.equal(playFps({native:false,mobile:false,heat:2,tier:'high'}),60);
   });
 

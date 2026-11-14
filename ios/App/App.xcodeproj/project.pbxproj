@@ -18,6 +18,8 @@
 		9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9582B6822FE993A50072D4E8 /* SceneDelegate.swift */; };
 		A1B2C3D42FE993A80072D4E8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D32FE993A80072D4E8 /* PrivacyInfo.xcprivacy */; };
 		A1B2C3D82FE993A80072D4E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D52FE993A80072D4E8 /* InfoPlist.strings */; };
+		A2B2C3D52FE993B00072D4E8 /* GameBridgeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B2C3D42FE993B00072D4E8 /* GameBridgeViewController.swift */; };
+		A2B2C3D72FE993B00072D4E8 /* IosGameNativePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B2C3D62FE993B00072D4E8 /* IosGameNativePlugin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		A1B2C3D32FE993A80072D4E8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A1B2C3D62FE993A80072D4E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A1B2C3D72FE993A80072D4E8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A2B2C3D42FE993B00072D4E8 /* GameBridgeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBridgeViewController.swift; sourceTree = "<group>"; };
+		A2B2C3D62FE993B00072D4E8 /* IosGameNativePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosGameNativePlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,8 @@
 			isa = PBXGroup;
 			children = (
 				9582B6822FE993A50072D4E8 /* SceneDelegate.swift */,
+				A2B2C3D42FE993B00072D4E8 /* GameBridgeViewController.swift */,
+				A2B2C3D62FE993B00072D4E8 /* IosGameNativePlugin.swift */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
@@ -172,6 +178,8 @@
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */,
+				A2B2C3D52FE993B00072D4E8 /* GameBridgeViewController.swift in Sources */,
+				A2B2C3D72FE993B00072D4E8 /* IosGameNativePlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,14 +330,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 16;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.1.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fincansokagi.game;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -345,14 +353,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 16;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fincansokagi.game;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";

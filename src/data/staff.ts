@@ -24,14 +24,14 @@ export const STAFF_ROLES: StaffRoleDef[] = [
   {
     id: 'waiter',
     name: tr("Tezgâhtar"),
-    desc: tr("Atandığı ürünün rafını düzenli doldurur. Seviye arttıkça taşıdığı parti büyür."),
+    desc: tr("Açık ürün raflarını düzenli doldurur; geciken normal masalara yedek servis yapar."),
     glyph: '🧺',
     hireCost: 400,
-    // 1.85–2.15: next hire stays a few minutes. Waiter 1 = 400, waiter 6 = round(400×1.85^5) = 8668.
-    hireGrowth: 1.85,
+    // 2.05: Waiter 1 = 400, waiter 2 = 820, waiter 6 = round(400×2.05^5) = 14482.
+    hireGrowth: 2.05,
     maxCount: 6,
-    levelCost: 320,
-    levelGrowth: 1.72,
+    levelCost: 420,
+    levelGrowth: 1.8,
     maxLevel: 10,
     color: '#c9793f',
   },
@@ -40,11 +40,11 @@ export const STAFF_ROLES: StaffRoleDef[] = [
     name: tr("Kasiyer"),
     desc: tr("Siparişi alır ve sırayı akıtır. Kasada biriken parayı oyuncu toplar."),
     glyph: '🧾',
-    hireCost: 2600,
-    hireGrowth: 2.05,
+    hireCost: 2400,
+    hireGrowth: 2.08,
     maxCount: 4,
     levelCost: 1800,
-    levelGrowth: 1.8,
+    levelGrowth: 1.82,
     maxLevel: 10,
     color: '#376152',
   },
@@ -53,10 +53,10 @@ export const STAFF_ROLES: StaffRoleDef[] = [
     name: tr("Masa Görevlisi"),
     desc: tr("Sorumlu olduğu masaların bulaşığını toplar ve yüzeyini siler. Zemin ve tuvaleti oyuncu temizler."),
     glyph: '🧹',
-    hireCost: 9000,
-    hireGrowth: 2.0,
+    hireCost: 8500,
+    hireGrowth: 2.05,
     maxCount: 5,
-    levelCost: 6000,
+    levelCost: 5200,
     levelGrowth: 1.82,
     maxLevel: 10,
     color: '#5b9bd5',
@@ -66,11 +66,11 @@ export const STAFF_ROLES: StaffRoleDef[] = [
     name: tr("Kahve Ustası"),
     desc: tr("Seçildiği makinenin hazırlığını hızlandırır. Ürün taşımaz ve raf doldurmaz."),
     glyph: '👩‍🍳',
-    hireCost: 18000,
-    hireGrowth: 2.15,
+    hireCost: 18500,
+    hireGrowth: 2.08,
     maxCount: 5,
-    levelCost: 8000,
-    levelGrowth: 1.52,
+    levelCost: 8800,
+    levelGrowth: 1.75,
     maxLevel: 10,
     color: '#d8607a',
   },
@@ -91,7 +91,7 @@ export function staffLevelCost(def: StaffRoleDef, level: number): number {
 /* --------- rol türev değerleri (seviye 0 tabanlı) --------- */
 
 export function waiterSpeed(level: number): number {
-  return 2.25 + level * 0.15;
+  return 2.3 + level * 0.16;
 }
 /** Aynı anda kaç ürün taşıyabilir (sepet). */
 export function waiterCapacity(level: number): number {
@@ -104,19 +104,19 @@ export function waiterShelfTarget(level: number, shelfCapacity?: number): number
 }
 /** Bir ürünü alma / rafa dizme süresi (sn). */
 export function waiterHandInterval(level: number): number {
-  return 0.75 * Math.pow(0.96, level);
+  return 0.68 * Math.pow(0.96, level);
 }
 
 export function cashierSpeed(level: number): number {
-  return 2.0 + level * 0.1;
+  return 2.05 + level * 0.1;
 }
 /** Bir siparişi alma süresi (sn). */
 export function cashierOrderTime(level: number): number {
-  return 2.4 * Math.pow(0.95, level);
+  return 2.05 * Math.pow(0.945, level);
 }
 
 export function baristaSpeed(level: number): number {
-  return 2.15 + level * 0.12;
+  return 2.2 + level * 0.12;
 }
 /** Visible +25% preparation at hire, +85% at level10; player help remains ×2. */
 export function baristaBoost(level: number): number {
@@ -127,26 +127,26 @@ export function baristaCapacity(level: number): number {
 }
 
 export function busserSpeed(level: number): number {
-  return 2.6 + level * 0.16;
+  return 2.65 + level * 0.16;
 }
 export function busserCapacity(level: number): number {
   return 3 + Math.floor(level * 0.8);
 }
 /** Bir bulaşık toplama / bir leke silme adımı (sn). */
 export function busserWorkTime(level: number): number {
-  return 1.65 * Math.pow(0.94, level);
+  return 1.48 * Math.pow(0.94, level);
 }
 
 // Show which meaningful work remains with the player at every staffing level.
 export const PLAYER_STAFF_WORK: Record<StaffRole, string> = {
   cashier: "Sen: masa servisi ve para toplama",
-  waiter: "Sen: masalar ve özel siparişler",
+  waiter: "Sen: taze masa servisi, hızlı bahşiş ve VIP",
   busser: "Sen: servis ve başladığın masa bakımı",
   barista: "Sen: ürün seçimi, taşıma ve servis",
 };
 export const STAFF_JOIN_BENEFIT: Record<StaffRole, string> = {
   cashier: "Sipariş sırasını alır; servis sende.",
-  waiter: "Rafı doldurur; masalara sen servis yaparsın.",
+  waiter: "Rafları doldurur; taze masa servisi ve VIP siparişler sende.",
   busser: "Diğer masaları toparlar; başladığın işi sana bırakır.",
   barista: "Hazırlığı hızlandırır; sen el verince daha da hızlanır.",
 };

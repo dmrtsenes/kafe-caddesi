@@ -5,9 +5,8 @@ import * as THREE from 'three';
 import type { ItemId } from '../data/items';
 import type { NavGrid } from '../sim/Navigation';
 import type { MoveInput } from '../input/InputManager';
-import { Actor } from './Actor';
+import { Actor, safeCreateCharacter } from './Actor';
 import { CarryStack } from './CarryStack';
-import { createCharacter } from '../chars';
 import type { HeldVacuum } from '../world/StationView';
 import { BALANCE } from '../data/balance';
 import { angleTowards, clamp } from '../core/MathUtils';
@@ -97,7 +96,7 @@ export class Player extends Actor {
     // Oyuncu oyunun tanınan kahramanıdır: model, ten, saç ve kıyafet her
     // açılışta bire bir aynıdır. Müşteri kalabalığı çeşitlenebilir; oyuncu
     // sayfa yenilenince başka birine dönüşmez.
-    super(createCharacter('player', { seed: 0x46494e43 }));
+    super(safeCreateCharacter('player', { seed: 0x46494e43 }));
     this.stack = new CarryStack(this.char.carryAnchor, this.char.root);
     this.char.root.add(this.floorMop.root);
     const clothGroup = new THREE.Group();
@@ -121,8 +120,10 @@ export class Player extends Actor {
   }
 
   private buildMilestoneAccessories(): void {
-    // Hazır Quaternius rig adları birinci yol; eski prosedürel adlar kayıtlı
-    // geliştirme sahneleri için geri dönüş olarak kalır.
+    if (this.char.root.userData.characterPack !== 'fincan-original') return;
+    // Hazır karakter paketi (mixamorig*) kendi üniforma ve rozet dokusunu taşır;
+    // prosedürel halka/rozet parçaları yalnız eski prosedürel iskelet için kurulur,
+    // aksi hâlde Mixamo kemik ekseninde dirsek arkasında havada asılı kalırlar.
     const armL = this.char.root.getObjectByName('LowerArmL') ?? this.char.root.getObjectByName('armLowerL');
     const armR = this.char.root.getObjectByName('LowerArmR') ?? this.char.root.getObjectByName('armLowerR');
     const torso = this.char.root.getObjectByName('Torso') ?? this.char.root.getObjectByName('torso');

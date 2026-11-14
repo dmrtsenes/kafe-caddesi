@@ -1,13 +1,13 @@
-/** Product balance v3: measured active-play pacing; expansion rewards share the price source. */
+/** Product balance v5: tight mid/late sink pacing so cash stays scarce and rewarded ads stay high-value. */
 export const ZONE_COSTS: Record<string, number> = {
-  a1: 0, t1: 300, a3: 1100, t2: 1900, a4: 3400, t3: 4800,
-  a5: 5000, t4: 6500, a6: 9000, t5: 9000, r1: 12500,
-  a7: 14000, t6: 13500, a8: 26000, t7: 18500,
-  z_muzik: 8000, z_vitrin: 12000, z_tabela: 18000,
-  r2: 48000, v1: 36000, v2: 46000,
-  p1: 0, p2: 115000, p3: 210000, p4: 310000, p5: 460000, p6: 155000,
+  a1: 0, t1: 300, a3: 1350, t2: 2400, a4: 4800, t3: 7200,
+  a5: 10500, t4: 13500, a6: 19500, t5: 24000, r1: 38000,
+  a7: 52000, t6: 42000, a8: 88000, t7: 62000,
+  z_muzik: 28000, z_vitrin: 44000, z_tabela: 68000,
+  r2: 155000, v1: 125000, v2: 165000,
+  p1: 0, p2: 240000, p3: 500000, p4: 740000, p5: 1100000, p6: 330000,
 };
-export const BRANCH_COSTS = { kose: 0, sahil: 145000 } as const;
-export const BRANCH_STAFF_MULTIPLIER = 2.8;
-/** Ordinary area rewards return 30% of the paid expansion cost. */
-export const zoneReward = (zone: string): number => Math.round((ZONE_COSTS[zone] ?? 0) * 0.3);
+export const BRANCH_COSTS = { kose: 0, sahil: 380000 } as const;
+export const BRANCH_STAFF_MULTIPLIER = 3.2;
+/** Ordinary area rewards return 25% of the paid expansion cost. */
+export const zoneReward = (zone: string): number => Math.round((ZONE_COSTS[zone] ?? 0) * 0.25);

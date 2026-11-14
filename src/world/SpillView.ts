@@ -198,8 +198,8 @@ export function createSpillView(): SpillView {
           slot.spillId = s.id;
           slot.mat.color.setHex(colorOf(s));
           // Islak leke parlak, toz mat: aynı malzemede tek satırla ayrışır.
-          slot.mat.roughness = s.kind === 'liquid' ? 0.28 : 0.98;
-          slot.mat.metalness = s.kind === 'liquid' ? 0.04 : 0;
+          slot.mat.roughness = s.kind === 'liquid' ? 0.2 : s.kind === 'crumbs' ? 0.88 : 0.98;
+          slot.mat.metalness = s.kind === 'liquid' ? 0.08 : 0;
           // Cells are world-aligned; rotating the quad rotates the cleaned path.
           slot.mesh.rotation.y = 0;
         }

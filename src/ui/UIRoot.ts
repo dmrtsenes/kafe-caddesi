@@ -3,7 +3,7 @@ import { tr } from "../core/I18n";
 import type {
   UIApi,
   UIRoot,
-  UiAdKind,
+  UiAdRewardKind,
   UiEventBanner,
   UiOfflineReport,
   UiPanelId,
@@ -41,6 +41,7 @@ class UIRootImpl implements UIRoot {
   private readonly mw: HTMLDivElement;
   private readonly offlineModal: HTMLDivElement;
   private readonly offlineFocus: ModalFocus;
+  private readonly offTitleEl: HTMLHeadingElement;
   private readonly offTime: HTMLDivElement;
   private readonly offCount: HTMLDivElement;
   private readonly offUnit: HTMLDivElement;
@@ -48,11 +49,23 @@ class UIRootImpl implements UIRoot {
   private readonly offLines: HTMLDivElement;
   /** v5.1 — "dönüş satışı" reklam butonu; yalnız teklif hazırken görünür. */
   private readonly offAdBtn: HTMLButtonElement;
+  private readonly offClaimBtn: HTMLButtonElement;
   private offOpen = false;
+  private offReport: UiOfflineReport | null = null;
   private offShown = 0;
   private offTarget = 0;
   private offLastInt = -1;
   private offIsMoney = false;
+
+  // mola uyarısı (2.8 sn iptal edilebilir ödüllü geçiş kartı)
+  private readonly breakCard: HTMLDivElement;
+  private readonly breakSub: HTMLDivElement;
+  private readonly breakBarFill: HTMLElement;
+  private breakOpen = false;
+  private breakLeft = 0;
+  private readonly breakDuration = 2.8;
+  private breakOnComplete: (() => void) | null = null;
+  private breakOnCancel: (() => void) | null = null;
 
   // kutlama
   private readonly cel: HTMLDivElement;
@@ -115,6 +128,7 @@ class UIRootImpl implements UIRoot {
     const offlineTitle = el('h2', 'off-title', tr('Raflar hazır!'));
     offlineTitle.id = 'fincan-offline-title';
     offlineTitle.tabIndex = -1;
+    this.offTitleEl = offlineTitle;
     modal.appendChild(offlineTitle);
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
@@ -153,6 +167,7 @@ class UIRootImpl implements UIRoot {
     const claim = el('button', 'btn btn-gold btn-wide', tr("SERVİSE BAŞLA"));
     claim.type = 'button';
     claim.addEventListener('click', () => this.closeOffline());
+    this.offClaimBtn = claim;
     modal.appendChild(claim);
     this.mw.appendChild(modal);
     this.offlineFocus = new ModalFocus(this.mw, offlineTitle);
@@ -180,6 +195,31 @@ class UIRootImpl implements UIRoot {
     blockPointer(this.cel);
     this.root.appendChild(this.cel);
 
+    // --- kahve molası kartı (2.8 sn iptal edilebilir) ---
+    this.breakCard = el('div', 'break-prompt');
+    this.breakCard.setAttribute('role', 'status');
+    const breakRow = el('div', 'break-prompt-row');
+    breakRow.appendChild(el('span', 'break-prompt-glyph', '☕'));
+    const breakCopy = el('div', 'break-prompt-copy');
+    breakCopy.appendChild(el('div', 'break-prompt-title', tr('Kahve Molası İkramı')));
+    this.breakSub = el('div', 'break-prompt-sub', '');
+    breakCopy.appendChild(this.breakSub);
+    breakRow.appendChild(breakCopy);
+    const skipBtn = el('button', 'break-prompt-skip', tr('Geç'));
+    skipBtn.type = 'button';
+    skipBtn.addEventListener('click', () => {
+      sfx('ui_click');
+      this.cancelBreakPrompt();
+    });
+    breakRow.appendChild(skipBtn);
+    this.breakCard.appendChild(breakRow);
+    const breakBar = el('div', 'break-prompt-bar');
+    this.breakBarFill = document.createElement('i');
+    breakBar.appendChild(this.breakBarFill);
+    this.breakCard.appendChild(breakBar);
+    blockPointer(this.breakCard);
+    this.root.appendChild(this.breakCard);
+
     host.appendChild(this.root);
 
     // --- bağlantılar ---
@@ -194,8 +234,12 @@ class UIRootImpl implements UIRoot {
       this.hud.hideAdChip();
       void this.api.watchAd(kind);
     };
+    this.hud.onAdChipDismiss = () => {
+      this.api.dismissAdChip?.();
+    };
 
     this.panels.onOpened = (id) => {
+      this.hideBreakPrompt();
       this.hud.setActivePanel(id);
       this.root.classList.add('panel-on');
       this.hud.root.inert = true;
@@ -218,7 +262,10 @@ class UIRootImpl implements UIRoot {
     this.offs.push(
       bus.on('toast', (p) => this.toast(p.text, p.glyph, p.tone)),
       bus.on('ui:float', (p) => this.floatText(p.x, p.y, p.text, p.tone)),
-      bus.on('ui:refresh', () => this.applySettings()),
+      bus.on('ui:refresh', () => {
+        this.applySettings();
+        this.refreshOfflineAdOffer();
+      }),
     );
 
     this.onKey = (e: KeyboardEvent) => {
@@ -285,6 +332,15 @@ class UIRootImpl implements UIRoot {
       this.celT -= d;
       if (this.celT <= 0) this.endCelebrate();
     }
+
+    if (this.breakOpen) {
+      this.breakLeft -= d;
+      const ratio = Math.max(0, Math.min(1, this.breakLeft / this.breakDuration));
+      this.breakBarFill.style.transform = `scaleX(${ratio})`;
+      if (this.breakLeft <= 0) {
+        this.completeBreakPrompt();
+      }
+    }
   }
 
   /** Oyun duraklasa bile arayüz akıcı kalsın diye duvar saati kullanılır. */
@@ -300,18 +356,79 @@ class UIRootImpl implements UIRoot {
   // Sözleşme yüzeyi
   // ------------------------------------------------------------------
 
+  private applyOfflineOfferView(report: UiOfflineReport): void {
+    const cashVal = report.offlineCash ?? 0;
+    const stockVal = report.stockValue ?? 0;
+    const baseMoney = report.earned ?? cashVal + stockVal;
+    const mult = report.rewardMultiplier ?? 2;
+    const rvReady = Boolean(report.comebackReady) && baseMoney > 0;
+    const fullMoney = rvReady
+      ? (report.rewardedTotalCash ?? Math.round(cashVal * mult) + Math.round(stockVal * mult))
+      : baseMoney;
+
+    this.offTitleEl.textContent = fullMoney > 0 ? tr('Kasa hazır!') : tr('Raflar hazır!');
+    this.offIsMoney = fullMoney > 0;
+    this.offCount.classList.toggle('off-stock', !this.offIsMoney);
+    this.offTarget = Math.max(0, this.offIsMoney ? fullMoney : report.stocked);
+    this.offUnit.textContent = rvReady
+      ? tr("MASADAKİ TOPLAM BİRİKİM (×{0})", mult)
+      : this.offIsMoney
+        ? tr("toplam dönüş değeri · {0} ürün rafta hazır", report.stocked)
+        : tr("ürün rafta — dokun ve servis et");
+
+    if (rvReady) {
+      this.offAdBtn.className = 'btn btn-gold btn-wide off-rv-cta';
+      setIconText(this.offAdBtn, tr("🎬 TAMAMINI KASAYA AL (×{0} · +₺{1})", mult, this.api.formatMoney(fullMoney)));
+      this.offAdBtn.style.display = '';
+      this.offClaimBtn.className = 'btn btn-ghost btn-wide off-skip-cta';
+      this.offClaimBtn.textContent = tr("Sadece 1× ile Başla");
+    } else {
+      this.offAdBtn.className = 'btn btn-mint btn-wide';
+      setIconText(this.offAdBtn, tr("🎬 Stoğu ×{0} Değerinde Sat", mult));
+      this.offAdBtn.style.display = report.comebackReady ? '' : 'none';
+      this.offClaimBtn.className = 'btn btn-gold btn-wide';
+      this.offClaimBtn.textContent = tr("SERVİSE BAŞLA");
+    }
+  }
+
+  private refreshOfflineAdOffer(): void {
+    if (!this.offOpen || !this.offReport || this.offReport.comebackReady) return;
+    if (!this.api.isComebackAdReady?.()) return;
+    const cashVal = this.offReport.offlineCash ?? 0;
+    const stockVal = this.offReport.stockValue ?? 0;
+    const baseMoney = this.offReport.earned ?? cashVal + stockVal;
+    if (baseMoney <= 0) return;
+    this.offReport.comebackReady = true;
+    this.applyOfflineOfferView(this.offReport);
+  }
+
   showOffline(report: UiOfflineReport): void {
+    this.hideBreakPrompt();
     this.panels.close();
-    this.offTime.textContent = tr("{0} sonra raflar doldu", formatDuration(report.seconds));
+    this.offReport = report;
+
+    this.offTime.textContent =
+      report.stocked > 0
+        ? tr("{0} sonra raflar doldu", formatDuration(report.seconds))
+        : tr("{0} boyunca kasa çalıştı", formatDuration(report.seconds));
     this.offMachines.textContent =
-      report.machines === 1 ? tr("1 makine rafları doldurdu") : tr("{0} makine rafları doldurdu", report.machines);
+      report.machines > 0
+        ? report.machines === 1
+          ? tr("1 makine rafları doldurdu")
+          : tr("{0} makine rafları doldurdu", report.machines)
+        : (report.offlineCash ?? 0) > 0
+          ? tr("Personel gece vardiyası: +₺{0}", this.api.formatMoney(report.offlineCash ?? 0))
+          : '';
     this.offLines.textContent = '';
-    this.offLines.appendChild(el('p', 'c-desc', tr('Raflar hazır. Dokun, al ve servis et.')));
+    if (report.stocked > 0) {
+      this.offLines.appendChild(el('p', 'c-desc', tr('Raflar hazır. Dokun, al ve servis et.')));
+    }
     if (report.nextGoal) this.offLines.appendChild(el('p', 'off-next-goal', tr('Sıradaki hedef: {0}', report.nextGoal)));
-    if (report.offlineCash && report.offlineCash > 0) {
+    const cashVal = report.offlineCash ?? 0;
+    if (cashVal > 0) {
       const cashRow = el('div', 'off-line');
       cashRow.appendChild(el('span', 'g', '💰'));
-      cashRow.appendChild(el('span', undefined, tr("Gece vardiyası nakdi: +₺{0}", this.api.formatMoney(report.offlineCash))));
+      cashRow.appendChild(el('span', undefined, tr("Gece vardiyası nakdi: +₺{0}", this.api.formatMoney(cashVal))));
       this.offLines.appendChild(cashRow);
     }
     for (const line of report.lines) {
@@ -320,19 +437,11 @@ class UIRootImpl implements UIRoot {
       row.appendChild(el('span', undefined, line.text));
       this.offLines.appendChild(row);
     }
-    const totalMoney = report.earned ?? 0;
-    this.offIsMoney = totalMoney > 0;
-    this.offTarget = Math.max(0, this.offIsMoney ? totalMoney : report.stocked);
-    this.offUnit.textContent = this.offIsMoney
-      ? tr("toplam dönüş değeri · {0} ürün rafta hazır", report.stocked)
-      : tr("ürün rafta — dokun ve servis et");
+
     this.offShown = 0;
     this.offLastInt = -1;
+    this.applyOfflineOfferView(report);
     this.offCount.textContent = this.offIsMoney ? '₺0' : '0';
-    // v5.1 — dönüş satışı butonu her açılışta rapora göre kurulur.
-    const mult = report.rewardMultiplier ?? 2;
-    this.offAdBtn.textContent = tr("📺 İZLE — Stoğu ×{0} Değerinde Sat", mult);
-    this.offAdBtn.style.display = report.comebackReady ? '' : 'none';
     this.offAdBtn.disabled = false;
     this.offOpen = true;
     this.mw.classList.add('open');
@@ -353,6 +462,7 @@ class UIRootImpl implements UIRoot {
     if (!this.offOpen) return;
     sfx('ui_close');
     this.offOpen = false;
+    this.offReport = null;
     this.mw.classList.remove('open');
     // Panel de açık DEĞİLSE toast yığını normal yerine dönsün.
     if (!this.panels.isOpen()) this.root.classList.remove('panel-on');
@@ -361,9 +471,15 @@ class UIRootImpl implements UIRoot {
     this.offlineFocus.close();
   }
 
-  showAdChip(kind: UiAdKind, glyph: string, title: string, text: string): void {
+  showAdChip(
+    kind: UiAdRewardKind,
+    glyph: string,
+    title: string,
+    text: string,
+    variant: 'default' | 'urgent' | 'vip' = 'default',
+  ): void {
     if (this.panels.isOpen() || this.offOpen || this.celOn || this.tutorialVisible) return;
-    this.hud.showAdChip(kind, glyph, title, text);
+    this.hud.showAdChip(kind, glyph, title, text, variant);
   }
 
   hideAdChip(): void {
@@ -422,6 +538,10 @@ class UIRootImpl implements UIRoot {
 
   /** Android donanım geri tuşu ve Escape için LIFO geri yöneticisi. */
   handleBack(): boolean {
+    if (this.breakOpen) {
+      this.cancelBreakPrompt();
+      return true;
+    }
     // 1. Kutlama / konfeti katmanı
     if (this.celOn) {
       this.endCelebrate();
@@ -436,7 +556,13 @@ class UIRootImpl implements UIRoot {
     if (this.panels.isOpen()) {
       return this.panels.handleBack();
     }
-    // 4. Genişletilmiş yan işler çekmecesi
+    // 4. Merkez ödül kartı açıksa kapat
+    if (this.hud.adChipOpen) {
+      this.hud.hideAdChip();
+      this.hud.onAdChipDismiss?.();
+      return true;
+    }
+    // 5. Genişletilmiş yan işler çekmecesi
     if (this.hud.isSideJobsExpanded()) {
       this.hud.collapseSideJobs();
       return true;
@@ -458,6 +584,42 @@ class UIRootImpl implements UIRoot {
       this.bootTimer = 0;
       if (boot.parentNode) boot.parentNode.removeChild(boot);
     }, 520);
+  }
+
+  get breakPromptOpen(): boolean {
+    return this.breakOpen;
+  }
+
+  showBreakPrompt(bonusFormatted: string, onComplete: () => void, onCancel: () => void): void {
+    if (this.panels.isOpen() || this.offOpen || this.tutorialVisible) return;
+    this.breakSub.textContent = tr("İzleyince +₺{0} nakit ikramı!", bonusFormatted);
+    this.breakLeft = this.breakDuration;
+    this.breakBarFill.style.transform = 'scaleX(1)';
+    this.breakOnComplete = onComplete;
+    this.breakOnCancel = onCancel;
+    this.breakOpen = true;
+    this.breakCard.classList.add('open');
+  }
+
+  hideBreakPrompt(): void {
+    if (!this.breakOpen) return;
+    this.breakOpen = false;
+    this.breakLeft = 0;
+    this.breakOnComplete = null;
+    this.breakOnCancel = null;
+    this.breakCard.classList.remove('open');
+  }
+
+  private cancelBreakPrompt(): void {
+    const cb = this.breakOnCancel;
+    this.hideBreakPrompt();
+    cb?.();
+  }
+
+  private completeBreakPrompt(): void {
+    const cb = this.breakOnComplete;
+    this.hideBreakPrompt();
+    cb?.();
   }
 
   celebrate(title: string, subtitle: string, glyph: string): void {

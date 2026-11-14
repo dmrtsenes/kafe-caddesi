@@ -18,12 +18,15 @@ workflows:
         APP_STORE_APPLE_ID: "6827967983"
         VITE_IOS_APP_STORE_URL: "https://apps.apple.com/app/id6827967983"
         VITE_ADMOB_MODE: "production"
-        # Not: İlk App Store onayı öncesi aşağıdaki 4 değişkeni boş bırakabilirsiniz.
+        # Not: İlk App Store onayı öncesi aşağıdaki değişkenleri boş bırakabilirsiniz.
         # Onaydan sonra Codemagic Environment Variables ekranından eklediğinizde
         # kod değişikliği gerekmeden canlı iOS reklamları ve mağaza puanlama butonu aktif olur:
         # IOS_ADMOB_APP_ID: ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY
         # VITE_IOS_ADMOB_REWARDED_ID: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
         # VITE_IOS_ADMOB_INTERSTITIAL_ID: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
+        # VITE_IOS_ADMOB_BANNER_ID: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
+        # VITE_IOS_ADMOB_APP_OPEN_ID: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
+        # VITE_IOS_ADMOB_REWARDED_INTERSTITIAL_ID: ca-app-pub-XXXXXXXXXXXXXXXX/YYYYYYYYYY
         # VITE_IOS_APP_STORE_URL: https://apps.apple.com/app/idXXXXXXXXXX
       node: 22
       xcode: latest
@@ -43,7 +46,7 @@ workflows:
         script: |
           if [ -n "${IOS_ADMOB_APP_ID:-}" ]; then
             echo "Canlı iOS AdMob App ID uygulanıyor: $IOS_ADMOB_APP_ID"
-            printf "ADMOB_APP_ID = %s\n" "$IOS_ADMOB_APP_ID" > ios/release.xcconfig
+            printf "ADMOB_APP_ID = %s\nCAPACITOR_DEBUG = false\n" "$IOS_ADMOB_APP_ID" > ios/release.xcconfig
           else
             echo "IOS_ADMOB_APP_ID tanımlı değil; başlatma çökmesini önleyen güvenli yedek kimlik korunuyor (reklamsız inceleme modu)."
           fi
@@ -52,6 +55,7 @@ workflows:
         script: |
           npm run build
           npx cap sync ios
+          rm -f ios/App/App/public/manifest.webmanifest ios/App/App/public/pwa-*.png ios/App/App/public/app-ads.txt
 
       - name: Xcode sürüm ve derleme numarasını (Build Number) otomatik artır
         script: |

@@ -17,9 +17,59 @@ import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 export const isNative = Capacitor.isNativePlatform();
 export const isIos = isNative && Capacitor.getPlatform() === 'ios';
 
-export function onNativeThermalStatus(callback:(status:number)=>void):()=>void {
-  if (!isNative || Capacitor.getPlatform() !== 'android') return ()=>{};
-  return attachThermalStatus(registerPlugin<ThermalStatusBridge>('DeviceThermal'),callback);
+export async function isPreviewBuild(): Promise<boolean> {
+  if (!isNative) return false;
+  try {
+    const info = await App.getInfo();
+    return Boolean(info.id?.endsWith('.preview'));
+  } catch {
+    return false;
+  }
+}
+
+export function onNativeThermalStatus(callback: (status: number) => void): () => void {
+  const platform = Capacitor.getPlatform();
+  if (!isNative || (platform !== 'android' && platform !== 'ios')) return () => {};
+  return attachThermalStatus(registerPlugin<ThermalStatusBridge>('DeviceThermal'), callback);
+}
+
+interface IosGameNativeBridge {
+  requestReview(): Promise<{ requested?: boolean }>;
+  playTransientHaptic(options: { intensity: number; sharpness: number }): Promise<{ played?: boolean }>;
+}
+
+const IOS_REVIEW_PROMPTED_KEY = 'kc_ios_review_prompted_v1';
+let iosNativeBridge: IosGameNativeBridge | null = null;
+
+function iosNative(): IosGameNativeBridge | null {
+  if (!isIos) return null;
+  if (!iosNativeBridge) iosNativeBridge = registerPlugin<IosGameNativeBridge>('IosGameNative');
+  return iosNativeBridge;
+}
+
+/**
+ * Triggers native App Store SKStoreReviewController prompt on iOS.
+ * Pass onceOnly=true for automatic milestone calls so players are asked at most once per install.
+ */
+export async function requestNativeAppReview(onceOnly = false): Promise<boolean> {
+  const bridge = iosNative();
+  if (!bridge) return false;
+  try {
+    if (onceOnly && typeof localStorage !== 'undefined' && localStorage.getItem(IOS_REVIEW_PROMPTED_KEY) === '1') {
+      return false;
+    }
+    const res = await bridge.requestReview();
+    if (onceOnly && res?.requested && typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(IOS_REVIEW_PROMPTED_KEY, '1');
+      } catch {
+        /* ignore quota errors */
+      }
+    }
+    return Boolean(res?.requested);
+  } catch {
+    return false;
+  }
 }
 
 /* ================================================================ *
@@ -224,11 +274,25 @@ export async function scheduleReminders(list: Reminder[]): Promise<void> {
 
 export type HapticKind = 'light' | 'medium' | 'heavy' | 'success' | 'warning';
 
+const lastHapticAt: Record<HapticKind, number> = {
+  light: -1e9,
+  medium: -1e9,
+  heavy: -1e9,
+  success: -1e9,
+  warning: -1e9,
+};
+
 /**
  * Titreşim. Native'de Haptics, webde `navigator.vibrate` (Android
  * Chrome destekler, iOS Safari etmez — sessizce yok sayılır).
+ * Aynı tür ardışık darbeler mikro-soğumayla sınırlandırılır ki yığın/jeton
+ * patlamaları Capacitor köprüsünü boğmasın.
  */
 export function haptic(kind: HapticKind = 'light'): void {
+  const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+  const minGap = kind === 'light' ? 28 : 45;
+  if (now - lastHapticAt[kind] < minGap) return;
+  lastHapticAt[kind] = now;
   try {
     if (isNative) {
       if (kind === 'success') void Haptics.notification({ type: NotificationType.Success }).catch(() => {});
@@ -236,6 +300,24 @@ export function haptic(kind: HapticKind = 'light'): void {
       else {
         const style =
           kind === 'heavy' ? ImpactStyle.Heavy : kind === 'medium' ? ImpactStyle.Medium : ImpactStyle.Light;
+        const bridge = iosNative();
+        if (bridge) {
+          const params =
+            kind === 'heavy'
+              ? { intensity: 0.92, sharpness: 0.72 }
+              : kind === 'medium'
+                ? { intensity: 0.65, sharpness: 0.55 }
+                : { intensity: 0.38, sharpness: 0.42 };
+          void bridge
+            .playTransientHaptic(params)
+            .then((res) => {
+              if (!res?.played) return Haptics.impact({ style });
+            })
+            .catch(() => {
+              void Haptics.impact({ style }).catch(() => {});
+            });
+          return;
+        }
         void Haptics.impact({ style }).catch(() => {});
       }
       return;
@@ -256,4 +338,66 @@ export function onAppStateChange(handler: (active: boolean) => void): () => void
   });
   void listener.catch(error => console.warn('[Cihaz] Yaşam döngüsü bağlanamadı:', error));
   return () => { disposed = true; void listener.then(l => l.remove()).catch(() => {}); };
+}
+
+/* ================================================================ *
+ *  Native Firebase Analytics Köprüsü
+ * ================================================================ */
+
+export interface FirebaseAnalyticsConsent {
+  analyticsStorage: boolean;
+  adStorage: boolean;
+  adUserData: boolean;
+  adPersonalization: boolean;
+  enabled: boolean;
+}
+
+interface FirebaseAnalyticsBridgePlugin {
+  setConsent(options: FirebaseAnalyticsConsent): Promise<void>;
+  logEvent(options: { name: string; params?: Record<string, string | number | boolean> }): Promise<void>;
+  setUserProperty(options: { name: string; value: string | null }): Promise<void>;
+}
+
+let analyticsBridge: FirebaseAnalyticsBridgePlugin | null = null;
+function getFirebaseAnalyticsBridge(): FirebaseAnalyticsBridgePlugin | null {
+  if (!hasNativeFirebaseAnalytics()) return null;
+  if (!analyticsBridge) {
+    analyticsBridge = registerPlugin<FirebaseAnalyticsBridgePlugin>('FirebaseAnalyticsBridge');
+  }
+  return analyticsBridge;
+}
+
+export function setFirebaseAnalyticsBridgeForTest(bridge: FirebaseAnalyticsBridgePlugin | null): void {
+  analyticsBridge = bridge;
+}
+
+export function hasNativeFirebaseAnalytics(): boolean {
+  return Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android';
+}
+
+export function nativeAnalyticsSetConsent(options: FirebaseAnalyticsConsent): void {
+  const bridge = getFirebaseAnalyticsBridge();
+  if (!bridge) return;
+  try {
+    void bridge.setConsent(options).catch(() => {});
+  } catch {}
+}
+
+export function nativeAnalyticsLogEvent(
+  name: string,
+  params?: Record<string, string | number | boolean>,
+): void {
+  const bridge = getFirebaseAnalyticsBridge();
+  if (!bridge) return;
+  try {
+    void bridge.logEvent(params ? { name, params } : { name }).catch(() => {});
+  } catch {}
+}
+
+export function nativeAnalyticsSetUserProperty(name: string, value: string | null): void {
+  const bridge = getFirebaseAnalyticsBridge();
+  if (!bridge) return;
+  try {
+    void bridge.setUserProperty({ name, value }).catch(() => {});
+  } catch {}
 }

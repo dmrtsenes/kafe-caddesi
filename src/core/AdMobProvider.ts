@@ -1,10 +1,21 @@
 import { tr } from "./I18n";
-import { AdMob, AdmobConsentStatus, RewardAdPluginEvents, InterstitialAdPluginEvents } from '@capacitor-community/admob';
+import {
+  AdMob,
+  AdmobConsentStatus,
+  AppOpenAdPluginEvents,
+  BannerAdPluginEvents,
+  BannerAdPosition,
+  BannerAdSize,
+  InterstitialAdPluginEvents,
+  RewardAdPluginEvents,
+  RewardInterstitialAdPluginEvents,
+} from '@capacitor-community/admob';
 import type { PluginListenerHandle } from '@capacitor/core';
 import type { AdProvider } from './Ads';
 import { setAdProvider, setAdStatusSource, setPrivacyOptionsHandler } from './Ads';
-import { isNative, isIos } from './Native';
-import { bus } from './EventBus';
+import { isNative, isIos, isPreviewBuild } from './Native';
+import { bus, type AdRevenueFormat } from './EventBus';
+import { analytics, deviceInEuConsentRegion } from './Analytics';
 
 /**
  * ADMOB SAĞLAYICISI — `Ads.ts`'teki soyut arayüzün gerçek karşılığı.
@@ -53,9 +64,25 @@ const TEST_REWARDED = isIos
 const TEST_INTERSTITIAL = isIos
   ? 'ca-app-pub-3940256099942544/4411468910'
   : 'ca-app-pub-3940256099942544/1033173712';
-const PRODUCTION_ADS = import.meta.env.VITE_ADMOB_MODE === 'production';
+const TEST_BANNER = isIos
+  ? 'ca-app-pub-3940256099942544/2934735716'
+  : 'ca-app-pub-3940256099942544/6300978111';
+const TEST_APP_OPEN = isIos
+  ? 'ca-app-pub-3940256099942544/5575463023'
+  : 'ca-app-pub-3940256099942544/9257395921';
+const TEST_REWARDED_INTERSTITIAL = isIos
+  ? 'ca-app-pub-3940256099942544/6978759866'
+  : 'ca-app-pub-3940256099942544/5354046379';
 
-function resolveAdUnitId(envKey: string, envVal: string | undefined, testFallback: string, name: string): string {
+let PRODUCTION_ADS = import.meta.env.VITE_ADMOB_MODE === 'production';
+
+function resolveAdUnitId(
+  envKey: string,
+  envVal: string | undefined,
+  testFallback: string,
+  name: string,
+  optional = false,
+): string {
   if (PRODUCTION_ADS) {
     if (envVal && envVal.trim().length > 0) {
       return envVal.trim();
@@ -64,29 +91,65 @@ function resolveAdUnitId(envKey: string, envVal: string | undefined, testFallbac
       console.info(`[Reklam] iOS üretim derlemesinde ${envKey} henüz tanımlı değil; ${name} devre dışı (reklamsız mod).`);
       return '';
     }
-    console.error(`[Reklam] KRİTİK HATA: VITE_ADMOB_MODE=production fakat ${envKey} tanımlı değil! Test ID'ye düşülmedi; ${name} yüklenmeyecek.`);
+    const log = optional ? console.warn : console.error;
+    log(`[Reklam] ${optional ? 'UYARI' : 'KRİTİK HATA'}: VITE_ADMOB_MODE=production fakat ${envKey} tanımlı değil! Test ID'ye düşülmedi; ${name} yüklenmeyecek.`);
     return '';
   }
   return testFallback;
 }
 
-const REWARDED_ID = resolveAdUnitId(
-  isIos ? 'VITE_IOS_ADMOB_REWARDED_ID' : 'VITE_ADMOB_REWARDED_ID',
-  isIos
-    ? (import.meta.env.VITE_IOS_ADMOB_REWARDED_ID || import.meta.env.VITE_ADMOB_IOS_REWARDED_ID)
-    : import.meta.env.VITE_ADMOB_REWARDED_ID,
-  TEST_REWARDED,
-  'ödüllü reklam'
-);
+let REWARDED_ID = TEST_REWARDED;
+let INTERSTITIAL_ID = TEST_INTERSTITIAL;
+let BANNER_ID = TEST_BANNER;
+let APP_OPEN_ID = TEST_APP_OPEN;
+let REWARDED_INTERSTITIAL_ID = TEST_REWARDED_INTERSTITIAL;
 
-const INTERSTITIAL_ID = resolveAdUnitId(
-  isIos ? 'VITE_IOS_ADMOB_INTERSTITIAL_ID' : 'VITE_ADMOB_INTERSTITIAL_ID',
-  isIos
-    ? (import.meta.env.VITE_IOS_ADMOB_INTERSTITIAL_ID || import.meta.env.VITE_ADMOB_IOS_INTERSTITIAL_ID)
-    : import.meta.env.VITE_ADMOB_INTERSTITIAL_ID,
-  TEST_INTERSTITIAL,
-  'geçiş reklamı'
-);
+function syncAdUnitIds(): void {
+  REWARDED_ID = resolveAdUnitId(
+    isIos ? 'VITE_IOS_ADMOB_REWARDED_ID' : 'VITE_ADMOB_REWARDED_ID',
+    isIos
+      ? (import.meta.env.VITE_IOS_ADMOB_REWARDED_ID || import.meta.env.VITE_ADMOB_IOS_REWARDED_ID)
+      : import.meta.env.VITE_ADMOB_REWARDED_ID,
+    TEST_REWARDED,
+    'ödüllü reklam',
+  );
+  INTERSTITIAL_ID = resolveAdUnitId(
+    isIos ? 'VITE_IOS_ADMOB_INTERSTITIAL_ID' : 'VITE_ADMOB_INTERSTITIAL_ID',
+    isIos
+      ? (import.meta.env.VITE_IOS_ADMOB_INTERSTITIAL_ID || import.meta.env.VITE_ADMOB_IOS_INTERSTITIAL_ID)
+      : import.meta.env.VITE_ADMOB_INTERSTITIAL_ID,
+    TEST_INTERSTITIAL,
+    'geçiş reklamı',
+    true,
+  );
+  BANNER_ID = resolveAdUnitId(
+    isIos ? 'VITE_IOS_ADMOB_BANNER_ID' : 'VITE_ADMOB_BANNER_ID',
+    isIos
+      ? (import.meta.env.VITE_IOS_ADMOB_BANNER_ID || import.meta.env.VITE_ADMOB_IOS_BANNER_ID)
+      : import.meta.env.VITE_ADMOB_BANNER_ID,
+    TEST_BANNER,
+    'banner reklamı',
+    true,
+  );
+  APP_OPEN_ID = resolveAdUnitId(
+    isIos ? 'VITE_IOS_ADMOB_APP_OPEN_ID' : 'VITE_ADMOB_APP_OPEN_ID',
+    isIos
+      ? (import.meta.env.VITE_IOS_ADMOB_APP_OPEN_ID || import.meta.env.VITE_ADMOB_IOS_APP_OPEN_ID)
+      : import.meta.env.VITE_ADMOB_APP_OPEN_ID,
+    TEST_APP_OPEN,
+    'uygulama açılış reklamı',
+    true,
+  );
+  REWARDED_INTERSTITIAL_ID = resolveAdUnitId(
+    isIos ? 'VITE_IOS_ADMOB_REWARDED_INTERSTITIAL_ID' : 'VITE_ADMOB_REWARDED_INTERSTITIAL_ID',
+    isIos
+      ? (import.meta.env.VITE_IOS_ADMOB_REWARDED_INTERSTITIAL_ID || import.meta.env.VITE_ADMOB_IOS_REWARDED_INTERSTITIAL_ID)
+      : import.meta.env.VITE_ADMOB_REWARDED_INTERSTITIAL_ID,
+    TEST_REWARDED_INTERSTITIAL,
+    'ödüllü geçiş reklamı',
+    true,
+  );
+}
 
 /* ── Geri çekilme (backoff) ayarları ─────────────────────────────── */
 
@@ -112,16 +175,22 @@ const CONSENT_RETRY_BACKOFF = [15, 30, 60, 120];
 
 type Evre = 'kapali' | 'baslatiliyor' | 'riza_bekliyor' | 'calisiyor' | 'olu';
 let evre: Evre = 'kapali';
-/** TEK ödüllü yuva — bkz. yukarıdaki tasarım notu. */
-let rewardedLoaded = false;
-let preloading = false;
-let preloadFailures = 0;
-let preloadTimer: ReturnType<typeof setTimeout> | null = null;
+let secondaryAdsArmed = false;
 
-let interstitialLoaded = false;
-let interstitialPreloading = false;
-let interstitialFailures = 0;
-let interstitialTimer: ReturnType<typeof setTimeout> | null = null;
+interface FullscreenSlot {
+  readonly label: string;
+  readonly adUnit: () => string;
+  readonly timeoutMs: number;
+  readonly secondary: boolean;
+  readonly missingError?: () => string;
+  readonly recordError?: boolean;
+  readonly onBecameReady?: () => void;
+  readonly prepare: (adId: string) => Promise<unknown>;
+  loaded: boolean;
+  loading: boolean;
+  failures: number;
+  timer: ReturnType<typeof setTimeout> | null;
+}
 
 let sonHata = '';
 /**
@@ -135,12 +204,100 @@ let consentRetryTimer: ReturnType<typeof setTimeout> | null = null;
 let consentRetryCount = 0;
 let listenersInstalled = false;
 
+let bannerCreated = false;
+let bannerVisible = false;
+let bannerWanted = false;
+let bannerHeightPx = 0;
+let lastCssBannerHeight = -1;
+let bannerSyncing = false;
+let bannerSyncDirty = false;
+
 function kisaHata(err: unknown): string {
   const m = err instanceof Error ? err.message : String(err ?? 'bilinmeyen hata');
   return m.length > 64 ? m.slice(0, 61) + '…' : m;
 }
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
+
+function setBannerHeightCss(px: number): void {
+  const clamped = Math.max(0, Math.round(px));
+  if (clamped === lastCssBannerHeight) return;
+  lastCssBannerHeight = clamped;
+  if (typeof document !== 'undefined') {
+    document.documentElement.style.setProperty('--banner-h', `${clamped}px`);
+  }
+}
+
+async function syncBanner(): Promise<void> {
+  bannerSyncDirty = true;
+  if (bannerSyncing) return;
+  bannerSyncing = true;
+  try {
+    while (bannerSyncDirty) {
+      bannerSyncDirty = false;
+      const shouldShow =
+        consentAllowsAds &&
+        evre === 'calisiyor' &&
+        secondaryAdsArmed &&
+        Boolean(BANNER_ID) &&
+        bannerWanted;
+      if (shouldShow && !bannerVisible) {
+        if (!bannerCreated) {
+          bannerCreated = true;
+          bannerVisible = true;
+          await AdMob.showBanner({
+            adId: BANNER_ID,
+            adSize: BannerAdSize.ADAPTIVE_BANNER,
+            position: BannerAdPosition.BOTTOM_CENTER,
+            margin: 0,
+          });
+          if (bannerVisible && bannerHeightPx > 0) {
+            setBannerHeightCss(bannerHeightPx);
+          }
+        } else {
+          bannerVisible = true;
+          await AdMob.resumeBanner();
+          setBannerHeightCss(bannerHeightPx);
+        }
+      } else if (!shouldShow && bannerVisible) {
+        bannerVisible = false;
+        setBannerHeightCss(0);
+        if (bannerCreated) {
+          try {
+            await AdMob.hideBanner();
+          } catch (err) {
+            const msg = String(err ?? '');
+            if (msg.includes('never shown')) bannerCreated = false;
+            else throw err;
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[Reklam] Banner senkron hatası:', err);
+    bannerVisible = false;
+    setBannerHeightCss(0);
+  } finally {
+    bannerSyncing = false;
+    if (bannerSyncDirty) void syncBanner();
+  }
+}
+
+function emitRevenue(
+  format: AdRevenueFormat,
+  adUnit: string,
+  data: { valueMicros?: number; currencyCode?: string; precision?: number } | null | undefined,
+): void {
+  const value = (data?.valueMicros ?? 0) / 1_000_000;
+  analytics.trackAdRevenue(format, adUnit, value);
+  bus.emit('ad:revenue', {
+    value,
+    currency: data?.currencyCode ?? 'USD',
+    precision: data?.precision ?? 0,
+    adUnit,
+    format,
+  });
+}
 
 /**
  * İnsan-okur reklam durumu — Ayarlar panelindeki "Reklam durumu" satırı.
@@ -158,8 +315,8 @@ export function adStatus(): string {
       return `hata: ${sonHata || tr("başlatılamadı")}`;
     case 'calisiyor':
       if (!consentAllowsAds) return tr("gizlilik tercihi nedeniyle kapalı");
-      if (rewardedLoaded) return tr("hazır");
-      if (preloadFailures >= 4) return `hata: ${sonHata || tr("reklam yüklenemedi")}`;
+      if (rewardedSlot.loaded) return tr("hazır");
+      if (rewardedSlot.failures >= 4) return `hata: ${sonHata || tr("reklam yüklenemedi")}`;
       return tr("yükleniyor…");
   }
 }
@@ -168,87 +325,114 @@ export function adStatus(): string {
 
 /**
  * Tek zamanlayıcılı `setTimeout` zinciri — `setInterval` YOK, yani hata
- * tavanına ulaşıldığında geride işleyen sayaç kalmaz. Her `schedulePreload`
+ * tavanına ulaşıldığında geride işleyen sayaç kalmaz. Her `scheduleSlot`
  * öncekini iptal eder; çifte planlama zararsızdır.
  */
-function schedulePreload(seconds: number): void {
-  if (preloadTimer !== null) clearTimeout(preloadTimer);
-  preloadTimer = setTimeout(() => {
-    preloadTimer = null;
-    void preloadTick();
+const PRELOAD_TIMEOUT_MS = 10_000;
+
+const rewardedSlot: FullscreenSlot = {
+  label: 'Ödüllü reklam',
+  adUnit: () => REWARDED_ID,
+  timeoutMs: PRELOAD_TIMEOUT_MS,
+  secondary: false,
+  missingError: () => tr("Canlı ödüllü reklam ID tanımlı değil"),
+  recordError: true,
+  onBecameReady: () => bus.emit('ui:refresh', {}),
+  prepare: (adId) => AdMob.prepareRewardVideoAd({ adId }),
+  loaded: false,
+  loading: false,
+  failures: 0,
+  timer: null,
+};
+
+const interstitialSlot: FullscreenSlot = {
+  label: 'Geçiş reklamı',
+  adUnit: () => INTERSTITIAL_ID,
+  timeoutMs: 8000,
+  secondary: true,
+  prepare: (adId) => AdMob.prepareInterstitial({ adId }),
+  loaded: false,
+  loading: false,
+  failures: 0,
+  timer: null,
+};
+
+const rewardedInterstitialSlot: FullscreenSlot = {
+  label: 'Ödüllü geçiş reklamı',
+  adUnit: () => REWARDED_INTERSTITIAL_ID,
+  timeoutMs: PRELOAD_TIMEOUT_MS,
+  secondary: true,
+  prepare: (adId) => AdMob.prepareRewardInterstitialAd({ adId }),
+  loaded: false,
+  loading: false,
+  failures: 0,
+  timer: null,
+};
+
+const appOpenSlot: FullscreenSlot = {
+  label: 'Açılış reklamı',
+  adUnit: () => APP_OPEN_ID,
+  timeoutMs: PRELOAD_TIMEOUT_MS,
+  secondary: true,
+  prepare: (adId) => AdMob.loadAppOpen({ adId }),
+  loaded: false,
+  loading: false,
+  failures: 0,
+  timer: null,
+};
+
+function jitteredDelay(baseSeconds: number): number {
+  const jitter = 0.85 + Math.random() * 0.3;
+  return Math.max(1, Math.round(baseSeconds * jitter * 10) / 10);
+}
+
+function scheduleSlot(slot: FullscreenSlot, seconds: number): void {
+  if (slot.timer !== null) clearTimeout(slot.timer);
+  slot.timer = setTimeout(() => {
+    slot.timer = null;
+    void preloadSlot(slot);
   }, seconds * 1000);
 }
 
-async function preloadTick(): Promise<void> {
+async function preloadSlot(slot: FullscreenSlot): Promise<void> {
   if (evre !== 'calisiyor' || !consentAllowsAds) return;
-  if (!REWARDED_ID) {
-    sonHata = tr("Canlı ödüllü reklam ID tanımlı değil");
+  if (slot.secondary && !secondaryAdsArmed) return;
+  const adId = slot.adUnit();
+  if (!adId) {
+    if (slot.missingError) sonHata = slot.missingError();
     return;
   }
-  if (rewardedLoaded) {
-    // Yuva dolu: bekçi turu. (Süresi dolan reklamı native bildirmez; o
-    // durum show() başarısızlığında yakalanır ve yuva yeniden doldurulur.)
-    schedulePreload(WATCHDOG_SECONDS);
+  if (slot.loaded) {
+    scheduleSlot(slot, WATCHDOG_SECONDS);
     return;
   }
-  if (preloading) return; // uçuştaki istek bitince kendi planlamasını yapar
-  preloading = true;
+  if (slot.loading) return;
+  slot.loading = true;
+  let loadTimeout: ReturnType<typeof setTimeout> | null = null;
   try {
-    await AdMob.prepareRewardVideoAd({ adId: REWARDED_ID });
-    rewardedLoaded = true;
-    preloadFailures = 0;
-    schedulePreload(WATCHDOG_SECONDS);
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      loadTimeout = setTimeout(
+        () => reject(new Error(`${slot.label} yükleme zaman aşımı (${slot.timeoutMs / 1000}s)`)),
+        slot.timeoutMs,
+      );
+    });
+    await Promise.race([slot.prepare(adId), timeoutPromise]);
+    const wasLoaded = slot.loaded;
+    slot.loaded = true;
+    slot.failures = 0;
+    if (!wasLoaded) slot.onBecameReady?.();
+    scheduleSlot(slot, WATCHDOG_SECONDS);
   } catch (err) {
-    preloadFailures++;
-    sonHata = kisaHata(err);
-    console.warn(`[Reklam] Ödüllü reklam yüklenemedi (${preloadFailures}):`, err);
-    // Hata durumunda kademeli geri çekilme; tavan sonrasında kalıcı ölmek yerine sakin arka plan bekçisi (90s)
-    const delay = preloadFailures <= PRELOAD_BACKOFF.length
-      ? PRELOAD_BACKOFF[preloadFailures - 1]
+    slot.failures++;
+    if (slot.recordError) sonHata = kisaHata(err);
+    console.warn(`[Reklam] ${slot.label} yüklenemedi (${slot.failures}):`, err);
+    const baseDelay = slot.failures <= PRELOAD_BACKOFF.length
+      ? PRELOAD_BACKOFF[slot.failures - 1]
       : RELAXED_RETRY_SECONDS;
-    schedulePreload(delay);
+    scheduleSlot(slot, jitteredDelay(baseDelay));
   } finally {
-    preloading = false;
-  }
-}
-
-function scheduleInterstitialPreload(seconds: number): void {
-  if (interstitialTimer !== null) clearTimeout(interstitialTimer);
-  interstitialTimer = setTimeout(() => {
-    interstitialTimer = null;
-    void preloadInterstitialTick();
-  }, seconds * 1000);
-}
-
-async function preloadInterstitialTick(): Promise<void> {
-  if (evre !== 'calisiyor' || !consentAllowsAds) return;
-  if (!INTERSTITIAL_ID) return;
-  if (interstitialLoaded) {
-    scheduleInterstitialPreload(WATCHDOG_SECONDS);
-    return;
-  }
-  if (interstitialPreloading) return;
-  interstitialPreloading = true;
-  try {
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('Interstitial yükleme zaman aşımı (8s)')), 8000)
-    );
-    await Promise.race([
-      AdMob.prepareInterstitial({ adId: INTERSTITIAL_ID }),
-      timeoutPromise,
-    ]);
-    interstitialLoaded = true;
-    interstitialFailures = 0;
-    scheduleInterstitialPreload(WATCHDOG_SECONDS);
-  } catch (err) {
-    interstitialFailures++;
-    console.warn(`[Reklam] Geçiş reklamı yüklenemedi (${interstitialFailures}):`, err);
-    const delay = interstitialFailures <= PRELOAD_BACKOFF.length
-      ? PRELOAD_BACKOFF[interstitialFailures - 1]
-      : RELAXED_RETRY_SECONDS;
-    scheduleInterstitialPreload(delay);
-  } finally {
-    interstitialPreloading = false;
+    if (loadTimeout !== null) clearTimeout(loadTimeout);
+    slot.loading = false;
   }
 }
 
@@ -257,17 +441,17 @@ async function preloadInterstitialTick(): Promise<void> {
 const admobProvider: AdProvider = {
   /** Yerleşim seçimi Game.getAdOffers'ta; burada tek soru "yuva dolu mu". */
   isReady(_placement) {
-    return consentAllowsAds && rewardedLoaded;
+    return consentAllowsAds && rewardedSlot.loaded;
   },
 
   async show(_placement) {
-    if (!consentAllowsAds || !rewardedLoaded) return false;
+    if (!consentAllowsAds || !rewardedSlot.loaded) return false;
     /**
      * YUVA GÖSTERİMDEN ÖNCE TÜKETİLİR. Bayrak gösterim sonrasında
      * temizlenseydi, gösterim sırasında düşen bir teklif çipi aynı reklamı
      * "hazır" sanmaya devam ederdi — hayalet teklif hatasının kökü buydu.
      */
-    rewardedLoaded = false;
+    rewardedSlot.loaded = false;
     let earned = false;
     let sub: PluginListenerHandle | null = null;
     /**
@@ -300,7 +484,7 @@ const admobProvider: AdProvider = {
       dismissSub = await AdMob.addListener(RewardAdPluginEvents.Dismissed, () => onDismiss());
       failedSub = await AdMob.addListener(RewardAdPluginEvents.FailedToShow, (err) => onFailed(err));
 
-      await AdMob.showRewardVideoAd();
+      void AdMob.showRewardVideoAd().catch((err) => onFailed(err));
       await Promise.race([dismissPromise, failedPromise, timeoutPromise]).catch((e) => {
         console.warn('[Reklam] Ödüllü reklam bekleme/kapanma uyarısı:', e);
       });
@@ -320,13 +504,13 @@ const admobProvider: AdProvider = {
         try { await failedSub.remove(); } catch {}
       }
       // Bir sonraki teklif için yuvayı hemen doldurmaya başla.
-      schedulePreload(1);
+      scheduleSlot(rewardedSlot, 1);
     }
     return earned;
   },
 
   isInterstitialReady() {
-    return consentAllowsAds && interstitialLoaded;
+    return consentAllowsAds && interstitialSlot.loaded;
   },
 
   /**
@@ -335,11 +519,11 @@ const admobProvider: AdProvider = {
    * reklam arka planda otomatik yüklenir.
    */
   async showInterstitial() {
-    if (!consentAllowsAds || !interstitialLoaded) {
+    if (!consentAllowsAds || !interstitialSlot.loaded) {
       console.info('[Reklam] Geçiş reklamı hazır değil, gösterim atlandı.');
       return;
     }
-    interstitialLoaded = false;
+    interstitialSlot.loaded = false;
     let dismissSub: PluginListenerHandle | null = null;
     let failedSub: PluginListenerHandle | null = null;
     let safetyTimer: ReturnType<typeof setTimeout> | null = null;
@@ -348,13 +532,6 @@ const admobProvider: AdProvider = {
       let onFailed: (err: unknown) => void = () => {};
       const dismissPromise = new Promise<void>((resolve) => { onDismiss = resolve; });
       const failedPromise = new Promise<void>((_, reject) => { onFailed = reject; });
-      /**
-       * OYUN, REKLAM KAPANANA KADAR DURAKLATILMIŞ KALIR.
-       * Eskiden 8 sn'lik zaman aşımı vardı; 15-30 sn'lik video reklamda oyun
-       * sesi ve dokunuşu reklam hâlâ ekrandayken geri açılıyordu. Artık tek
-       * sinyal Dismissed / FailedToShow. Bu süre yalnız native olayın hiç
-       * gelmediği arıza durumu için bir emniyet ağıdır.
-       */
       const safetyPromise = new Promise<void>((_, reject) => {
         safetyTimer = setTimeout(
           () => reject(new Error(`Geçiş reklamı kapanma olayı gelmedi (${AD_DISMISS_SAFETY_MS / 1000}s)`)),
@@ -365,7 +542,7 @@ const admobProvider: AdProvider = {
       dismissSub = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => onDismiss());
       failedSub = await AdMob.addListener(InterstitialAdPluginEvents.FailedToShow, (err) => onFailed(err));
 
-      await AdMob.showInterstitial();
+      void AdMob.showInterstitial().catch((err) => onFailed(err));
       await Promise.race([dismissPromise, failedPromise, safetyPromise]).catch((e) => {
         console.warn('[Reklam] Geçiş reklamı bekleme uyarısı:', e);
       });
@@ -379,7 +556,116 @@ const admobProvider: AdProvider = {
       if (failedSub) {
         try { await failedSub.remove(); } catch {}
       }
-      scheduleInterstitialPreload(1);
+      scheduleSlot(interstitialSlot, 1);
+    }
+  },
+
+  warmSecondaryAds() {
+    if (secondaryAdsArmed) return;
+    secondaryAdsArmed = true;
+    if (evre === 'calisiyor' && consentAllowsAds) {
+      scheduleSlot(rewardedInterstitialSlot, 0.2);
+      scheduleSlot(interstitialSlot, 0.8);
+      scheduleSlot(appOpenSlot, 2.0);
+      void syncBanner();
+    }
+  },
+
+  setBannerVisible(visible: boolean) {
+    bannerWanted = visible;
+    void syncBanner();
+  },
+
+  isRewardedInterstitialReady() {
+    return consentAllowsAds && rewardedInterstitialSlot.loaded;
+  },
+
+  async showRewardedInterstitial() {
+    if (!consentAllowsAds || !rewardedInterstitialSlot.loaded) {
+      throw new Error('Ödüllü geçiş reklamı hazır değil');
+    }
+    rewardedInterstitialSlot.loaded = false;
+    let earned = false;
+    let rewardSub: PluginListenerHandle | null = null;
+    let dismissSub: PluginListenerHandle | null = null;
+    let failedSub: PluginListenerHandle | null = null;
+    let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+    try {
+      let onDismiss: () => void = () => {};
+      let onFailed: (err: unknown) => void = () => {};
+      const dismissPromise = new Promise<void>((resolve) => { onDismiss = resolve; });
+      const failedPromise = new Promise<void>((_, reject) => { onFailed = reject; });
+      const safetyPromise = new Promise<void>((_, reject) => {
+        safetyTimer = setTimeout(
+          () => reject(new Error(`Ödüllü geçiş kapanma olayı gelmedi (${AD_DISMISS_SAFETY_MS / 1000}s)`)),
+          AD_DISMISS_SAFETY_MS,
+        );
+      });
+
+      rewardSub = await AdMob.addListener(RewardInterstitialAdPluginEvents.Rewarded, () => {
+        earned = true;
+      });
+      dismissSub = await AdMob.addListener(RewardInterstitialAdPluginEvents.Dismissed, () => onDismiss());
+      failedSub = await AdMob.addListener(RewardInterstitialAdPluginEvents.FailedToShow, (err) => onFailed(err));
+
+      void AdMob.showRewardInterstitialAd().catch((err) => onFailed(err));
+      await Promise.race([dismissPromise, failedPromise, safetyPromise]);
+      return earned;
+    } finally {
+      if (safetyTimer !== null) clearTimeout(safetyTimer);
+      if (rewardSub) {
+        try { await rewardSub.remove(); } catch {}
+      }
+      if (dismissSub) {
+        try { await dismissSub.remove(); } catch {}
+      }
+      if (failedSub) {
+        try { await failedSub.remove(); } catch {}
+      }
+      scheduleSlot(rewardedInterstitialSlot, 1);
+    }
+  },
+
+  isAppOpenReady() {
+    return consentAllowsAds && appOpenSlot.loaded;
+  },
+
+  async showAppOpen() {
+    if (!consentAllowsAds || !appOpenSlot.loaded) return false;
+    appOpenSlot.loaded = false;
+    let closedSub: PluginListenerHandle | null = null;
+    let failedSub: PluginListenerHandle | null = null;
+    let safetyTimer: ReturnType<typeof setTimeout> | null = null;
+    try {
+      let onClosed: () => void = () => {};
+      let onFailed: (err: unknown) => void = () => {};
+      const closedPromise = new Promise<void>((resolve) => { onClosed = resolve; });
+      const failedPromise = new Promise<void>((_, reject) => { onFailed = reject; });
+      const safetyPromise = new Promise<void>((_, reject) => {
+        safetyTimer = setTimeout(
+          () => reject(new Error(`Açılış reklamı kapanma olayı gelmedi (${AD_DISMISS_SAFETY_MS / 1000}s)`)),
+          AD_DISMISS_SAFETY_MS,
+        );
+      });
+
+      closedSub = await AdMob.addListener(AppOpenAdPluginEvents.Closed, () => onClosed());
+      failedSub = await AdMob.addListener(AppOpenAdPluginEvents.FailedToShow, (err) => onFailed(err));
+
+      void AdMob.showAppOpen().catch((err) => onFailed(err));
+      await Promise.race([closedPromise, failedPromise, safetyPromise]);
+      return true;
+    } catch (err) {
+      console.warn('[Reklam] Açılış reklamı gösterilemedi:', err);
+      return false;
+    } finally {
+      if (safetyTimer !== null) clearTimeout(safetyTimer);
+      if (closedSub) {
+        try { await closedSub.remove(); } catch {}
+      }
+      if (failedSub) {
+        try { await failedSub.remove(); } catch {}
+      }
+      scheduleSlot(appOpenSlot, 2);
     }
   },
 };
@@ -391,29 +677,6 @@ const admobProvider: AdProvider = {
  * Türkiye (`Europe/Istanbul`) bu listede yoktur. Form hiç yayınlanmamışsa
  * UMP bölgeyi söyleyemez; o durumda liste dışındaki cihaz reklam ister.
  */
-const EU_CONSENT_TIMEZONES = new Set([
-  'Europe/Amsterdam', 'Europe/Athens', 'Europe/Berlin', 'Europe/Bratislava',
-  'Europe/Brussels', 'Europe/Bucharest', 'Europe/Budapest', 'Europe/Busingen',
-  'Europe/Copenhagen', 'Europe/Dublin', 'Europe/Gibraltar', 'Europe/Guernsey',
-  'Europe/Helsinki', 'Europe/Isle_of_Man', 'Europe/Jersey', 'Europe/Lisbon',
-  'Europe/Ljubljana', 'Europe/London', 'Europe/Luxembourg', 'Europe/Madrid',
-  'Europe/Malta', 'Europe/Mariehamn', 'Europe/Nicosia', 'Europe/Oslo',
-  'Europe/Paris', 'Europe/Prague', 'Europe/Riga', 'Europe/Rome',
-  'Europe/Sofia', 'Europe/Stockholm', 'Europe/Tallinn', 'Europe/Vaduz',
-  'Europe/Vienna', 'Europe/Vilnius', 'Europe/Warsaw', 'Europe/Zagreb',
-  'Europe/Zurich', 'Atlantic/Canary', 'Atlantic/Faroe', 'Atlantic/Madeira',
-  'Atlantic/Reykjavik', 'Arctic/Longyearbyen',
-]);
-
-function deviceInEuConsentRegion(): boolean {
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? '';
-    return EU_CONSENT_TIMEZONES.has(tz);
-  } catch {
-    return false;
-  }
-}
-
 /** AdMob'da Avrupa formu yayınlanmamış. Bu bir oyuncu reddi değil. */
 function umpMissingPrivacyForm(err: unknown): boolean {
   const m = (err instanceof Error ? err.message : String(err ?? '')).toLowerCase();
@@ -436,12 +699,21 @@ async function runConsentFlow(): Promise<boolean> {
 /** Yeni rıza kararını uygular; izin geldiyse SDK'yı başlatır ya da yuvaları doldurur. */
 function applyConsent(allowed: boolean): void {
   consentAllowsAds = allowed;
-  if (!allowed) return; // kapılar (isReady/show/preload) gerisini halleder
+  analytics.setConsent(allowed, true);
+  if (!allowed) {
+    void syncBanner();
+    return; // kapılar (isReady/show/preload) gerisini halleder
+  }
   if (evre === 'riza_bekliyor') {
     void startSdk();
   } else if (evre === 'calisiyor') {
-    schedulePreload(0.2);
-    scheduleInterstitialPreload(0.2);
+    scheduleSlot(rewardedSlot, 0.2);
+    if (secondaryAdsArmed) {
+      scheduleSlot(rewardedInterstitialSlot, 0.4);
+      scheduleSlot(interstitialSlot, 0.8);
+      scheduleSlot(appOpenSlot, 1.5);
+      void syncBanner();
+    }
   }
 }
 
@@ -498,9 +770,24 @@ export async function initAds(): Promise<void> {
   // Durum satırı daha ilk saniyeden anlamlı olsun ('başlatılıyor…').
   setAdStatusSource(adStatus);
 
+  // Debug / önizleme (.preview) APK'larında geliştirici cihazında canlı AdMob
+  // gösterimi geçersiz trafik riski doğurur; yalnızca yayın paketinde canlı kalır.
+  if (PRODUCTION_ADS && (await isPreviewBuild())) {
+    PRODUCTION_ADS = false;
+    console.info('[Reklam] Önizleme (.preview) paketi algılandı; Google test reklam birimleri etkin.');
+  }
+  syncAdUnitIds();
+
   // Üretim derlemesinde henüz canlı reklam birimleri girilmemişse (ör. ilk App Store
   // incelemesi), ATT kontrolünden sonra SDK ve UMP başlatılmaz; oyun %100 reklamsız çalışır.
-  if (PRODUCTION_ADS && !REWARDED_ID && !INTERSTITIAL_ID) {
+  if (
+    PRODUCTION_ADS &&
+    !REWARDED_ID &&
+    !INTERSTITIAL_ID &&
+    !BANNER_ID &&
+    !APP_OPEN_ID &&
+    !REWARDED_INTERSTITIAL_ID
+  ) {
     evre = 'riza_bekliyor';
     return;
   }
@@ -527,8 +814,10 @@ export async function initAds(): Promise<void> {
   });
 
   let allowed = false;
+  let consentResolved = false;
   try {
     allowed = await runConsentFlow();
+    consentResolved = true;
   } catch (err) {
     sonHata = kisaHata(err);
     if (PRODUCTION_ADS && umpMissingPrivacyForm(err) && !deviceInEuConsentRegion()) {
@@ -545,6 +834,7 @@ export async function initAds(): Promise<void> {
   }
 
   consentAllowsAds = allowed;
+  analytics.setConsent(allowed, consentResolved);
   if (!allowed) {
     evre = 'riza_bekliyor';
     return;
@@ -585,8 +875,13 @@ async function startSdk(): Promise<void> {
   setAdProvider(admobProvider);
 
   if (listenersInstalled) {
-    void preloadTick();
-    void preloadInterstitialTick();
+    void preloadSlot(rewardedSlot);
+    if (secondaryAdsArmed) {
+      scheduleSlot(rewardedInterstitialSlot, 0.3);
+      scheduleSlot(interstitialSlot, 0.8);
+      scheduleSlot(appOpenSlot, 1.5);
+      void syncBanner();
+    }
     return;
   }
   listenersInstalled = true;
@@ -595,9 +890,9 @@ async function startSdk(): Promise<void> {
   // boşalt ve (zincir boştaysa) kısa süre sonra yeniden dene.
   try {
     await AdMob.addListener(RewardAdPluginEvents.FailedToLoad, (err) => {
-      rewardedLoaded = false;
+      rewardedSlot.loaded = false;
       sonHata = kisaHata(err?.message ?? err);
-      if (!preloading && preloadTimer === null) schedulePreload(5);
+      if (!rewardedSlot.loading && rewardedSlot.timer === null) scheduleSlot(rewardedSlot, 5);
     });
   } catch (err) {
     console.warn('[Reklam] Reward FailedToLoad dinleyicisi takılamadı:', err);
@@ -605,24 +900,57 @@ async function startSdk(): Promise<void> {
 
   try {
     await AdMob.addListener(InterstitialAdPluginEvents.FailedToLoad, () => {
-      interstitialLoaded = false;
-      if (!interstitialPreloading && interstitialTimer === null) scheduleInterstitialPreload(5);
+      interstitialSlot.loaded = false;
+      if (secondaryAdsArmed && !interstitialSlot.loading && interstitialSlot.timer === null) {
+        scheduleSlot(interstitialSlot, 5);
+      }
     });
   } catch (err) {
     console.warn('[Reklam] Interstitial FailedToLoad dinleyicisi takılamadı:', err);
   }
 
+  try {
+    await AdMob.addListener(RewardInterstitialAdPluginEvents.FailedToLoad, () => {
+      rewardedInterstitialSlot.loaded = false;
+      if (secondaryAdsArmed && !rewardedInterstitialSlot.loading && rewardedInterstitialSlot.timer === null) {
+        scheduleSlot(rewardedInterstitialSlot, 5);
+      }
+    });
+  } catch (err) {
+    console.warn('[Reklam] RewardInterstitial FailedToLoad dinleyicisi takılamadı:', err);
+  }
+
+  try {
+    await AdMob.addListener(AppOpenAdPluginEvents.FailedToLoad, () => {
+      appOpenSlot.loaded = false;
+      if (secondaryAdsArmed && !appOpenSlot.loading && appOpenSlot.timer === null) {
+        scheduleSlot(appOpenSlot, 10);
+      }
+    });
+  } catch (err) {
+    console.warn('[Reklam] AppOpen FailedToLoad dinleyicisi takılamadı:', err);
+  }
+
+  try {
+    await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (info) => {
+      const h = Math.max(0, Math.min(110, Math.round(info?.height ?? 0)));
+      if (h > 0) bannerHeightPx = h;
+      setBannerHeightCss(bannerVisible ? bannerHeightPx : 0);
+    });
+    await AdMob.addListener(BannerAdPluginEvents.FailedToLoad, () => {
+      bannerCreated = false;
+      bannerVisible = false;
+      bannerHeightPx = 0;
+      setBannerHeightCss(0);
+    });
+  } catch (err) {
+    console.warn('[Reklam] Banner dinleyicisi takılamadı:', err);
+  }
+
   // 5) ILRD / Gelir telemetrisi (Paid Event / Impression-Level Revenue)
   try {
     await AdMob.addListener(RewardAdPluginEvents.AdImpression, (data) => {
-      const value = (data?.valueMicros ?? 0) / 1_000_000;
-      bus.emit('ad:revenue', {
-        value,
-        currency: data?.currencyCode ?? 'USD',
-        precision: data?.precision ?? 0,
-        adUnit: data?.adUnitId ?? REWARDED_ID,
-        format: 'rewarded',
-      });
+      emitRevenue('rewarded', data?.adUnitId ?? REWARDED_ID, data);
     });
   } catch (err) {
     console.warn('[Reklam] Rewarded AdImpression dinleyicisi takılamadı:', err);
@@ -630,38 +958,71 @@ async function startSdk(): Promise<void> {
 
   try {
     await AdMob.addListener(InterstitialAdPluginEvents.AdImpression, (data) => {
-      const value = (data?.valueMicros ?? 0) / 1_000_000;
-      bus.emit('ad:revenue', {
-        value,
-        currency: data?.currencyCode ?? 'USD',
-        precision: data?.precision ?? 0,
-        adUnit: data?.adUnitId ?? INTERSTITIAL_ID,
-        format: 'interstitial',
-      });
+      emitRevenue('interstitial', data?.adUnitId ?? INTERSTITIAL_ID, data);
     });
   } catch (err) {
     console.warn('[Reklam] Interstitial AdImpression dinleyicisi takılamadı:', err);
+  }
+
+  try {
+    await AdMob.addListener(RewardInterstitialAdPluginEvents.AdImpression, (data) => {
+      emitRevenue('rewarded_interstitial', data?.adUnitId ?? REWARDED_INTERSTITIAL_ID, data);
+    });
+  } catch (err) {
+    console.warn('[Reklam] RewardInterstitial AdImpression dinleyicisi takılamadı:', err);
+  }
+
+  try {
+    await AdMob.addListener(AppOpenAdPluginEvents.AdImpression, (data) => {
+      emitRevenue('app_open', data?.adUnitId ?? APP_OPEN_ID, data);
+    });
+  } catch (err) {
+    console.warn('[Reklam] AppOpen AdImpression dinleyicisi takılamadı:', err);
+  }
+
+  try {
+    await AdMob.addListener(BannerAdPluginEvents.AdPaid, (data) => {
+      emitRevenue('banner', data?.adUnitId ?? BANNER_ID, data);
+    });
+  } catch (err) {
+    console.warn('[Reklam] Banner AdPaid dinleyicisi takılamadı:', err);
   }
 
   // 6) Uygulama arka plandan döndüğünde boş yuvaları doldurmaya çalış
   if (typeof document !== 'undefined') {
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && evre === 'calisiyor' && consentAllowsAds) {
-        if (!rewardedLoaded && !preloading) {
-          preloadFailures = 0;
-          schedulePreload(1);
+        if (!rewardedSlot.loaded && !rewardedSlot.loading) {
+          rewardedSlot.failures = 0;
+          scheduleSlot(rewardedSlot, 1);
         }
-        if (!interstitialLoaded && !interstitialPreloading) {
-          interstitialFailures = 0;
-          scheduleInterstitialPreload(1);
+        if (secondaryAdsArmed) {
+          if (!rewardedInterstitialSlot.loaded && !rewardedInterstitialSlot.loading) {
+            rewardedInterstitialSlot.failures = 0;
+            scheduleSlot(rewardedInterstitialSlot, 1);
+          }
+          if (!interstitialSlot.loaded && !interstitialSlot.loading) {
+            interstitialSlot.failures = 0;
+            scheduleSlot(interstitialSlot, 1.5);
+          }
+          if (!appOpenSlot.loaded && !appOpenSlot.loading) {
+            appOpenSlot.failures = 0;
+            scheduleSlot(appOpenSlot, 2);
+          }
         }
       }
     });
   }
 
-  // 7) İlk yükleme
+  // 7) İlk yükleme: soğuk açılışta bant genişliği yalnızca REWARDED için
+  // ayrılır; ikincil biçimler öğretici bittiğinde (warmSecondaryAds) açılır.
   if (consentAllowsAds) {
-    void preloadTick();
-    void preloadInterstitialTick();
+    void preloadSlot(rewardedSlot);
+    if (secondaryAdsArmed) {
+      scheduleSlot(rewardedInterstitialSlot, 0.3);
+      scheduleSlot(interstitialSlot, 0.8);
+      scheduleSlot(appOpenSlot, 2.0);
+      void syncBanner();
+    }
   }
 }

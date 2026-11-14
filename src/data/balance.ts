@@ -180,8 +180,8 @@ export const BALANCE = {
     scrubRewardRate: 0.55,
     /** Süpürülen toz lekesinin ödül oranı */
     dustRewardRate: 0.34,
-    /** Masadan kalkan her müşterinin bıraktığı yüzey kiri (0..1) */
-    tableSoilPerUse: 0.38,
+    /** Masadan kalkan her müşterinin bıraktığı yüzey kiri (0..1) — ayrı masa silme adımı kaldırıldı */
+    tableSoilPerUse: 0,
     playerTablePolishTime: 1.05,
 
     /* ---------------------------------------------------------------- *
@@ -530,28 +530,29 @@ export const BALANCE = {
 
   /* --- offline --- */
   offline: {
-    /** Arka planda geçen sürenin kaçta kaçı gelire dönüşür. */
-    efficiency: 0.45,
-    minSeconds: 45,
+    /** Arka planda geçen sürenin kaçta kaçı makine raf stoğuna dönüşür. */
+    efficiency: 0.25,
+    /** Kısa uygulama geçişlerinde (WhatsApp vb.) dönüş penceresi açılmasın (3 dk). */
+    minSeconds: 180,
     /**
      * Tek bir dönüşte ödenebilecek en fazla süre (saat cinsinden aktif
-     * gelir). Depo yükseltmesi kapasiteyi 16 saate çıkarsa bile ödeme
-     * bunun üstüne çıkmaz — offline kazanç oyunu bitiren bir kısayol
-     * değil, dönmek için bir sebep olmalı.
+     * gelir karşılığı). Depo yükseltmesi kapasiteyi 16 saate çıkarsa bile
+     * baz ödeme en fazla ~24 dakikalık aktif oyuna denk gelir — çevrimdışı
+     * kazanç oyunu bitiren bir kısayol değil, dönmek için tatlı bir ivmedir.
      */
-    maxActiveHours: 3,
+    maxActiveHours: 0.4,
     /**
      * Kapalı şubenin, kendi ölçülen aktif gelirinin kaçta kaçını arka
      * planda kazandığı. 1'in altında olması ŞART: aksi hâlde oyunu
      * bırakmak oynamaktan kârlı hâle gelir.
      */
-    backgroundShare: 0.5,
-    /** Standart offline dönüşte reklam çarpanı. */
+    backgroundShare: 0.38,
+    /** Standart offline dönüşte reklam çarpanı (<2 saat). */
     rewardedMultiplier: 2,
-    /** Uzun offline dönüşte reklam çarpanı (1 saat ve üzeri). */
+    /** Uzun offline dönüşte reklam çarpanı (2 saat ve üzeri). */
     rewardedLongOfflineMultiplier: 3,
-    /** Uzun offline sayılma eşiği (sn, 1 saat). */
-    longOfflineThresholdSeconds: 3600,
+    /** Uzun offline sayılma eşiği (sn, 2 saat). */
+    longOfflineThresholdSeconds: 7200,
   },
 
   /* --- kaos olayları --- */
@@ -589,11 +590,11 @@ export const BALANCE = {
     influencerTipMult: 1.7,
     influencerAfterZone: 't1',
 
-    investorInterval: [240, 420] as [number, number],
+    investorInterval: [190, 320] as [number, number],
     investorDuration: 60,
     investorAfterZone: 'a1',
     investorInteractRadius: 2.2,
-    investorCashMultiplier: 1.5,
+    investorCashMultiplier: 1.8,
   },
 
   /* --- personel yapay zekâsı --- */
@@ -602,20 +603,15 @@ export const BALANCE = {
     reserveTimeout: 5,
     idleReturnDist: 3.5,
     /**
-     * PERSONELİN RAF DOLDURMA TAVANI (0..1).
+     * TEZGÂHTARIN MASAYA GECİKMELİ YEDEK SERVİS EŞİĞİ (0..1).
      *
-     * Tezgâhtar bir rafı ancak kapasitesinin bu payına kadar besler; üstü
-     * OYUNCUNUN işidir. Oyuncu geri bildirimi: "2 tane öyle personel alsa
-     * her şeyi hızlıca alıp yerlerine koyar, elemanlar bize ne gerek
-     * kalıyor?"
-     *
-     * Neden %45 ve neden CEZA DEĞİL: taban hep dolu kalır, yani kafe
-     * hiçbir zaman ürünsüz kalmaz ve kimse küsmez. Değişen tek şey,
-     * mekânda gözle görülür bir işin DURMASI — üst raflar boş bekler.
-     * Rafın kendi görseli doluluğu zaten gösterdiği için yeni bir arayüz
-     * öğesi gerekmez.
+     * Tezgâhtar öncelikle açık ürün raflarını doldurur. Masada oturan
+     * misafirlere yalnızca VIP OLMAYAN normal masalarda, misafirin kalan
+     * sabrı bu oranın altına düştüğünde (oyuncunun hızlı bahşiş penceresi
+     * geçtikten sonra) gecikmeli yedek servis yapar; böylece taze masalar,
+     * hızlı bahşiş ve VIP siparişler tamamen oyuncuda kalır.
      */
-    shelfShare: 0.45,
+    tableAssistPatienceRatio: 0.45,
   },
 
   /* --- kamera --- */

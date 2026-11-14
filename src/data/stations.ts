@@ -194,16 +194,13 @@ const KOSE: StationDef[] = [
       x: 3.0, z: -4.4, rot: 0, time: 1.8, outputCap: 0, speedCost: 260 }),
   S({ id: 'k_masa_1', name: tr("Masa 1"), kind: 'table', visual: 'table', location: 'kose', zone: 'a1', dept: 'salon',
       x: -5.2, z: 2.2, rot: 0, time: 11, outputCap: 0, seats: 2, serviceCode: 'M1', capCost: 260 }),
-  S({ id: 'k_supurge', name: tr("Süpürge Yeri"), kind: 'vacuum', visual: 'vacuumdock', location: 'kose', zone: 'a1', dept: 'salon',
-      x: -7.4, z: -1.5, rot: 90, time: 0, outputCap: 0 }),
   /**
-   * Kova bilerek süpürge dolabından UZAKTA durur (x aynı, z 6,1 birim
-   * ötede — etkileşim yarıçapı 2,9'un iki katından fazla). Eskiden ikisi
-   * 2,5 birim arayla yan yanaydı: bulaşığı kovaya atmaya giden oyuncu aynı
-   * anda süpürgenin de menziline giriyor, yanlışlıkla süpürgeyi kapıyordu
-   * ("yan yana duruyor karışıyor" geri bildirimi). Masa 1'e yakınlığını da
-   * korur (dx 2,4 · dz 2,4).
+   * Süpürge parkı bar-salon geçiş koridorunun batı duvarında (z -1,6) durur;
+   * Bulaşık Kovası'ndan (z 4,8) 6,4 birim uzaktadır. Böylece kovaya bulaşık/çöp
+   * atan oyuncu hiçbir zaman süpürge menziline girmez.
    */
+  S({ id: 'k_supurge', name: tr("Süpürge Yeri"), kind: 'vacuum', visual: 'vacuumdock', location: 'kose', zone: 'a1', dept: 'salon',
+      x: -8.08, z: -1.6, rot: 90, time: 0, outputCap: 0 }),
   /** Kova salona (doğuya) bakar: kapağı/pedalı oyuncunun geldiği yöndedir. */
   S({ id: 'k_kova_1', name: tr("Bulaşık Kovası"), kind: 'bin', visual: 'bin', location: 'kose', zone: 'a1', dept: 'salon',
       x: -8.5, z: 4.8, rot: 90, time: 0, outputCap: 0 }),
@@ -226,20 +223,20 @@ const KOSE: StationDef[] = [
 
   /* ================= a3 · KAHVE ================= */
   S({ id: 'k_sutbar', name: tr("Kahve Barı"), kind: 'machine', visual: 'steamer', location: 'kose', zone: 'a3', dept: 'bar',
-      x: -3.45, z: -11.4, rot: 0, item: 'latte', time: 3.0, outputCap: 6, speedCost: 850, capCost: 650, menuOrder: 1 }),
+      x: -3.45, z: -11.4, rot: 0, item: 'latte', time: 3.0, outputCap: 6, speedCost: 1100, capCost: 850, menuOrder: 1 }),
   S({ id: 'k_raf_latte', name: tr("Kahve Rafı"), kind: 'pickup', visual: 'shelf', location: 'kose', zone: 'a3', dept: 'bar',
-      x: -4.85, z: -4.4, rot: 0, item: 'latte', time: 0, outputCap: 8, capCost: 750 }),
+      x: -4.85, z: -4.4, rot: 0, item: 'latte', time: 0, outputCap: 8, capCost: 950 }),
 
   /* ================= a4 · TOST ================= */
   S({ id: 'k_tost', name: tr("Tost Makinesi"), kind: 'machine', visual: 'panini', location: 'kose', zone: 'a4', dept: 'bar',
-      x: 0.0, z: -11.4, rot: 0, item: 'tost', time: 4.2, outputCap: 5, speedCost: 2400, capCost: 1900, menuOrder: 2 }),
+      x: 0.0, z: -11.4, rot: 0, item: 'tost', time: 4.2, outputCap: 5, speedCost: 3400, capCost: 2700, menuOrder: 2 }),
   S({ id: 'k_raf_tost', name: tr("Tost Rafı"), kind: 'pickup', visual: 'shelf', location: 'kose', zone: 'a4', dept: 'bar',
-      x: -3.25, z: -4.4, rot: 0, item: 'tost', time: 0, outputCap: 8, capCost: 2100 }),
+      x: -3.25, z: -4.4, rot: 0, item: 'tost', time: 0, outputCap: 8, capCost: 3000 }),
 
   /* ================= a5 · SALON HATTI ================= *
    * İkinci kasa: sıra ikiye bölünür, sipariş kuyruğu kısalır.            */
   S({ id: 'k_tezgah_2', name: tr("İkinci Kasa"), kind: 'counter', visual: 'counter', location: 'kose', zone: 'a5', dept: 'bar',
-      x: 5.65, z: -4.4, rot: 0, time: 1.6, outputCap: 0, speedCost: 3600 }),
+      x: 5.65, z: -4.4, rot: 0, time: 1.6, outputCap: 0, speedCost: 6200 }),
   /* Kova doğu duvarından 0,96 birim içeride: 8,1'deyken duvar gövdesiyle
    * arasında 0,46'lık TUZAK bandı kalıyordu (doğrulayıcı yakaladı).       */
   S({ id: 'k_kova_2', name: tr("Salon Kovası"), kind: 'bin', visual: 'bin', location: 'kose', zone: 'a5', dept: 'salon',
@@ -273,25 +270,25 @@ const KOSE: StationDef[] = [
 
   /* ================= a7 · WAFFLE ================= */
   S({ id: 'k_waffle', name: tr("Vafıl Makinesi"), kind: 'machine', visual: 'wafflemaker', location: 'kose', zone: 'a7', dept: 'bar',
-      x: 3.26, z: -11.4, rot: 0, item: 'waffle', time: 5.2, outputCap: 5, speedCost: 10500, capCost: 8500, menuOrder: 3 }),
+      x: 3.26, z: -11.4, rot: 0, item: 'waffle', time: 5.2, outputCap: 5, speedCost: 24000, capCost: 19000, menuOrder: 3 }),
   S({ id: 'k_raf_waffle', name: tr("Vafıl Rafı"), kind: 'pickup', visual: 'shelf', location: 'kose', zone: 'a7', dept: 'bar',
-      x: -1.65, z: -4.4, rot: 0, item: 'waffle', time: 0, outputCap: 8, capCost: 9000 }),
+      x: -1.65, z: -4.4, rot: 0, item: 'waffle', time: 0, outputCap: 8, capCost: 21000 }),
 
   /* ================= a8 · FRAPPE ================= */
   S({ id: 'k_frappe', name: tr("Buzlu Kahve Blenderi"), kind: 'machine', visual: 'blender', location: 'kose', zone: 'a8', dept: 'bar',
-      x: 6.49, z: -11.4, rot: 0, item: 'frappe', time: 6.0, outputCap: 5, speedCost: 18500, capCost: 15000, menuOrder: 4 }),
+      x: 6.49, z: -11.4, rot: 0, item: 'frappe', time: 6.0, outputCap: 5, speedCost: 42000, capCost: 34000, menuOrder: 4 }),
   S({ id: 'k_raf_frappe', name: tr("Buzlu Kahve Rafı"), kind: 'pickup', visual: 'shelf', location: 'kose', zone: 'a8', dept: 'bar',
-      x: -0.05, z: -4.4, rot: 0, item: 'frappe', time: 0, outputCap: 8, capCost: 16000 }),
+      x: -0.05, z: -4.4, rot: 0, item: 'frappe', time: 0, outputCap: 8, capCost: 36000 }),
 
   /* ================= r2 / v1 / v2 · VIP SALON ================= *
    * En pahalı oda: mermer tablalı VIP masalar. Hesap ve bahşiş 2,4×.
    * Oda ile ilk masa birlikte gelir; diğer ikisi ayrı ayrı satın alınır. */
   S({ id: 'k_vip_1', name: tr("VIP Masa 1"), kind: 'table', visual: 'viptable', location: 'kose', zone: 'r2', dept: 'salon',
-      x: -14.9, z: 15.8, rot: 0, time: 14, outputCap: 0, seats: 2, serviceCode: 'V1', vip: true, capCost: 32000 }),
+      x: -14.9, z: 15.8, rot: 0, time: 14, outputCap: 0, seats: 2, serviceCode: 'V1', vip: true, capCost: 75000 }),
   S({ id: 'k_vip_2', name: tr("VIP Masa 2"), kind: 'table', visual: 'viptable', location: 'kose', zone: 'v1', dept: 'salon',
-      x: -14.9, z: 12.2, rot: 0, time: 14, outputCap: 0, seats: 2, serviceCode: 'V2', vip: true, capCost: 26000 }),
+      x: -14.9, z: 12.2, rot: 0, time: 14, outputCap: 0, seats: 2, serviceCode: 'V2', vip: true, capCost: 65000 }),
   S({ id: 'k_vip_3', name: tr("VIP Loca"), kind: 'table', visual: 'viptable', location: 'kose', zone: 'v2', dept: 'salon',
-      x: -11.6, z: 15.8, rot: 0, time: 15, outputCap: 0, seats: 4, serviceCode: 'V3', vip: true, capCost: 34000 }),
+      x: -11.6, z: 15.8, rot: 0, time: 15, outputCap: 0, seats: 4, serviceCode: 'V3', vip: true, capCost: 85000 }),
 ];
 
 /* ==================================================================== *
@@ -305,35 +302,35 @@ const KOSE: StationDef[] = [
 
 const SAHIL: StationDef[] = [
   S({ id: 's_smoothie', name: tr("Meyve Barı"), kind: 'machine', visual: 'juicebar', location: 'sahil', zone: 'p1', dept: 'bar',
-      x: -7.2, z: -8.4, rot: 0, item: 'smoothie', time: 3.4, outputCap: 8, speedCost: 65000, capCost: 52000, menuOrder: 0 }),
+      x: -7.2, z: -8.4, rot: 0, item: 'smoothie', time: 3.4, outputCap: 8, speedCost: 95000, capCost: 78000, menuOrder: 0 }),
   S({ id: 's_raf_smoothie', name: tr("Meyve Rafı"), kind: 'pickup', visual: 'shelf', location: 'sahil', zone: 'p1', dept: 'bar',
-      x: -6.2, z: -1.0, rot: 0, item: 'smoothie', time: 0, outputCap: 10, capCost: 56000 }),
+      x: -6.2, z: -1.0, rot: 0, item: 'smoothie', time: 0, outputCap: 10, capCost: 82000 }),
   S({ id: 's_tezgah_1', name: tr("Kumsal Tezgâhı"), kind: 'counter', visual: 'counter', location: 'sahil', zone: 'p1', dept: 'bar',
-      x: -3.4, z: -1.0, rot: 0, time: 1.5, outputCap: 0, speedCost: 58000 }),
+      x: -3.4, z: -1.0, rot: 0, time: 1.5, outputCap: 0, speedCost: 90000 }),
   S({ id: 's_masa_1', name: tr("Kum Masası 1"), kind: 'table', visual: 'table', location: 'sahil', zone: 'p1', dept: 'salon',
-      x: -7.6, z: 4.2, rot: 0, time: 11, outputCap: 0, seats: 4, serviceCode: 'S1', outdoor: true, capCost: 48000 }),
+      x: -7.6, z: 4.2, rot: 0, time: 11, outputCap: 0, seats: 4, serviceCode: 'S1', outdoor: true, capCost: 75000 }),
   S({ id: 's_masa_2', name: tr("Kum Masası 2"), kind: 'table', visual: 'table', location: 'sahil', zone: 'p1', dept: 'salon',
-      x: -2.8, z: 4.6, rot: 0, time: 11, outputCap: 0, seats: 2, serviceCode: 'S2', outdoor: true, capCost: 48000 }),
+      x: -2.8, z: 4.6, rot: 0, time: 11, outputCap: 0, seats: 2, serviceCode: 'S2', outdoor: true, capCost: 75000 }),
   S({ id: 's_supurge', name: tr("Sahil Süpürgesi"), kind: 'vacuum', visual: 'vacuumdock', location: 'sahil', zone: 'p1', dept: 'salon',
       x: 3.8, z: -8.4, rot: 0, time: 0, outputCap: 0 }),
   S({ id: 's_kova_1', name: tr("Kumsal Kovası"), kind: 'bin', visual: 'bin', location: 'sahil', zone: 'p1', dept: 'salon',
       x: -10.0, z: 1.6, rot: 90, time: 0, outputCap: 0 }),
 
   S({ id: 's_dondurma', name: tr("Dondurma Makinesi"), kind: 'machine', visual: 'icecream', location: 'sahil', zone: 'p2', dept: 'bar',
-      x: -3.6, z: -8.4, rot: 0, item: 'dondurma', time: 4.2, outputCap: 6, speedCost: 82000, capCost: 66000, menuOrder: 1 }),
+      x: -3.6, z: -8.4, rot: 0, item: 'dondurma', time: 4.2, outputCap: 6, speedCost: 145000, capCost: 115000, menuOrder: 1 }),
   S({ id: 's_raf_dondurma', name: tr("Dondurma Rafı"), kind: 'pickup', visual: 'shelf', location: 'sahil', zone: 'p2', dept: 'bar',
-      x: -7.55, z: -1.0, rot: 0, item: 'dondurma', time: 0, outputCap: 8, capCost: 70000 }),
+      x: -7.55, z: -1.0, rot: 0, item: 'dondurma', time: 0, outputCap: 8, capCost: 120000 }),
   S({ id: 's_masa_3', name: tr("Kum Masası 3"), kind: 'table', visual: 'table', location: 'sahil', zone: 'p2', dept: 'salon',
-      x: 2.0, z: 4.4, rot: 0, time: 11, outputCap: 0, seats: 4, serviceCode: 'S3', outdoor: true, capCost: 64000 }),
+      x: 2.0, z: 4.4, rot: 0, time: 11, outputCap: 0, seats: 4, serviceCode: 'S3', outdoor: true, capCost: 110000 }),
   S({ id: 's_masa_4', name: tr("Kum Masası 4"), kind: 'table', visual: 'table', location: 'sahil', zone: 'p2', dept: 'salon',
-      x: -5.2, z: 9.0, rot: 0, time: 11, outputCap: 0, seats: 4, serviceCode: 'S4', outdoor: true, capCost: 64000 }),
+      x: -5.2, z: 9.0, rot: 0, time: 11, outputCap: 0, seats: 4, serviceCode: 'S4', outdoor: true, capCost: 110000 }),
 
   S({ id: 's_shake', name: tr("Sütlü Kokteyl Barı"), kind: 'machine', visual: 'blender', location: 'sahil', zone: 'p3', dept: 'bar',
-      x: 0.0, z: -8.4, rot: 0, item: 'milkshake', time: 5.0, outputCap: 6, speedCost: 135000, capCost: 110000, menuOrder: 2 }),
+      x: 0.0, z: -8.4, rot: 0, item: 'milkshake', time: 5.0, outputCap: 6, speedCost: 240000, capCost: 195000, menuOrder: 2 }),
   S({ id: 's_raf_shake', name: tr("Sütlü Kokteyl Rafı"), kind: 'pickup', visual: 'shelf', location: 'sahil', zone: 'p3', dept: 'bar',
-      x: -8.9, z: -1.0, rot: 0, item: 'milkshake', time: 0, outputCap: 8, capCost: 115000 }),
+      x: -8.9, z: -1.0, rot: 0, item: 'milkshake', time: 0, outputCap: 8, capCost: 205000 }),
   S({ id: 's_masa_5', name: tr("Teras 1"), kind: 'table', visual: 'table', location: 'sahil', zone: 'p3', dept: 'salon',
-      x: 6.8, z: 4.6, rot: 0, time: 13, outputCap: 0, seats: 4, serviceCode: 'S5', outdoor: true, capCost: 105000 }),
+      x: 6.8, z: 4.6, rot: 0, time: 13, outputCap: 0, seats: 4, serviceCode: 'S5', outdoor: true, capCost: 88000 }),
   /**
    * GİRİŞ KORİDORUNDAN ÇEKİLDİ (x 0,4 → −0,6).
    *
@@ -348,17 +345,17 @@ const SAHIL: StationDef[] = [
    * çekilerek çıkılır. Yeni boşluk 1,88 (gereken 1,1).
    */
   S({ id: 's_masa_6', name: tr("Teras 2"), kind: 'table', visual: 'table', location: 'sahil', zone: 'p3', dept: 'salon',
-      x: -0.6, z: 9.2, rot: 0, time: 13, outputCap: 0, seats: 6, serviceCode: 'S6', outdoor: true, capCost: 105000 }),
+      x: -0.6, z: 9.2, rot: 0, time: 13, outputCap: 0, seats: 6, serviceCode: 'S6', outdoor: true, capCost: 88000 }),
   S({ id: 's_kova_2', name: tr("Teras Kovası"), kind: 'bin', visual: 'bin', location: 'sahil', zone: 'p3', dept: 'salon',
       x: 9.6, z: 9.6, rot: 0, time: 0, outputCap: 0 }),
 
   /* ================= p4 · SAHİL HATTI (İkinci Kasa) ================= */
   S({ id: 's_tezgah_2', name: tr("İkinci Kumsal Kasası"), kind: 'counter', visual: 'counter', location: 'sahil', zone: 'p4', dept: 'bar',
-      x: 4.4, z: -1.0, rot: 0, time: 1.4, outputCap: 0, speedCost: 185000 }),
+      x: 4.4, z: -1.0, rot: 0, time: 1.4, outputCap: 0, speedCost: 155000 }),
 
   /* ================= p5 · İSKELE VIP LOCA ================= */
   S({ id: 's_vip_1', name: tr("İskele VIP Loca"), kind: 'table', visual: 'viptable', location: 'sahil', zone: 'p5', dept: 'salon',
-      x: 6.2, z: 8.8, rot: 0, time: 14, outputCap: 0, seats: 4, serviceCode: 'SV1', vip: true, outdoor: true, capCost: 260000 }),
+      x: 6.2, z: 8.8, rot: 0, time: 14, outputCap: 0, seats: 4, serviceCode: 'SV1', vip: true, outdoor: true, capCost: 220000 }),
 ];
 
 export const ALL_STATIONS: StationDef[] = [...KOSE, ...SAHIL];

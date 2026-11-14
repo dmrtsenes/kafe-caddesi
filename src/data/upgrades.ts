@@ -15,6 +15,17 @@ export interface PlayerUpgradeDef {
   format: (level: number) => string;
 }
 
+export const VAULT_UPGRADE_DEF: PlayerUpgradeDef = {
+  id: 'vault',
+  name: tr("Depo"),
+  desc: tr("Makineler senin için üretti. Servise hazır raflar seni bekliyor."),
+  glyph: '🔐',
+  maxLevel: 6,
+  baseCost: 1200,
+  growth: 1.75,
+  format: (l) => `${offlineCapHours(l)}h`,
+};
+
 export const PLAYER_UPGRADES: PlayerUpgradeDef[] = [
   {
     id: 'speed',
@@ -22,8 +33,8 @@ export const PLAYER_UPGRADES: PlayerUpgradeDef[] = [
     desc: tr("Salonda daha hızlı hareket et."),
     glyph: '👟',
     maxLevel: 10,
-    baseCost: 180,
-    growth: 1.7,
+    baseCost: 260,
+    growth: 1.82,
     format: (l) => tr("{0} hız", number(playerSpeed(l))),
   },
   {
@@ -32,8 +43,8 @@ export const PLAYER_UPGRADES: PlayerUpgradeDef[] = [
     desc: tr("Tek seferde daha çok bardak ve tabak taşı."),
     glyph: '🍽️',
     maxLevel: 12,
-    baseCost: 260,
-    growth: 1.62,
+    baseCost: 360,
+    growth: 1.76,
     format: (l) => tr("{0} adet", playerCapacity(l)),
   },
   {
@@ -42,8 +53,8 @@ export const PLAYER_UPGRADES: PlayerUpgradeDef[] = [
     desc: tr("Alma ve bırakma çok daha hızlı."),
     glyph: '🤲',
     maxLevel: 10,
-    baseCost: 320,
-    growth: 1.65,
+    baseCost: 450,
+    growth: 1.78,
     format: (l) => tr("{0} adet/sn", number(1 / handsInterval(l))),
   },
   {
@@ -52,17 +63,11 @@ export const PLAYER_UPGRADES: PlayerUpgradeDef[] = [
     desc: tr("Bütün satışların hesap değerini artırır."),
     glyph: '😊',
     maxLevel: 10,
-    baseCost: 700,
-    growth: 1.58,
+    baseCost: 950,
+    growth: 1.74,
     format: (l) => tr("+%{0} hesap", Math.round((charmMult(l) - 1) * 100)),
   },
-  /**
-   * 'vault' (Kasa Deposu) LİSTEDE YOK. Offline para kazancı oyundan
-   * tamamen çıkarıldı ("sadece oyundayken kazanılsın") — süreyi uzatan
-   * bir yükseltmenin satılacak şeyi kalmadı. Tip birliği ve eski kayıt
-   * uyumu için kimlik `PlayerUpgradeId`de duruyor; UI bu listeden
-   * beslendiği için oyuncuya hiç görünmüyor.
-   */
+  VAULT_UPGRADE_DEF,
 ];
 
 export const PLAYER_UPGRADE_MAP: Record<PlayerUpgradeId, PlayerUpgradeDef> = Object.fromEntries(
@@ -101,8 +106,8 @@ export function upgradeCost(def: PlayerUpgradeDef, level: number): number {
 
 /* ---------------- istasyon yükseltmeleri ---------------- */
 
-export const STATION_SPEED_GROWTH = 1.52;
-export const STATION_CAP_GROWTH = 1.46;
+export const STATION_SPEED_GROWTH = 1.65;
+export const STATION_CAP_GROWTH = 1.58;
 export const STATION_SPEED_MAX = 8;
 export const STATION_CAP_MAX = 8;
 

@@ -1,5 +1,4 @@
-google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-2758339186734568, DIRECT, f08c47fec0942fa0
 
-# X bölümünü AdMob hesabındaki yayıncı kimliğiyle değiştirin.
-# Son dosyayı uygulamanın Play Console'daki geliştirici web alanının
-# kökünde /app-ads.txt olarak yayınlayın. Test kimlikleriyle gerekmez.
+# Bu dosyayı uygulamanın Play Console'daki geliştirici web alanının
+# kökünde /app-ads.txt olarak yayınlayın (sites.google.com kök dizin desteklemez).

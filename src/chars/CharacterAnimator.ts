@@ -333,7 +333,10 @@ export class CharacterAnimator {
 
   update(dt: number, planarSpeed: number, turnRate = 0): void {
     if (this.dead) return;
-    const d = dt > 0.1 ? 0.1 : dt < 0 ? 0 : dt;
+    const rawDt = Number.isFinite(dt) ? dt : 0;
+    const d = rawDt > 0.1 ? 0.1 : rawDt < 0 ? 0 : rawDt;
+    const safeSpeed = Number.isFinite(planarSpeed) && planarSpeed > 0 ? planarSpeed : 0;
+    const safeTurn = Number.isFinite(turnRate) ? turnRate : 0;
     this.t += d;
     this.stateTime += d;
 
@@ -348,7 +351,7 @@ export class CharacterAnimator {
     // 60 fps'teki 0.88'e denk gelen kare hızından bağımsız sönüm.
     this.liftRelease = Math.exp(-LIFT_LAMBDA * d);
 
-    this.spd = damp(this.spd, planarSpeed, 12, d);
+    this.spd = damp(this.spd, safeSpeed, 12, d);
     // Hız yükseltmesi yalnız rakamı değil hareket dilini de değiştirir.
     // Geçiş damp'lidir; seviye alınca poz tek karede sıçramaz.
     const speedTier = this.spd < 4.2 ? 0 : this.spd < 6.4 ? 1 : 2;
@@ -367,7 +370,7 @@ export class CharacterAnimator {
      * müşteride birikmiş açı farkı da aynı kelepçeye takılır.
      */
     const steadyLoad = this.carryMode === 'cart' ? 0.35 : this.carry > 0 ? 0.62 : 1;
-    const leanT = clamp(turnRate * 0.045, -0.11, 0.11) * clamp01(this.spd / 3.5) * steadyLoad;
+    const leanT = clamp(safeTurn * 0.045, -0.11, 0.11) * clamp01(this.spd / 3.5) * steadyLoad;
     this.leanW = damp(this.leanW, leanT, 8, d);
 
     const trayOn = this.carry > 0 && this.carryMode !== 'cart';

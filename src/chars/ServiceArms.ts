@@ -162,17 +162,22 @@ export class ServiceArmLayer {
   private aim(joint: T.Object3D, child: T.Object3D, destination: T.Vector3): void {
     if (!joint.parent) return;
     this.parentInverse.copy(joint.parent.matrixWorld).invert();
-    this.from.setFromMatrixPosition(child.matrixWorld).applyMatrix4(this.parentInverse).sub(joint.position).normalize();
-    this.to.copy(destination).applyMatrix4(this.actor.matrixWorld).applyMatrix4(this.parentInverse).sub(joint.position).normalize();
+    this.from.setFromMatrixPosition(child.matrixWorld).applyMatrix4(this.parentInverse).sub(joint.position);
+    this.to.copy(destination).applyMatrix4(this.actor.matrixWorld).applyMatrix4(this.parentInverse).sub(joint.position);
+    if (this.from.lengthSq() < 1e-10 || this.to.lengthSq() < 1e-10) return;
+    this.from.normalize();
+    this.to.normalize();
     joint.quaternion.premultiply(this.turn.setFromUnitVectors(this.from, this.to)).normalize();
     joint.updateWorldMatrix(false, false);
     child.updateWorldMatrix(false, false);
   }
 
   apply(weight: number, carrying: boolean, working: boolean, phase: number, kind: WorkKind, dt = 0, compactGrip = false): void {
-    if (weight <= 0) { this.engaged = false; this.resetBounce(); return; }
-    if (dt > 0 && this.bounceTime < 1) {
-      this.bounceTime = Math.min(1, this.bounceTime + dt / TRAY_BOUNCE_DURATION);
+    if (!Number.isFinite(weight) || weight <= 0) { this.engaged = false; this.resetBounce(); return; }
+    const safeDt = Number.isFinite(dt) && dt > 0 ? dt : 0;
+    const safePhase = Number.isFinite(phase) ? phase : 0;
+    if (safeDt > 0 && this.bounceTime < 1) {
+      this.bounceTime = Math.min(1, this.bounceTime + safeDt / TRAY_BOUNCE_DURATION);
       this.bounceY = this.bounceAmp * trayBounceEnvelope(this.bounceTime);
     } else if (this.bounceTime >= 1) {
       this.bounceY = 0;
@@ -182,8 +187,9 @@ export class ServiceArmLayer {
     this.actor.updateWorldMatrix(true, false);
     this.inverse.copy(this.actor.matrixWorld).invert();
     this.actor.getWorldQuaternion(this.actorRotation);
-    const actorScaleX = this.actor.getWorldScale(this.to).x;
-    const contact = working ? serviceContactEnvelope(phase) : 0;
+    const rawScaleX = this.actor.getWorldScale(this.to).x;
+    const actorScaleX = Number.isFinite(rawScaleX) && Math.abs(rawScaleX) > 1e-5 ? rawScaleX : 1;
+    const contact = working ? serviceContactEnvelope(safePhase) : 0;
     for (const arm of this.arms) {
       // Update just the shoulder ancestry and the three arm joints.
       arm.upper.updateWorldMatrix(true, false);
@@ -201,7 +207,7 @@ export class ServiceArmLayer {
       if (free) {
         if (kind === 'wipe') {
           // Masa üstünde enerjik, kesintisiz oval oval ovalama yörüngesi
-          const scrubCycle = phase * Math.PI * 6;
+          const scrubCycle = safePhase * Math.PI * 6;
           this.target.x = Math.sin(scrubCycle) * (this.height * 0.16) + (this.height * 0.04);
           this.target.z = this.height * 0.31 + Math.cos(scrubCycle) * (this.height * 0.10);
           this.target.y = this.height * 0.485 + Math.sin(scrubCycle * 2) * (this.height * 0.012);
@@ -213,8 +219,8 @@ export class ServiceArmLayer {
       }
       // Picking up the first product or placing the last one changes support
       // mode mid-gesture; approach the new hand target without a one-frame snap.
-      if (!this.engaged || dt <= 0) arm.target.copy(this.target);
-      else arm.target.lerp(this.target, 1 - Math.exp(-40 * dt));
+      if (!this.engaged || safeDt <= 0) arm.target.copy(this.target);
+      else arm.target.lerp(this.target, 1 - Math.exp(-40 * safeDt));
       this.target.copy(arm.target);
       if (carrying || !working) this.target.y += this.bounceY;
       // Solve wrist behind the desired support point so the palm, not the wrist,

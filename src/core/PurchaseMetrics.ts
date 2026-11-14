@@ -17,6 +17,7 @@ const keyOf = (identity: PurchaseIdentity): string => `${identity.location}\0${i
 const validIdentity = (value: PurchaseIdentity): boolean => !!value &&
   (value.kind === 'zone' || value.kind === 'staff') && typeof value.id === 'string' && value.id.length > 0 && value.id.length <= 80 &&
   typeof value.location === 'string' && value.location.length > 0 && value.location.length <= 80;
+const NO_EVENTS: PurchaseMetric[] = [];
 
 export class PurchaseMetrics {
   private contracts = new Map<string, LiveState>();
@@ -55,7 +56,7 @@ export class PurchaseMetrics {
     // Only foreground simulation deltas are supplied; a stalled frame is bounded.
     const dt = Math.min(0.25, bounded(deltaSeconds));
     this.activeSeconds += dt;
-    const events: PurchaseMetric[] = [];
+    let events: PurchaseMetric[] | null = null;
     const observed = this.observed;
     observed.clear();
     for (const target of targets) {
@@ -73,39 +74,39 @@ export class PurchaseMetrics {
       if (target.visible) state.viewSeconds += dt;
       if (!state.seen && target.visible && state.viewSeconds >= 0.75) {
         state.seen = true;
-        events.push({ name: 'purchase_seen', props: this.props(state) });
+        (events ??= []).push({ name: 'purchase_seen', props: this.props(state) });
       }
       if (target.onPad && !wasOnPad) { state.visitSeconds = 0; state.visitEngaged = false; }
       if (target.onPad) state.visitSeconds += dt;
       const increased = paid > state.paid + 0.0001;
       state.paid = Math.max(state.paid, paid);
       if (increased && target.onPad && !state.visitEngaged) {
-        events.push({ name: 'purchase_engaged', props: { ...this.props(state), phase: state.started ? 'resume' : 'start',
+        (events ??= []).push({ name: 'purchase_engaged', props: { ...this.props(state), phase: state.started ? 'resume' : 'start',
           stationary: target.stationary, entry_seconds: state.visitSeconds } });
         state.started = true;
         state.visitEngaged = true;
       }
-      if (target.completed) events.push(...this.complete(target, 'unknown'));
+      if (target.completed) (events ??= []).push(...this.complete(target, 'unknown'));
       else if (wasOnPad && !target.onPad && state.started && state.paid > 0)
-        events.push({ name: 'purchase_left', props: { ...this.props(state), entry_seconds: state.visitSeconds } });
+        (events ??= []).push({ name: 'purchase_left', props: { ...this.props(state), entry_seconds: state.visitSeconds } });
       state.onPad = target.onPad;
     }
     for (const [key, state] of this.contracts) {
       if (observed.has(key) || !state.onPad || state.completed) continue;
       if (state.started && state.paid > 0)
-        events.push({ name: 'purchase_left', props: { ...this.props(state), entry_seconds: state.visitSeconds } });
+        (events ??= []).push({ name: 'purchase_left', props: { ...this.props(state), entry_seconds: state.visitSeconds } });
       state.onPad = false;
       state.visitSeconds = 0;
       state.visitEngaged = false;
     }
-    return events;
+    return events ?? NO_EVENTS;
   }
   complete(target: PurchaseCompletion, method: 'pad' | 'menu' | 'unknown' = 'unknown'): PurchaseMetric[] {
-    if (!validIdentity(target)) return [];
+    if (!validIdentity(target)) return NO_EVENTS;
     const key = keyOf(target);
     const known = this.contracts.has(key);
     const state = this.state(target, key);
-    if (state.completed) return [];
+    if (state.completed) return NO_EVENTS;
     // A pad can finish the remaining cents before the next sampled observation.
     // Actual completion proves payment engagement, even if that visit was missed.
     // The completion payload's fully paid amount is not a prior partial payment.
@@ -126,9 +127,9 @@ export class PurchaseMetrics {
     return events;
   }
   useHelp(target: { id: string; kind: string; location: string }, foregroundSeconds = this.activeSeconds): PurchaseMetric[] {
-    if (!target || !target.id || !target.kind || !target.location) return [];
+    if (!target || !target.id || !target.kind || !target.location) return NO_EVENTS;
     const key = `${target.id}\0${target.kind}\0${target.location}`;
-    if (foregroundSeconds - (this.helpAt.get(key) ?? -Infinity) < 2) return [];
+    if (foregroundSeconds - (this.helpAt.get(key) ?? -Infinity) < 2) return NO_EVENTS;
     this.helpAt.set(key, foregroundSeconds);
     if (this.helpAt.size > 64) this.helpAt.delete(this.helpAt.keys().next().value!);
     return [{ name: 'help_used', props: { id: target.id, kind: target.kind, location: target.location } }];

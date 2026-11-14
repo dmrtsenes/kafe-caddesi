@@ -139,6 +139,9 @@ export class Scene3D {
     });
     this.sceneCache = new StaticSceneCache(this.renderer);
     this.renderer.info.autoReset = false;
+    // Production WebView/Adreno'da senkron glGetProgramiv(LINK_STATUS) + InfoLog IPC
+    // bloklamasını kapatır; soğuk ilk kurulumda shader derlemesini katbekat hızlandırır.
+    this.renderer.debug.checkShaderErrors = Boolean(import.meta.env?.DEV);
     const lost = (event: Event) => {
       event.preventDefault();
       this.lostContext = true;
@@ -501,23 +504,46 @@ export class Scene3D {
     await this.edgeSmoothing.prepare(this.renderer);
     const start = performance.now();
     const warm = new THREE.Group(), cacheWarm = new THREE.Group();
+    const useCacheWarm = !this.mobileDevice && this.sceneCache.supported;
+    const warmSeen = new Set<string>(), cacheSeen = new Set<string>();
     const temporaryInstances: THREE.InstancedMesh[] = [];
     const temporaryCharacters = createCharacterWarmup();
     const textures = new Set<THREE.Texture>();
     const add = (object: THREE.Object3D, products = false): void => {
       const mesh = object as THREE.Mesh;
       if (!mesh.isMesh && !(object as THREE.Sprite).isSprite && !(object as THREE.Points).isPoints) return;
-      // compile traverses invisible meshes too. Build a flat visible selection so
-      // a locked room cannot delay the first playable frame.
-      const clone = object.clone(false) as THREE.Mesh;
-      clone.frustumCulled = false;
-      clone.castShadow = false;
-      warm.add(clone);
-      if (!products && object.layers.isEnabled(LAYER_STATIC)) cacheWarm.add(object.clone(false));
-      if (!mesh.material) return;
-      for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
-        const map = (material as THREE.MeshStandardMaterial).map;
-        if (map) textures.add(map);
+      if (mesh.material) {
+        for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+          const map = (material as THREE.MeshStandardMaterial).map;
+          if (map) textures.add(map);
+        }
+      }
+      const matKey = Array.isArray(mesh.material)
+        ? mesh.material.map(m => m.id).join(',')
+        : String(mesh.material?.id ?? '');
+      const skinned = (object as THREE.SkinnedMesh).isSkinnedMesh === true;
+      const instanced = (object as THREE.InstancedMesh).isInstancedMesh === true;
+      const attrs = mesh.geometry?.attributes;
+      const attrKey = attrs
+        ? `${attrs.color ? 'c' : ''}${attrs.uv ? 'u' : ''}${attrs.uv1 ? '2' : ''}${attrs.normal ? 'n' : ''}${attrs.tangent ? 't' : ''}`
+        : '';
+      const variantKey =
+        `${matKey}|${(object as THREE.Sprite).isSprite ? 'S' : (object as THREE.Points).isPoints ? 'P' : 'M'}` +
+        `|${skinned ? `sk:${(object as THREE.SkinnedMesh).skeleton?.bones.length ?? 1}:${mesh.geometry?.uuid ?? ''}` : ''}` +
+        `|${instanced ? ((object as THREE.InstancedMesh).instanceColor ? 'ic' : 'i') : ''}` +
+        `|${mesh.receiveShadow ? 1 : 0}|${attrKey}|${mesh.morphTargetInfluences?.length ?? 0}`;
+      // compile traverses invisible meshes too. Build a deduplicated flat visible selection so
+      // identical material/shader variants do not trigger redundant DoubleSide needsUpdate stalls.
+      if (!warmSeen.has(variantKey)) {
+        warmSeen.add(variantKey);
+        const clone = object.clone(false) as THREE.Mesh;
+        clone.frustumCulled = false;
+        clone.castShadow = false;
+        warm.add(clone);
+      }
+      if (useCacheWarm && !products && object.layers.isEnabled(LAYER_STATIC) && !cacheSeen.has(variantKey)) {
+        cacheSeen.add(variantKey);
+        cacheWarm.add(object.clone(false));
       }
     };
     this.scene.traverseVisible(object => add(object));
@@ -530,19 +556,23 @@ export class Scene3D {
     this.preparation.meshes = warm.children.length;
     this.preparation.cacheMeshes = cacheWarm.children.length;
     const previousTarget = this.renderer.getRenderTarget();
-    const linearTarget = new THREE.WebGLRenderTarget(2, 2);
+    const linearTarget = useCacheWarm && cacheWarm.children.length > 0 ? new THREE.WebGLRenderTarget(2, 2) : null;
     const layerMask = this.camera.layers.mask;
     try {
       let phase = performance.now();
       this.camera.layers.enable(LAYER_SURFACE_LABEL);
       await this.renderer.compileAsync(warm, this.camera, this.scene);
       this.preparation.screenMs = performance.now() - phase;
-      phase = performance.now();
-      // The static HDR cache never renders characters or product stacks.
-      this.renderer.setRenderTarget(linearTarget);
-      await this.renderer.compileAsync(cacheWarm, this.camera, this.scene);
-      this.preparation.cacheMs = performance.now() - phase;
-      this.renderer.setRenderTarget(previousTarget);
+      if (linearTarget) {
+        phase = performance.now();
+        // The static HDR cache never renders characters or product stacks.
+        this.renderer.setRenderTarget(linearTarget);
+        await this.renderer.compileAsync(cacheWarm, this.camera, this.scene);
+        this.preparation.cacheMs = performance.now() - phase;
+        this.renderer.setRenderTarget(previousTarget);
+      } else {
+        this.preparation.cacheMs = 0;
+      }
       phase = performance.now();
       for (const texture of textures) this.renderer.initTexture(texture);
       // Compilation alone does not upload vertex buffers. One covered pixel warms
@@ -554,7 +584,7 @@ export class Scene3D {
       for (const object of warm.children) object.visible = (object as THREE.SkinnedMesh).isSkinnedMesh === true;
       this.scene.add(warm);
       try {
-        this.camera.layers.mask = (1 << LAYER_STATIC) | (1 << LAYER_DYNAMIC) | (1 << LAYER_SURFACE_LABEL);
+        this.camera.layers.mask = (1 << LAYER_STATIC) | (1 << LAYER_DYNAMIC) | (this.hideSurfaceLabels ? 0 : (1 << LAYER_SURFACE_LABEL));
         this.renderer.setScissor(0,0,1,1);
         this.renderer.setScissorTest(true);
         this.renderer.render(this.scene,this.camera);
@@ -570,7 +600,7 @@ export class Scene3D {
     } finally {
       this.camera.layers.mask = layerMask;
       this.renderer.setRenderTarget(previousTarget);
-      linearTarget.dispose();
+      linearTarget?.dispose();
       for (const instance of temporaryInstances) instance.dispose();
       for (const character of temporaryCharacters) character.dispose();
       // Clones own only temporary instance buffers, never shared asset geometry.
@@ -773,7 +803,7 @@ export class Scene3D {
       // yapmaması için temiz, donanımsal MSAA destekli doğrudan çizim kullanılır.
       // Kenar yumuşatma mobilde kapalı; yazılar ayrı bir ikinci sahne geçişi
       // yerine aynı geçişte, LABEL_RENDER_ORDER ile en son çizilir.
-      this.camera.layers.mask = (1 << LAYER_STATIC) | (1 << LAYER_DYNAMIC) | (1 << LAYER_SURFACE_LABEL);
+      this.camera.layers.mask = (1 << LAYER_STATIC) | (1 << LAYER_DYNAMIC) | (this.hideSurfaceLabels ? 0 : (1 << LAYER_SURFACE_LABEL));
       this.renderer.autoClear = true;
       this.renderer.setRenderTarget(null);
       this.renderer.render(this.scene, this.camera);

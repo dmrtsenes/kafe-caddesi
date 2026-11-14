@@ -1,15 +1,16 @@
 import { tr } from "../core/I18n";
 import * as THREE from 'three';
-import { Actor } from './Actor';
+import { Actor, safeCreateCharacter } from './Actor';
 import { CarryStack } from './CarryStack';
-import { createCharacter } from '../chars';
 import { ITEMS, type ItemId } from '../data/items';
+import { drawMenuItemIcon } from '../ui/MenuIcons';
 import type { CustomerArchetype } from '../data/customers';
 import type { StationEntity } from '../sim/Station';
 import type { NavGrid } from '../sim/Navigation';
 import type { Order } from '../sim/Orders';
 import { BALANCE, clampCustomerWalkSpeed } from '../data/balance';
 import { clamp01, wrapAngle } from '../core/MathUtils';
+import { QUALITY } from '../core/Quality';
 
 export type CustomerState =
   /** Sipariş tezgâhının sırasına yürüyor */
@@ -32,7 +33,9 @@ export type CustomerState =
   | 'angry'
   /** Kaçak müşteri: vitrinden kapıyor */
   | 'grab'
-  | 'flee';
+  | 'flee'
+  /** Zengin Yatırımcı VIP misafiri: bekleme çubuğu/küsme olmadan salonda bekler */
+  | 'investor';
 
 /* ---------- paylaşılan ikon dokuları (bir kez üretilir) ---------- */
 
@@ -48,42 +51,81 @@ function iconMaterial(item: ItemId, count = 1, mode: 'table' | 'takeaway' = 'tak
   const key = `${item}x${count}:${mode}:${serviceCode}`;
   let m = iconCache.get(key);
   if (m) return m;
-  const size = 192;
+  if (typeof document === 'undefined') { m = new THREE.SpriteMaterial({ transparent: true, depthWrite: false }); iconCache.set(key, m); return m; }
+  const size = 256;
   const c = document.createElement('canvas');
   c.width = size;
   c.height = size;
   const ctx = c.getContext('2d');
   if (ctx) {
-    ctx.scale(2, 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.96)';
-    roundRect(ctx, 4, 4, 88, 88, 22);
+    const k = size / 96;
+    ctx.scale(k, k);
+
+    // Soft card drop shadow
+    ctx.fillStyle = 'rgba(15, 25, 34, 0.22)';
+    roundRect(ctx, 5, 6.5, 86, 86, 22);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(29,43,52,0.22)';
-    ctx.lineWidth = 4;
-    roundRect(ctx, 4, 4, 88, 88, 22);
+
+    // Warm porcelain card background
+    const cardGrad = ctx.createLinearGradient(0, 4, 0, 90);
+    cardGrad.addColorStop(0, 'rgba(255, 254, 250, 0.98)');
+    cardGrad.addColorStop(1, 'rgba(242, 238, 229, 0.98)');
+    ctx.fillStyle = cardGrad;
+    roundRect(ctx, 5, 4.5, 86, 86, 22);
+    ctx.fill();
+
+    // Subtle radial halo behind product illustration
+    const halo = ctx.createRadialGradient(48, 36, 4, 48, 36, 28);
+    halo.addColorStop(0, 'rgba(255, 214, 140, 0.26)');
+    halo.addColorStop(1, 'rgba(255, 214, 140, 0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(48, 36, 28, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Refined dual card border
+    ctx.strokeStyle = 'rgba(29, 43, 52, 0.24)';
+    ctx.lineWidth = 2.6;
+    roundRect(ctx, 5, 4.5, 86, 86, 22);
     ctx.stroke();
-    drawOrderIcon(ctx, item, count > 1 ? 44 : 48, 38);
-    // Aynı balonun alt şeridi servis şeklini tek bakışta anlatır.
-    ctx.fillStyle = mode === 'table' ? '#376152' : '#e2703a';
-    roundRect(ctx, 10, 70, 76, 17, 8);
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.lineWidth = 1.2;
+    roundRect(ctx, 6.6, 6.1, 82.8, 82.8, 20.5);
+    ctx.stroke();
+
+    drawMenuItemIcon(ctx, item, count > 1 ? 44 : 48, 37.5, 1.04);
+
+    // Bottom service pill (table vs takeaway)
+    const pillGrad = ctx.createLinearGradient(11, 69, 11, 86);
+    if (mode === 'table') {
+      pillGrad.addColorStop(0, '#2f6b59');
+      pillGrad.addColorStop(1, '#1e463a');
+    } else {
+      pillGrad.addColorStop(0, '#ec7d45');
+      pillGrad.addColorStop(1, '#c75622');
+    }
+    ctx.fillStyle = pillGrad;
+    roundRect(ctx, 11, 69.5, 74, 16.5, 8.2);
     ctx.fill();
+
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#ffffff';
-    ctx.font = '800 11px system-ui, -apple-system, "Segoe UI", sans-serif';
-    ctx.fillText(mode === 'table' ? `${serviceCode || tr("MASA")}` : tr("PAKET"), 48, 79);
+    ctx.font = '800 10.8px system-ui, -apple-system, "Segoe UI", sans-serif';
+    ctx.fillText(mode === 'table' ? `${serviceCode || tr("MASA")}` : tr("PAKET"), 48, 78.2);
+
     if (count > 1) {
-      const bx = 73;
-      const by = 21;
-      const br = 15.5;
-      // Beyaz kart zemininden net ayrışması için yumuşak dış gölge
-      ctx.fillStyle = 'rgba(18, 32, 42, 0.28)';
+      const bx = 74.5;
+      const by = 19.5;
+      const br = 14.2;
+      ctx.fillStyle = 'rgba(18, 32, 42, 0.26)';
       ctx.beginPath();
-      ctx.arc(bx, by + 1.5, br + 1.5, 0, Math.PI * 2);
+      ctx.arc(bx, by + 1.4, br + 1.2, 0, Math.PI * 2);
       ctx.fill();
 
       const badgeGrad = ctx.createLinearGradient(bx, by - br, bx, by + br);
-      badgeGrad.addColorStop(0, '#ff7e47');
+      badgeGrad.addColorStop(0, '#ff874f');
       badgeGrad.addColorStop(1, '#d9480f');
       ctx.fillStyle = badgeGrad;
       ctx.beginPath();
@@ -91,20 +133,12 @@ function iconMaterial(item: ItemId, count = 1, mode: 'table' | 'takeaway' = 'tak
       ctx.fill();
 
       ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2.8;
+      ctx.lineWidth = 2.4;
       ctx.stroke();
 
-      ctx.strokeStyle = 'rgba(29, 43, 52, 0.35)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(bx, by, br + 1.4, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-      ctx.font = '900 16px system-ui, -apple-system, "Segoe UI", sans-serif';
-      ctx.fillText(`${count}x`, bx, by + 1.5);
       ctx.fillStyle = '#ffffff';
-      ctx.fillText(`${count}x`, bx, by + 0.5);
+      ctx.font = '900 14.5px system-ui, -apple-system, "Segoe UI", sans-serif';
+      ctx.fillText(`${count}x`, bx, by + 0.6);
     }
   }
   const tex = new THREE.CanvasTexture(c);
@@ -127,254 +161,6 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
-}
-
-/**
- * Müşteri başındaki ürün ikonu — Çay ve Kahve (Latte) için net, anlaşılır özel
- * çizim; diğer menü ürünleri için emoji kullanılır.
- */
-function drawOrderIcon(ctx: CanvasRenderingContext2D, itemId: ItemId, cx = 48, cy = 38): void {
-  if (itemId === 'cay') {
-    drawTurkishTea(ctx, cx, cy);
-  } else if (itemId === 'latte') {
-    drawCoffeeCup(ctx, cx - 1, cy);
-  } else {
-    ctx.font = '52px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(ITEMS[itemId].glyph, cx, cy + 5);
-  }
-}
-
-/** Sade, yüksek kontrastlı ve modern ince belli Türk çayı ikonu */
-function drawTurkishTea(ctx: CanvasRenderingContext2D, cx: number, cy: number): void {
-  ctx.save();
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-
-  // 1. Taban yumuşak gölgesi
-  ctx.fillStyle = 'rgba(18, 32, 42, 0.12)';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 21.5, 22, 5.2, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // 2. Porselen çay tabağı (krem-fildişi zemin + klasik kırmızı kuşak -> kırmızı çayla yüksek kontrast)
-  const saucerGrad = ctx.createLinearGradient(cx, cy + 13, cx, cy + 24);
-  saucerGrad.addColorStop(0, '#f5eadc');
-  saucerGrad.addColorStop(1, '#decbb4');
-  ctx.fillStyle = saucerGrad;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 18.2, 22, 5.8, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#2b1814';
-  ctx.lineWidth = 2.1;
-  ctx.stroke();
-
-  // Tabak içi ince kırmızı geleneksel halka
-  ctx.strokeStyle = '#dc2626';
-  ctx.lineWidth = 1.6;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 18.0, 16.5, 4.1, 0, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // 3. İnce belli cam gövde + kalın kristal taban
-  const traceGlass = () => {
-    ctx.beginPath();
-    ctx.moveTo(cx - 13.8, cy - 14.5);
-    ctx.bezierCurveTo(cx - 13.2, cy - 7.5, cx - 8.4, cy - 3.0, cx - 8.4, cy + 0.5);
-    ctx.bezierCurveTo(cx - 8.4, cy + 4.8, cx - 15.2, cy + 9.2, cx - 10.2, cy + 16.8);
-    ctx.quadraticCurveTo(cx, cy + 19.6, cx + 10.2, cy + 16.8);
-    ctx.bezierCurveTo(cx + 15.2, cy + 9.2, cx + 8.4, cy + 4.8, cx + 8.4, cy + 0.5);
-    ctx.bezierCurveTo(cx + 8.4, cy - 3.0, cx + 13.2, cy - 7.5, cx + 13.8, cy - 14.5);
-    ctx.closePath();
-  };
-
-  const glassGrad = ctx.createLinearGradient(cx - 14, cy - 14, cx + 14, cy + 18);
-  glassGrad.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
-  glassGrad.addColorStop(0.75, '#e2eef5');
-  glassGrad.addColorStop(1, '#c5dae6');
-  traceGlass();
-  ctx.fillStyle = glassGrad;
-  ctx.fill();
-
-  // Kristal taban parlaması (çayın altındaki kalın cam kısım)
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.78)';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 16.2, 9.2, 2.2, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // 4. Tavşan kanı çay dolgusu (kristal tabanın üstünden başlar)
-  const teaGrad = ctx.createLinearGradient(cx, cy - 9.5, cx, cy + 15);
-  teaGrad.addColorStop(0, '#ea580c');
-  teaGrad.addColorStop(0.28, '#dc2626');
-  teaGrad.addColorStop(0.72, '#991b1b');
-  teaGrad.addColorStop(1, '#5c0b12');
-
-  ctx.beginPath();
-  ctx.moveTo(cx - 11.8, cy - 9.2);
-  ctx.bezierCurveTo(cx - 10.5, cy - 4.5, cx - 7.4, cy - 1.5, cx - 7.4, cy + 0.8);
-  ctx.bezierCurveTo(cx - 7.4, cy + 4.6, cx - 13.6, cy + 8.8, cx - 9.4, cy + 14.5);
-  ctx.quadraticCurveTo(cx, cy + 16.8, cx + 9.4, cy + 14.5);
-  ctx.bezierCurveTo(cx + 13.6, cy + 8.8, cx + 7.4, cy + 4.6, cx + 7.4, cy + 0.8);
-  ctx.bezierCurveTo(cx + 7.4, cy - 1.5, cx + 10.5, cy - 4.5, cx + 11.8, cy - 9.2);
-  ctx.closePath();
-  ctx.fillStyle = teaGrad;
-  ctx.fill();
-
-  // Çay göbeğinde sıcak kehribar iç ışıma (3B derinlik ve şeffaflık hissi)
-  const glowGrad = ctx.createRadialGradient(cx - 1.5, cy + 6.5, 1, cx, cy + 6.5, 10.5);
-  glowGrad.addColorStop(0, 'rgba(251, 146, 60, 0.58)');
-  glowGrad.addColorStop(1, 'rgba(220, 38, 38, 0)');
-  ctx.fillStyle = glowGrad;
-  ctx.fill();
-
-  // 5. Çay üst yüzeyi (3B perspektif elipsi — kahve fincanıyla aynı bakış açısı)
-  const surfaceGrad = ctx.createLinearGradient(cx - 11, cy - 12, cx + 11, cy - 7);
-  surfaceGrad.addColorStop(0, '#fb923c');
-  surfaceGrad.addColorStop(0.5, '#ea580c');
-  surfaceGrad.addColorStop(1, '#b91c1c');
-  ctx.fillStyle = surfaceGrad;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy - 9.2, 11.8, 3.6, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#7f1d1d';
-  ctx.lineWidth = 1.2;
-  ctx.stroke();
-
-  // Çay yüzeyinde ince parlak menisküs halkası
-  ctx.strokeStyle = 'rgba(254, 215, 170, 0.65)';
-  ctx.lineWidth = 1.1;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy - 9.3, 9.2, 2.3, 0, Math.PI * 0.15, Math.PI * 0.85);
-  ctx.stroke();
-
-  // 6. Bardak dış konturu
-  traceGlass();
-  ctx.strokeStyle = '#2b1814';
-  ctx.lineWidth = 2.2;
-  ctx.stroke();
-
-  // 7. Ağız çemberi (açık cam efekti + parlak ön dudak)
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.32)';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy - 14.5, 13.8, 3.9, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#2b1814';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Ağız ön kenar beyaz cam ışıltısı
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-  ctx.lineWidth = 1.4;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy - 14.5, 12.6, 3.2, 0, Math.PI * 0.12, Math.PI * 0.88);
-  ctx.stroke();
-
-  // 8. İnce belli kavisli cam yansımaları (sol ana parlama + sağ alt denge parlaması)
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
-  ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.moveTo(cx - 10.2, cy - 9.8);
-  ctx.bezierCurveTo(cx - 9.2, cy - 5.5, cx - 5.8, cy - 2.0, cx - 5.8, cy + 0.8);
-  ctx.bezierCurveTo(cx - 5.8, cy + 4.4, cx - 10.6, cy + 8.2, cx - 7.8, cy + 13.0);
-  ctx.stroke();
-
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.42)';
-  ctx.lineWidth = 1.6;
-  ctx.beginPath();
-  ctx.moveTo(cx + 8.8, cy + 5.0);
-  ctx.quadraticCurveTo(cx + 10.4, cy + 9.2, cx + 7.2, cy + 13.2);
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-/** Sade, yüksek kontrastlı ve modern kahve / latte fincanı ikonu */
-function drawCoffeeCup(ctx: CanvasRenderingContext2D, cx: number, cy: number): void {
-  ctx.save();
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-
-  // 1. Taban yumuşak gölgesi
-  ctx.fillStyle = 'rgba(18, 32, 42, 0.10)';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 21, 22, 5, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // 2. Fincan tabağı (krem-bej porselen, beyaz karttan net ayrışır)
-  ctx.fillStyle = '#e6d7c3';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 18, 22, 5.5, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#2b1814';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // 3. Fincan kulpu (sağda belirgin, temiz halka)
-  ctx.strokeStyle = '#2b1814';
-  ctx.lineWidth = 6.2;
-  ctx.beginPath();
-  ctx.arc(cx + 15.5, cy + 2, 7.2, -Math.PI * 0.45, Math.PI * 0.52);
-  ctx.stroke();
-  ctx.strokeStyle = '#8c4f2b';
-  ctx.lineWidth = 2.8;
-  ctx.beginPath();
-  ctx.arc(cx + 15.5, cy + 2, 7.2, -Math.PI * 0.45, Math.PI * 0.52);
-  ctx.stroke();
-
-  // 4. Fincan gövdesi (zengin sıcak moka/karamel seramik — beyaz zeminde çok net okunur)
-  const cupGrad = ctx.createLinearGradient(cx - 16, cy - 10, cx + 16, cy + 16);
-  cupGrad.addColorStop(0, '#9c5a32');
-  cupGrad.addColorStop(0.55, '#784020');
-  cupGrad.addColorStop(1, '#522912');
-
-  ctx.beginPath();
-  ctx.moveTo(cx - 17.5, cy - 10);
-  ctx.bezierCurveTo(cx - 17.5, cy + 5, cx - 12.5, cy + 14.5, cx - 9.5, cy + 16);
-  ctx.quadraticCurveTo(cx, cy + 18, cx + 9.5, cy + 16);
-  ctx.bezierCurveTo(cx + 12.5, cy + 14.5, cx + 17.5, cy + 5, cx + 17.5, cy - 10);
-  ctx.closePath();
-  ctx.fillStyle = cupGrad;
-  ctx.fill();
-  ctx.strokeStyle = '#2b1814';
-  ctx.lineWidth = 2.2;
-  ctx.stroke();
-
-  // Fincan sol seramik parlaması
-  ctx.strokeStyle = 'rgba(255, 248, 240, 0.34)';
-  ctx.lineWidth = 2.8;
-  ctx.beginPath();
-  ctx.moveTo(cx - 13.5, cy - 4);
-  ctx.quadraticCurveTo(cx - 13, cy + 6, cx - 8.5, cy + 12.5);
-  ctx.stroke();
-
-  // 5. Fincan ağız çemberi ve krema yüzeyi
-  ctx.fillStyle = '#fff8f0';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy - 10, 17.5, 6.2, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#2b1814';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Altın espresso kreması
-  ctx.fillStyle = '#c27d42';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy - 10, 14.8, 4.6, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Sade, net süt köpüğü kalp motifi
-  ctx.fillStyle = '#fffbf5';
-  ctx.beginPath();
-  const hx = cx, hy = cy - 10.2;
-  ctx.moveTo(hx, hy + 3.2);
-  ctx.bezierCurveTo(hx - 6.5, hy + 0.6, hx - 7.2, hy - 3.6, hx - 3.4, hy - 3.6);
-  ctx.bezierCurveTo(hx - 1.2, hy - 3.6, hx, hy - 1.8, hx, hy - 0.8);
-  ctx.bezierCurveTo(hx, hy - 1.8, hx + 1.2, hy - 3.6, hx + 3.4, hy - 3.6);
-  ctx.bezierCurveTo(hx + 7.2, hy - 3.6, hx + 6.5, hy + 0.6, hx, hy + 3.2);
-  ctx.fill();
-
-  ctx.restore();
 }
 
 /**
@@ -529,6 +315,7 @@ function badgeMaterial(kind: 'check' | 'angry' | 'table_wait' | 'investor'): THR
   if (m) return m;
   // Doku 384px (Retina/telefonda jilet gibi keskin), çizim koordinatları 96'lık
   // mantıksal ızgarada — ctx.scale(4,4) ikisini köprüler.
+  if (typeof document === 'undefined') { m = new THREE.SpriteMaterial({ transparent: true, depthWrite: false }); badgeCache.set(key, m); return m; }
   const size = 384;
   const L = 96;
   const c = document.createElement('canvas');
@@ -698,7 +485,10 @@ export class Customer extends Actor {
   /** Zengin Yatırımcı VIP mi */
   isInvestor = false;
   /** Teşekkür / vedalaşma el sallaması */
-  private waving = false;
+  waving = false;
+  waveTimer = 0;
+  leaveDoorX = 0;
+  leaveDoorZ = 0;
   grabTimer = 0;
   stolen = 0;
   caught = false;
@@ -731,7 +521,7 @@ export class Customer extends Actor {
   ) {
     const visualSeed = (Math.random() * 0xffffffff) >>> 0;
     super(
-      createCharacter(kind === 'dasher' ? 'dasher' : kind === 'investor' ? 'investor' : 'customer', {
+      safeCreateCharacter(kind === 'dasher' ? 'dasher' : kind === 'investor' ? 'investor' : 'customer', {
         // Davranış arketipi görünüşü belirlemez. Her doğuş yeni bir anonim
         // modüler kişi üretir; tohum yalnız o karakterin kendi parçalarını bağlar.
         seed: visualSeed,
@@ -837,16 +627,14 @@ export class Customer extends Actor {
     this.showBubble(true);
   }
 
-  waveAndLeave(exitX: number, exitZ: number, nav?: NavGrid): void {
+  waveAndLeave(exitX: number, exitZ: number, _nav?: NavGrid): void {
     this.waving = true;
+    this.waveTimer = 1.8;
+    this.leaveDoorX = exitX;
+    this.leaveDoorZ = exitZ;
+    this.stop();
     this.char.setState('cheer');
     this.showBubble(false);
-    setTimeout(() => {
-      if (this.done) return;
-      this.waving = false;
-      this.state = 'leave';
-      if (nav) this.moveTo(nav, exitX, exitZ, true);
-    }, 1800);
   }
 
   showItem(item: ItemId, count = 1): void {
@@ -935,9 +723,21 @@ export class Customer extends Actor {
   /** Doğuşta 0→1 büyüme — kapıda tam boy "belirivermeyi" yumuşatır. */
   private spawnT = 0;
   private baseScale = 1;
+  private animTick = (Math.random() * 16) | 0;
 
   /** Yol takibi + animasyon durumu. */
-  step(dt: number, nav: NavGrid, animate = true): void {
+  step(dt: number, nav: NavGrid, animate = true, throttleAnim = false): void {
+    if (this.waveTimer > 0) {
+      this.waveTimer -= dt;
+      if (this.waveTimer <= 0) {
+        this.waveTimer = 0;
+        this.waving = false;
+        if (!this.done) {
+          this.state = 'leave';
+          this.moveTo(nav, this.leaveDoorX, this.leaveDoorZ, true);
+        }
+      }
+    }
     const arriveDist = this.state === 'toTable' || this.state === 'toToilet' ? .12 : BALANCE.customers.walkStopDist;
     // Otururken yol takibi çalışmaz; konumu masa sabitler.
     if (!this.sitting && !this.standingUp) this.advance(dt, nav, arriveDist);
@@ -968,10 +768,19 @@ export class Customer extends Actor {
      * karakter kadraja girdiğinde animatör kaldığı yerden devam eder
      * (tüm geçişler `damp` ile yazıldığı için değişken adım güvenlidir).
      */
-    if (animate) this.char.update(dt, this.planarSpeed, this.turnRate(dt));
-    if (animate) this.carryStack.update(dt, Math.min(1, this.planarSpeed / Math.max(1, this.speed)), this.planarSpeed);
+    if (animate) {
+      const stationary = (this.sitting && this.sitT >= 1) || (this.planarSpeed < 0.04 && (this.state === 'queue' || this.state === 'order'));
+      const halfRate = (QUALITY.tier !== 'high' && stationary && this.spawnT >= 1 && this.standT < 0) || throttleAnim;
+      this.animTick = (this.animTick + 1) & 1;
+      if (!halfRate || this.animTick === 0) {
+        this.char.update(halfRate ? dt * 2 : dt, this.planarSpeed, this.turnRate(dt));
+      }
+      if (this.carriedItems.length > 0 || !stationary) {
+        this.carryStack.update(dt, Math.min(1, this.planarSpeed / Math.max(1, this.speed)), this.planarSpeed);
+      }
+      this.updateVisual(dt);
+    }
     this.char.root.visible = animate;
-    if(animate)this.updateVisual(dt);
     if (this.sitting) {
       /**
        * OTURMA HARMANI. `sitAt` eskiden konumu ve yönü TEK KAREDE basıyordu:
@@ -1041,6 +850,9 @@ export class Customer extends Actor {
   }
 
   dispose(): void {
+    this.done = true;
+    this.waving = false;
+    this.waveTimer = 0;
     this.carryStack.dispose();
     this.bubble.removeFromParent();
     this.patienceBar.removeFromParent();
